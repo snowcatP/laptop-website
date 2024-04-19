@@ -23,15 +23,11 @@ public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    public Customer createCustomer(Customer customer) {
-        try {
-            customer.setCart(new Cart());
-            return customerRepository.save(customer);
-
-        } catch (Exception e){
-            throw new NoResultException("Can't create new user");
+    public Customer createNewCustomer(Customer customer) {
+        if (customerRepository.existsByEmail(customer.getEmail())){
+            throw new RuntimeException("User email has existed");
         }
-
+        return customerRepository.save(customer);
     }
 
     public List<Customer> getAllCustomers() {
@@ -40,7 +36,7 @@ public class CustomerService {
 
     public Customer findCustomerById(Long id) {
         Customer customer = customerRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Employee is not exist with given id: " + id));
+                .orElseThrow(() -> new RuntimeException("Employee is not exist with given id: " + id));
 
         return customer;
     }
