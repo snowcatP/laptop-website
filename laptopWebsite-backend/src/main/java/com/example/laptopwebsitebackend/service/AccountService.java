@@ -27,9 +27,6 @@ public class AccountService {
 
         String password = newAccount.getPassword();
 
-//        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-//        newAccount.setPassword(passwordEncoder.encode(password));
-
         newAccount.setPermission(userPermission);
         return accountRepository.save(newAccount);
     }

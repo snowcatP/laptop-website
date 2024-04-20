@@ -1,19 +1,28 @@
-package com.example.laptopwebsitebackend.dto;
+package com.example.laptopwebsitebackend.dto.request;
 
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class RegistrationRequest {
+@NoArgsConstructor
+@Builder
+public class StaffRequest {
+
     private String firstName;
+
     private String lastName;
+
     private String email;
+
     private String phone;
+
     private String address;
-    @Size(min = 8, message = "Password must be at least 8 characters")
+
+    private Double salary;
+
     private String password;
+
 }

@@ -7,8 +7,10 @@ import com.example.laptopwebsitebackend.entity.Order;
 import com.example.laptopwebsitebackend.repository.CustomerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.NoResultException;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,5 +41,16 @@ public class CustomerService {
                 .orElseThrow(() -> new RuntimeException("Employee is not exist with given id: " + id));
 
         return customer;
+    }
+
+
+    public Customer getMyProfile() {
+        var context = SecurityContextHolder.getContext();
+        String name = context.getAuthentication().getName();
+
+        Customer myProfile = customerRepository.findByEmail(name)
+                .orElseThrow(() -> new RuntimeException("User not exist"));
+
+        return myProfile;
     }
 }

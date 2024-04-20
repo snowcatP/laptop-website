@@ -22,16 +22,4 @@ public class Account {
     @ManyToOne
     @JoinColumn(name = "permission_id")
     private Permission permission;
-
-    @OneToOne(
-            mappedBy = "account",
-            cascade = CascadeType.ALL
-    )
-    private Staff staff;
-
-    @OneToOne(
-            mappedBy = "account",
-            cascade = CascadeType.ALL
-    )
-    private Customer customer;
 }
