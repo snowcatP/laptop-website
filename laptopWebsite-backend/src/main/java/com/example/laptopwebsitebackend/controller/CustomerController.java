@@ -1,6 +1,10 @@
 package com.example.laptopwebsitebackend.controller;
 
+import com.example.laptopwebsitebackend.dto.CustomerRequest;
+import com.example.laptopwebsitebackend.dto.ProductRequest;
+import com.example.laptopwebsitebackend.entity.Configuration;
 import com.example.laptopwebsitebackend.entity.Customer;
+import com.example.laptopwebsitebackend.entity.Product;
 import com.example.laptopwebsitebackend.service.CustomerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,5 +55,21 @@ public class CustomerController {
     @GetMapping("/my-profile")
     public ResponseEntity<Customer> getMyProfile() {
         return new ResponseEntity<>(customerService.getMyProfile(), HttpStatus.OK);
+    }
+    @PutMapping(value = "/edit/{id}")
+    public void update_Customer( @PathVariable(name = "id") Long id,@RequestBody CustomerRequest customerRequest) {
+
+        Customer customer= new Customer();
+        customer.setFirstName(customerRequest.getFirstName());
+        customer.setLastName(customerRequest.getLastName());
+        customer.setEmail(customerRequest.getEmail());
+        customer.setAddress(customerRequest.getAddress());
+        customer.setPhone(customerRequest.getPhone());
+        customerService.updateCustomer(customer, id);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void delete_Customer(@PathVariable("id") Long id) {
+        customerService.deleteCustomer(id);
     }
 }
