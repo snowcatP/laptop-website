@@ -1,6 +1,6 @@
 package com.example.laptopwebsitebackend.controller;
 
-import com.example.laptopwebsitebackend.dto.RegistrationRequest;
+import com.example.laptopwebsitebackend.dto.request.RegistrationRequest;
 import com.example.laptopwebsitebackend.entity.Account;
 import com.example.laptopwebsitebackend.entity.Cart;
 import com.example.laptopwebsitebackend.entity.Customer;
@@ -25,21 +25,21 @@ public class RegistrationController {
     @Autowired
     private CustomerService customerService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @PostMapping("/register")
     public ResponseEntity<?> customerRegister(@RequestBody @Valid RegistrationRequest registrationRequest) {
 
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        String password = registrationRequest.getPassword();
-
         Account newAccount = new Account();
         newAccount.setUsername(registrationRequest.getEmail());
-        newAccount.setPassword(passwordEncoder.encode(password));
+        newAccount.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
 
         Customer newCustomer = new Customer();
         newCustomer.setFirstName(registrationRequest.getFirstName());
         newCustomer.setLastName(registrationRequest.getLastName());
         newCustomer.setAddress(registrationRequest.getAddress());
-        newCustomer.setAddress(registrationRequest.getAddress());
+        newCustomer.setEmail(registrationRequest.getEmail());
         newCustomer.setPhone(registrationRequest.getPhone());
         newCustomer.setCart(new Cart());
 

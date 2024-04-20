@@ -1,28 +1,27 @@
 package com.example.laptopwebsitebackend.controller;
 
-import com.example.laptopwebsitebackend.dto.CustomerRequest;
-import com.example.laptopwebsitebackend.dto.ProductRequest;
-import com.example.laptopwebsitebackend.entity.Configuration;
 import com.example.laptopwebsitebackend.entity.Customer;
-import com.example.laptopwebsitebackend.entity.Product;
 import com.example.laptopwebsitebackend.service.CustomerService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/user")
+@Slf4j
 public class CustomerController {
 
     @Autowired
     private CustomerService customerService;
 
     @PostMapping
-    private ResponseEntity<Customer> createNewUser(@RequestBody Customer customer){
+    public ResponseEntity<Customer> createNewUser(@RequestBody Customer customer){
 
         Customer newCustomer = customerService.createNewCustomer(customer);
 
@@ -30,33 +29,27 @@ public class CustomerController {
     }
 
     @GetMapping
-    private ResponseEntity<List<Customer>> getAllCustomers(){
+    public ResponseEntity<List<Customer>> getAllCustomers(){
+
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        log.info("Username: {}", authentication.getName());
+        authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
+
         List<Customer> allCustomers = customerService.getAllCustomers();
 
         return new ResponseEntity<>(allCustomers, HttpStatus.OK);
     }
 
     @GetMapping({"/{id}"})
-    private ResponseEntity<Customer> getUserById(@PathVariable("id") Long customerId) {
+    public ResponseEntity<Customer> getUserById(@PathVariable("id") Long customerId) {
         Customer customer = customerService.findCustomerById(customerId);
 
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/edit/{id}")
-    public void update_Customer( @PathVariable(name = "id") Long id,@RequestBody CustomerRequest customerRequest) {
-
-        Customer customer= new Customer();
-        customer.setFirstName(customerRequest.getFirstName());
-        customer.setLastName(customerRequest.getLastName());
-        customer.setEmail(customerRequest.getEmail());
-        customer.setAddress(customerRequest.getAddress());
-        customer.setPhone(customerRequest.getPhone());
-        customerService.updateCustomer(customer, id);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public void delete_Customer(@PathVariable("id") Long id) {
-        customerService.deleteCustomer(id);
+    @GetMapping("/my-profile")
+    public ResponseEntity<Customer> getMyProfile() {
+        return new ResponseEntity<>(customerService.getMyProfile(), HttpStatus.OK);
     }
 }
