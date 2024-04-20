@@ -25,8 +25,8 @@ public class Configuration {
 
     private String graphicCard;
 
-    @OneToOne(
-            mappedBy = "configuration"
-    )
-    private Product product;
+//    @OneToOne(
+//            mappedBy = "configuration"
+//    )
+//    private Product product;
 }
