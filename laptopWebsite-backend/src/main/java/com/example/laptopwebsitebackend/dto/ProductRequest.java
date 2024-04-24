@@ -14,6 +14,8 @@ public class ProductRequest {
 
     private int quantity;
 
+    private String category;
+
     private String brand;
 
     private int ram;
