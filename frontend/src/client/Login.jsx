@@ -1,11 +1,15 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import Header from "./components/Header";
 import Navigation from "./components/Navigation";
 import Letter from "./components/Letter";
 import Footer from "./components/Footer";
 import { Link } from "react-router-dom";
 import { Form } from "react-bootstrap";
+
 const Login = () => {
+
+  //const [user, setUser] = useState()
+
   return (
     <>
       <Header />
@@ -20,13 +24,13 @@ const Login = () => {
             {/* Order Details */}
             <div className="col-md-3"></div>
             <div className="col-md-6 order-details">
-              <Form method="post" action="/events" style={{ minHeight:"40vh" }}>
+              <Form method="post" action="/login" style={{ minHeight:"40vh" }}>
                 <div className="section-title text-center">
                   <h2 className="title">Login</h2>
                 </div>
                 <div className="caption">
                   <div className="form-group">
-                    <label htmlFor="username"><i className="fa fa-user"/> Username</label>
+                    <label htmlFor="username"><i className="fa fa-user"/> Username <span style={{color:"red"}}>*</span></label>
                     <input
                       className="input"
                       type="text"
@@ -35,7 +39,7 @@ const Login = () => {
                     />
                   </div>
                   <div className="form-group">
-                    <label htmlFor="password"><i className="fa fa-lock"/> Password</label>
+                    <label htmlFor="password"><i className="fa fa-lock"/> Password <span style={{color:"red"}}>*</span></label>
                     <input
                       className="input"
                       type="text"

@@ -27,7 +27,7 @@ public class ProductService {
     }
 
     public Product addNewProduct(Product product){
-        if (productRepository.existsByProduct(product.getProductName())){
+        if (productRepository.existsByProductName(product.getProductName())){
             throw new RuntimeException("Product has existed");
         }
         return productRepository.save(product);

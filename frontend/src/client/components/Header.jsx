@@ -1,10 +1,24 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { Link } from "react-router-dom";
 
 
 const Header = () => {
+
+  const [load, setLoad] = useState(false);
+
+  useEffect(() => {
+
+    const loadCSS = async () => {
+      await import("./assets/css/style.css")
+      setLoad(true)
+    }
+
+    loadCSS()
+  }, [])
+
   return (
-    <>
+    <div style={{visibility: load ? 'visible' : 'hidden'}}>
+      
       {/* HEADER */}
       <header>
         {/* TOP HEADER */}
@@ -34,7 +48,7 @@ const Header = () => {
                 </Link>
               </li>
               <li>
-                <Link to="#">
+                <Link to="/user/profile">
                   <i className="fa fa-user-o" /> My Account
                 </Link>
               </li>
@@ -127,7 +141,7 @@ const Header = () => {
                         <h5>SUBTOTAL: $2940.00</h5>
                       </div>
                       <div className="cart-btns">
-                        <Link to="/cart">View Cart</Link>
+                        <Link to="/user/cart">View Cart</Link>
                         <Link to="/checkout">
                           Checkout <i className="fa fa-arrow-circle-right" />
                         </Link>
@@ -155,7 +169,7 @@ const Header = () => {
         {/* /MAIN HEADER */}
       </header>
       {/* /HEADER */}
-    </>
+    </div>
   );
 };
 

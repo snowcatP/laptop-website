@@ -32,7 +32,7 @@ const Register = () => {
                 <div className="form-group" style={{ display: "flex" }}>
                     <div style={{ flex: 1, marginRight: "10px" }}>
                       <label htmlFor="firstname">
-                        <i className="fa fa-user" /> First name
+                        <i className="fa fa-user" /> First name <span style={{color:"red"}}>*</span>
                       </label>
                       <input
                         className="input"
@@ -44,7 +44,7 @@ const Register = () => {
                     </div>
                     <div style={{ flex: 1 }}>
                       <label htmlFor="lastname">
-                        <i className="fa fa-user" /> Last name
+                        <i className="fa fa-user" /> Last name <span style={{color:"red"}}>*</span>
                       </label>
                       <input
                         className="input"
@@ -80,7 +80,7 @@ const Register = () => {
                   </div>
                   <div className="form-group">
                     <label htmlFor="password">
-                      <i className="fa fa-lock" /> Email or username
+                      <i className="fa fa-lock" /> Email or username <span style={{color:"red"}}>*</span>
                     </label>
                     <input
                       className="input"
@@ -91,7 +91,7 @@ const Register = () => {
                   </div>
                   <div className="form-group">
                     <label htmlFor="password">
-                      <i className="fa fa-lock" /> Password
+                      <i className="fa fa-lock" /> Password <span style={{color:"red"}}>*</span>
                     </label>
                     <input
                       className="input"

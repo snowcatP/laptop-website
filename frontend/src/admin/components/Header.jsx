@@ -1,9 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const Header = () => {
+  const [load, setLoad] = useState(false)
+  
+  useEffect(() => {
+
+    const loadCSS = async () => {
+      await import("./assets/css/admin.css")
+      await import("./assets/css/bootstrap-admin.min.css")
+      setLoad(true)
+    }
+    loadCSS()
+    
+  }, [])
+
   return (
-    <>
+    <div style={{visibility: load ? 'visible' : 'hidden'}}>
       {/* ======= Header ======= */}
       <div
         id="header"
@@ -283,7 +296,7 @@ const Header = () => {
         {/* End Icons Navigation */}
       </div>
       {/* End Header */}
-    </>
+    </div>
   );
 };
 

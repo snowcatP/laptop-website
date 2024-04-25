@@ -28,7 +28,7 @@ const ForgotPassword = () => {
                 <div className="caption">
                   <p style={{textAlign:'center'}}>Provide the email address associated with your account to recover your password.</p>
                   <div className="form-group">
-                    <label htmlFor="username"><i className="fa fa-user"/> Email</label>
+                    <label htmlFor="username"><i className="fa fa-user"/> Email <span style={{color:"red"}}>*</span></label>
                     <input
                       className="input"
                       type="text"
