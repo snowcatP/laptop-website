@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/product")
@@ -40,6 +41,7 @@ public class ProductController {
         Product newProduct = new Product();
         newProduct.setProductName(productRequest.getProductName());
         newProduct.setQuantity(productRequest.getQuantity());
+        newProduct.setCategory(productRequest.getCategory());
         newProduct.setPrice(productRequest.getPrice());
         newProduct.setBrand(productRequest.getBrand());
         newProduct.setConfiguration(configuration);
@@ -81,13 +83,29 @@ public class ProductController {
         product.setQuantity(productRequest.getQuantity());
         product.setPrice(productRequest.getPrice());
         product.setBrand(productRequest.getBrand());
+        product.setCategory(productRequest.getCategory());
 
         productService.updateProduct(product, id);
     }
 
     @DeleteMapping("/delete/{id}")
     public void delete_Product(@PathVariable("id") Long id) {
+
         productService.deleteProduct(id);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Product>> searchProducts(
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "brand", required = false) String brand,
+            @RequestParam(value = "minPrice", required = false) Double minPrice,
+            @RequestParam(value = "maxPrice", required = false) Double maxPrice){
+
+        // Perform search based on provided parameters
+        List<Product> foundProducts = productService.searchProducts(keyword,category, brand, minPrice, maxPrice);
+        return new ResponseEntity<>(foundProducts, HttpStatus.OK);
+    }
+
 
 }

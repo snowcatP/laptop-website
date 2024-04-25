@@ -23,6 +23,8 @@ public class Product {
 
     private String brand;
 
+    private String category;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "configuration_id")
     private Configuration configuration;
