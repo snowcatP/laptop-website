@@ -51,4 +51,8 @@ public class CommentService {
 
         return comment;
     }
+
+    public List<Comment> getListCommentByProductID(Long product_id){
+        return commentRepository.findByProduct_ProductId(product_id);
+    }
 }

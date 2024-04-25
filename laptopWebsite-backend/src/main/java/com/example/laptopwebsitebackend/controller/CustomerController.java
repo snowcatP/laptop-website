@@ -1,10 +1,6 @@
 package com.example.laptopwebsitebackend.controller;
 
-import com.example.laptopwebsitebackend.dto.CustomerRequest;
-import com.example.laptopwebsitebackend.dto.ProductRequest;
-import com.example.laptopwebsitebackend.entity.Configuration;
 import com.example.laptopwebsitebackend.entity.Customer;
-import com.example.laptopwebsitebackend.entity.Product;
 import com.example.laptopwebsitebackend.service.CustomerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -5,13 +5,17 @@ import com.example.laptopwebsitebackend.entity.Customer;
 import com.example.laptopwebsitebackend.entity.Product;
 import com.example.laptopwebsitebackend.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Predicate;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.awt.print.Pageable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 
 @Service
 public class ProductService {
@@ -60,6 +64,11 @@ public class ProductService {
             dbProduct.setBrand(product.getBrand());
         }
 
+        if(product.getCategory() != null && product.getCategory().length()>0
+                && !Objects.equals(dbProduct.getCategory(),product.getCategory())){
+            dbProduct.setCategory(product.getCategory());
+        }
+
         return productRepository.save(dbProduct);
     }
 
@@ -83,7 +92,51 @@ public class ProductService {
 
     public List<Product> get_Top_Nine_Highest_Priced_Products() {
         // Tạo một trang đầu tiên có 9 sản phẩm, sắp xếp theo giá giảm dần
-        PageRequest pageable = PageRequest.of(0, 6, Sort.by("price").descending());
+        PageRequest pageable = PageRequest.of(0, 9, Sort.by("price").descending());
         return productRepository.findAll(pageable).getContent();
     }
+
+
+    public List<Product> searchProducts(String keyword,String category, String brand, Double minPrice, Double maxPrice) {
+
+        if (keyword!=null){
+           return productRepository.searchByKeyword(keyword);
+        }
+        if( brand!=null && category != null && (minPrice!= null && maxPrice != null)){
+            return productRepository.findProductsByBrandAndCategoryAndPriceBetween(brand,category,minPrice,maxPrice);
+        }
+
+        if(brand!=null && category != null){
+            return productRepository.findProductsByBrandAndCategory(brand,category);
+        }
+
+        if(brand!=null && (minPrice!=null && maxPrice!=null)){
+            return productRepository.findProductsByBrandAndPriceBetween(brand,minPrice,maxPrice);
+        }
+
+        if(category!=null && (minPrice!=null && maxPrice!=null)){
+            return productRepository.findProductsByCategoryAndPriceBetween(category,minPrice,maxPrice);
+        }
+        if (category != null) {
+
+            // Tìm kiếm theo category
+            return productRepository.findProductByCategory(category);
+        }
+
+        if (brand !=null) {
+
+            return productRepository.findProductByBrand(brand);
+
+        }
+
+        if (minPrice != null && maxPrice != null) {
+
+            return productRepository.findProductByPriceBetween(minPrice,maxPrice);
+
+        }
+        
+            return productRepository.findAll();
+    }
+
+
 }

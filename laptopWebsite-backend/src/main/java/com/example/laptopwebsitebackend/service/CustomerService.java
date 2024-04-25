@@ -1,6 +1,9 @@
 package com.example.laptopwebsitebackend.service;
 
-import com.example.laptopwebsitebackend.entity.*;
+import com.example.laptopwebsitebackend.entity.Bill;
+import com.example.laptopwebsitebackend.entity.Cart;
+import com.example.laptopwebsitebackend.entity.Customer;
+import com.example.laptopwebsitebackend.entity.Order;
 import com.example.laptopwebsitebackend.repository.CustomerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.NoResultException;
@@ -14,10 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class CustomerService {
@@ -58,51 +58,15 @@ public class CustomerService {
         Customer dbcustomer = this.customerRepository.findById(customer_id).
                 orElseThrow(() -> new RuntimeException("Could not find request"));
 
-        if(customer.getFirstName() != null && customer.getFirstName().length()>0
-                && !Objects.equals(dbcustomer.getFirstName(),customer.getFirstName())){
-            dbcustomer.setFirstName(customer.getFirstName());
-        }
-
-        if(customer.getLastName() != null && customer.getLastName().length()>0
-                && !Objects.equals(dbcustomer.getLastName(),customer.getLastName())){
-            dbcustomer.setLastName(customer.getLastName());
-        }
-
-        if(customer.getEmail() != null && customer.getEmail().length()>0
-                && !Objects.equals(dbcustomer.getEmail(),customer.getEmail())){
-            String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
-            Pattern pattern = Pattern.compile(emailRegex);
-            Matcher matcher = pattern.matcher(customer.getEmail());
-            if (!matcher.matches()) {
-                throw new IllegalArgumentException("Invalid email format");
-            }else {
-                dbcustomer.setEmail(customer.getEmail());
-            }
-        }
-
-        if(customer.getPhone() != null && customer.getPhone().length()>0
-                && !Objects.equals(dbcustomer.getPhone(),customer.getPhone())){
-            String phoneRegex = "^[0-9]{10,11}$";
-            Pattern pattern = Pattern.compile(phoneRegex);
-            Matcher matcher = pattern.matcher(customer.getPhone());
-            if (!matcher.matches()) {
-                throw new IllegalArgumentException("Invalid phone number format");
-            } else {
-                dbcustomer.setPhone(customer.getPhone());
-            }
-        }
-
-        if(customer.getAddress() != null && customer.getAddress().length()>0
-                && !Objects.equals(dbcustomer.getAddress(),customer.getAddress())){
-            dbcustomer.setAddress(customer.getAddress());
-        }
-
-
-        return customerRepository.save(dbcustomer);
     }
+    public Customer getMyProfile() {
+        var context = SecurityContextHolder.getContext();
+        String name = context.getAuthentication().getName();
 
-    public void deleteCustomer(Long customer_id){
+        Customer myProfile = customerRepository.findByEmail(name)
+                .orElseThrow(() -> new RuntimeException("User not exist"));
 
-        customerRepository.deleteById(customer_id);
+        return myProfile;
     }
+    
 }
