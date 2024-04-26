@@ -125,27 +125,27 @@
 		})
 	});
 
-	var priceInputMax = document.getElementById('price-max'),
-			priceInputMin = document.getElementById('price-min');
+	// var priceInputMax = document.getElementById('price-max'),
+	// 		priceInputMin = document.getElementById('price-min');
 
-	priceInputMax.onChange(function(event) {
-		updatePriceSlider($(event.target).parent(), event.target.value);
-	});
+	// priceInputMax.onChange(function(event) {
+	// 	updatePriceSlider($(event.target).parent(), event.target.value);
+	// });
 			  
-	// Instead of priceInputMin.addEventListener('change', function(){...});
-	priceInputMin.onChange(function(event) {
-		updatePriceSlider($(event.target).parent(), event.target.value);
-	});
+	// // Instead of priceInputMin.addEventListener('change', function(){...});
+	// priceInputMin.onChange(function(event) {
+	// 	updatePriceSlider($(event.target).parent(), event.target.value);
+	// });
 
-	function updatePriceSlider(elem , value) {
-		if ( elem.hasClass('price-min') ) {
-			console.log('min')
-			priceSlider.noUiSlider.set([value, null]);
-		} else if ( elem.hasClass('price-max')) {
-			console.log('max')
-			priceSlider.noUiSlider.set([null, value]);
-		}
-	}
+	// function updatePriceSlider(elem , value) {
+	// 	if ( elem.hasClass('price-min') ) {
+	// 		console.log('min')
+	// 		priceSlider.noUiSlider.set([value, null]);
+	// 	} else if ( elem.hasClass('price-max')) {
+	// 		console.log('max')
+	// 		priceSlider.noUiSlider.set([null, value]);
+	// 	}
+	// }
 
 	// Price Slider
 	var priceSlider = document.getElementById('price-slider');

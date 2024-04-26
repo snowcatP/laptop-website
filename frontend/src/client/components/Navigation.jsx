@@ -12,7 +12,7 @@ const Navigation = () => {
             {/* NAV */}
             <ul className="main-nav nav navbar-nav">
               <li className="active">
-                <Link to="#">Home</Link>
+                <Link to="/">Home</Link>
               </li>
               <li>
                 <Link to="#">Hot Deals</Link>
