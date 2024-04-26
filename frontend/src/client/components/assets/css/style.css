@@ -61,6 +61,19 @@ body {
   color: #333;
 }
 
+span.error-message {
+  color: red;
+  display: none;
+}
+
+input:invalid[focused="true"] ~ span.error-message{
+  display: block;
+}
+
+input:invalid ~ span.error-message{
+  display: block;
+}
+
 h1, h2, h3, h4, h5, h6 {
   color: #2B2D42;
   font-weight: 700;

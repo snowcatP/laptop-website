@@ -1,25 +1,36 @@
 import React, {useEffect, useState} from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+//import './assets-copy/css/style.css'
 
-
-const Header = () => {
+const HeaderUser = () => {
   const [load, setLoad] = useState(false);
+  const location = useLocation()
 
   useEffect(() => {
 
     const loadCSS = async () => {
-      await import("./assets/css/style.css")
-      await import("./assets/css/font-awesome.min.css")
+ 
+      // if (location.pathname.includes("/user/"))
+      //   //await import("../assets/css/style.css")
+      //   console.log("")
+      // else
+
+      try {
+        await import("../components/assets/css/style.css")
+
+      } catch (e) {
+        console.log(e)
+      }
       setLoad(true)
     }
 
     loadCSS()
-  }, []);
+  }, [])
 
   return (
      <div style={{visibility: load ? 'visible' : 'hidden'}}>
-    {/* HEADER */}
-      
+     
+      {/* HEADER */}
       <header>
         {/* TOP HEADER */}
         <div id="top-header">
@@ -66,7 +77,7 @@ const Header = () => {
               <div className="col-md-3">
                 <div className="header-logo">
                   <Link to="/" className="logo">
-                    <img src="../assets/img/logo.png" alt="" />
+                    <img src="./assets/img/logo.png" alt="" />
                   </Link>
                 </div>
               </div>
@@ -105,7 +116,7 @@ const Header = () => {
                       <div className="cart-list">
                         <div className="product-widget">
                           <div className="product-img">
-                            <img src="../assets/img/product01.png" alt="" />
+                            <img src="./assets/img/product01.png" alt="" />
                           </div>
                           <div className="product-body">
                             <h3 className="product-name">
@@ -121,7 +132,7 @@ const Header = () => {
                         </div>
                         <div className="product-widget">
                           <div className="product-img">
-                            <img src="../assets/img/product02.png" alt="" />
+                            <img src="./assets/img/product02.png" alt="" />
                           </div>
                           <div className="product-body">
                             <h3 className="product-name">
@@ -151,7 +162,7 @@ const Header = () => {
                   {/* /Cart */}
                   {/* Account */}
                   <div>
-                    <Link to="/auth/login">
+                    <Link to="/login">
                       <i className="fa fa-user" />
                       <span>Account</span>
                     </Link>
@@ -173,4 +184,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default HeaderUser;

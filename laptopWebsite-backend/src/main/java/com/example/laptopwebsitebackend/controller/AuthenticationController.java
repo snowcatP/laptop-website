@@ -7,12 +7,10 @@ import com.example.laptopwebsitebackend.dto.response.IntrospectResponse;
 import com.example.laptopwebsitebackend.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/auth")
 public class AuthenticationController {
 
@@ -21,6 +19,10 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) throws Exception {
+        if (request == null || request.getUsername().isEmpty() || request.getPassword().isEmpty()){
+            throw new RuntimeException("Email and password must be full filled");
+        }
+
         AuthenticationResponse result = authenticationService.authenticate(request);
 
         return ResponseEntity.ok(result);

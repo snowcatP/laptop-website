@@ -8,6 +8,7 @@ import UserWarranties from './user/UserWarranties';
 import UserChangePassword from './user/UserChangePassword';
 
 const UserRoutes = () => {
+
   return (
     <Routes>
         <Route path='/profile' element={<UserProfile/>}/>

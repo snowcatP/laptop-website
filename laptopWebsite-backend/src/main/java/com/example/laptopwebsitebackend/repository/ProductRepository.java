@@ -15,11 +15,6 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product,Long> {
 
-<<<<<<< HEAD
-    Boolean existsByProductName(String name);
-=======
-
-
     Boolean existsByProductName(String name);
 
 
@@ -47,6 +42,4 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
             " OR p.configuration.screen = CAST(:keyword AS double)")
     List<Product> searchByKeyword(@Param("keyword") String keyword);
 
-
->>>>>>> 70a7ac8429b1b8225bf3a26f8142c262898bdc6e
 }

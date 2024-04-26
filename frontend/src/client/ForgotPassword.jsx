@@ -1,12 +1,34 @@
-import React from 'react'
+import React, {useState} from 'react'
 import Header from './components/Header'
 import Navigation from './components/Navigation'
 import Letter from './components/Letter'
 import Footer from './components/Footer'
 import { Link } from 'react-router-dom'
 import { Form } from 'react-bootstrap'
+import FormInput from './components/FormInput'
 
 const ForgotPassword = () => {
+
+  const [values, setValues] = useState({
+    username: ""
+  });
+
+
+  const input = {
+    id: 1,
+    name: "Username",
+    type: "email",
+    label: "Username",
+    placeholder: "Username",
+    errorMessage: "Username shoule be in email type",
+    required: true,
+    focused: false
+  }
+
+  const onChange = (e) => {
+    setValues({ ...values, [e.target.name]: e.target.value });
+  };
+
   return (
     <>
       <Header/>
@@ -28,19 +50,17 @@ const ForgotPassword = () => {
                 <div className="caption">
                   <p style={{textAlign:'center'}}>Provide the email address associated with your account to recover your password.</p>
                   <div className="form-group">
-                    <label htmlFor="username"><i className="fa fa-user"/> Email <span style={{color:"red"}}>*</span></label>
-                    <input
-                      className="input"
-                      type="text"
-                      name="username"
-                      placeholder="Input email"
+                    <FormInput 
+                      {...input}
+                      value = {values[input.name]}
+                      onChange={onChange}
                     />
                   </div>
                   <div
                     className="form-group"
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
-                    <Link to="/login" style={{ alignSelf: "flex-start" }}>
+                    <Link to="/auth/login" style={{ alignSelf: "flex-start" }}>
                       Login
                     </Link>
                     <Link to="/register" style={{ alignSelf: "flex-end" }}>
