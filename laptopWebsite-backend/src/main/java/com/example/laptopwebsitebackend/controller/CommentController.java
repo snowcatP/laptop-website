@@ -1,9 +1,7 @@
 package com.example.laptopwebsitebackend.controller;
 
 import com.example.laptopwebsitebackend.dto.CommentRequest;
-import com.example.laptopwebsitebackend.dto.DiscountRequest;
 import com.example.laptopwebsitebackend.entity.Comment;
-import com.example.laptopwebsitebackend.entity.Discount;
 import com.example.laptopwebsitebackend.service.CommentService;
 import com.example.laptopwebsitebackend.service.CustomerService;
 import com.example.laptopwebsitebackend.service.ProductService;

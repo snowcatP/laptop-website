@@ -1,7 +1,7 @@
 package com.example.laptopwebsitebackend.controller;
 
-import com.example.laptopwebsitebackend.dto.DiscountRequest;
-import com.example.laptopwebsitebackend.dto.ProductRequest;
+import com.example.laptopwebsitebackend.dto.request.DiscountRequest;
+import com.example.laptopwebsitebackend.dto.request.ProductRequest;
 import com.example.laptopwebsitebackend.dto.request.WarrantyRequest;
 import com.example.laptopwebsitebackend.entity.Discount;
 import com.example.laptopwebsitebackend.entity.Warranty;

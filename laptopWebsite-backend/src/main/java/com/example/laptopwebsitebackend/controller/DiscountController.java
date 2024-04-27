@@ -1,10 +1,7 @@
 package com.example.laptopwebsitebackend.controller;
 
-import com.example.laptopwebsitebackend.dto.DiscountRequest;
-import com.example.laptopwebsitebackend.dto.ProductRequest;
-import com.example.laptopwebsitebackend.entity.Configuration;
+import com.example.laptopwebsitebackend.dto.request.DiscountRequest;
 import com.example.laptopwebsitebackend.entity.Discount;
-import com.example.laptopwebsitebackend.entity.Product;
 import com.example.laptopwebsitebackend.service.DiscountService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

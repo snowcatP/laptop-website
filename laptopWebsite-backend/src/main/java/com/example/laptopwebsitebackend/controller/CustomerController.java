@@ -1,6 +1,6 @@
 package com.example.laptopwebsitebackend.controller;
 
-import com.example.laptopwebsitebackend.dto.CustomerRequest;
+import com.example.laptopwebsitebackend.dto.request.CustomerRequest;
 import com.example.laptopwebsitebackend.entity.Customer;
 import com.example.laptopwebsitebackend.service.CustomerService;
 import lombok.extern.slf4j.Slf4j;

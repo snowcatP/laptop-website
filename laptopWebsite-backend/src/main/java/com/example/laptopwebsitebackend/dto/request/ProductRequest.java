@@ -1,4 +1,4 @@
-package com.example.laptopwebsitebackend.dto;
+package com.example.laptopwebsitebackend.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
