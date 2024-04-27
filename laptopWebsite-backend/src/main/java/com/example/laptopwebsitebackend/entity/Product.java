@@ -25,6 +25,14 @@ public class Product {
 
     private String category;
 
+    private String image1;
+
+    private String image2;
+
+    private String image3;
+
+    private String image4;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "configuration_id")
     private Configuration configuration;
