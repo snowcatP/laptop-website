@@ -58,15 +58,15 @@ public class CustomerService {
         Customer dbcustomer = this.customerRepository.findById(customer_id).
                 orElseThrow(() -> new RuntimeException("Could not find request"));
 
+        return dbcustomer;
     }
-    public Customer getMyProfile() {
-        var context = SecurityContextHolder.getContext();
-        String name = context.getAuthentication().getName();
 
-        Customer myProfile = customerRepository.findByEmail(name)
-                .orElseThrow(() -> new RuntimeException("User not exist"));
+    public String deleteCustomer(Long customer_id){
+        if (!customerRepository.existsById(customer_id)) {
+            throw new RuntimeException("Can't delete customer not exist");
+        }
 
-        return myProfile;
+        customerRepository.deleteById(customer_id);
+        return "Delete customer success";
     }
-    
 }

@@ -1,5 +1,6 @@
 package com.example.laptopwebsitebackend.controller;
 
+import com.example.laptopwebsitebackend.dto.CustomerRequest;
 import com.example.laptopwebsitebackend.entity.Customer;
 import com.example.laptopwebsitebackend.service.CustomerService;
 import lombok.extern.slf4j.Slf4j;
@@ -65,7 +66,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public void delete_Customer(@PathVariable("id") Long id) {
-        customerService.deleteCustomer(id);
+    public ResponseEntity<String> delete_Customer(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(customerService.deleteCustomer(id));
     }
 }
