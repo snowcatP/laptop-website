@@ -1,4 +1,4 @@
-package com.example.laptopwebsitebackend.dto;
+package com.example.laptopwebsitebackend.dto.request;
 
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class DiscountRequest {
     private int discountValue;
 

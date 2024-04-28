@@ -69,6 +69,27 @@ public class ProductService {
             dbProduct.setCategory(product.getCategory());
         }
 
+        if(product.getImage1() != null && product.getImage1().length()>0
+                && !Objects.equals(dbProduct.getImage1(),product.getImage1())){{
+                    dbProduct.setImage1(product.getImage1());
+        }}
+
+        if(product.getImage2() != null && product.getImage2().length()>0
+                && !Objects.equals(dbProduct.getImage2(),product.getImage2())){{
+            dbProduct.setImage2(product.getImage2());
+        }}
+
+        if(product.getImage3() != null && product.getImage3().length()>0
+                && !Objects.equals(dbProduct.getImage3(),product.getImage3())){{
+            dbProduct.setImage3(product.getImage3());
+        }}
+
+        if(product.getImage4() != null && product.getImage4().length()>0
+                && !Objects.equals(dbProduct.getImage4(),product.getImage4())){{
+            dbProduct.setImage4(product.getImage4());
+        }}
+
+
         return productRepository.save(dbProduct);
     }
 

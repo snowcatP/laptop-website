@@ -8,10 +8,10 @@ import { Form } from "react-bootstrap";
 
 const Login = () => {
 
-  const [values, setValues] = useState({
+  const [form, setForm] = useState({
     username: "",
     password: ""
-  });
+  })
 
   const [focusedInput, setFocusedInput] = useState(null);
 
@@ -22,7 +22,7 @@ const Login = () => {
       type: "email",
       label: "Username",
       placeholder: "Username",
-      errorMessage: "Username shoule be in email type",
+      errorMessage: "Username shoule be in email format",
       required: true,
       focused: false
     },
@@ -40,7 +40,7 @@ const Login = () => {
   ]
 
   const onChangeInput = (e) => {
-    setValues({...values, [e.target.name]: e.target.value})
+    setForm({...form, [e.target.name]: e.target.value})
   }
 
   const onFocusInput = (inputName) => {
@@ -50,6 +50,12 @@ const Login = () => {
   const onBlurInput = () => {
     setFocusedInput(null);
   };
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    console.log(form)
+  }
 
   return (
     <>
@@ -65,7 +71,7 @@ const Login = () => {
             {/* Order Details */}
             <div className="col-md-3"></div>
             <div className="col-md-6 order-details">
-              <Form method="post" action="/auth/login" style={{ minHeight:"40vh" }}>
+              <Form onSubmit={handleSubmit} style={{ minHeight:"40vh" }}>
                 <div className="section-title text-center">
                   <h2 className="title">Login</h2>
                 </div>
@@ -80,7 +86,7 @@ const Login = () => {
                         type = {input.type}
                         name = {input.name}
                         placeholder = {input.placeholder}
-                        value = {values[input.name]}
+                        value = {form[input.name]}
                         onChange={onChangeInput}
                         pattern={input.pattern}
                         required={input.required}

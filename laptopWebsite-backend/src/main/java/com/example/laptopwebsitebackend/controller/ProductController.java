@@ -1,6 +1,6 @@
 package com.example.laptopwebsitebackend.controller;
 
-import com.example.laptopwebsitebackend.dto.ProductRequest;
+import com.example.laptopwebsitebackend.dto.request.ProductRequest;
 import com.example.laptopwebsitebackend.entity.Configuration;
 import com.example.laptopwebsitebackend.entity.Customer;
 import com.example.laptopwebsitebackend.entity.Product;
@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,6 +45,10 @@ public class ProductController {
         newProduct.setCategory(productRequest.getCategory());
         newProduct.setPrice(productRequest.getPrice());
         newProduct.setBrand(productRequest.getBrand());
+        newProduct.setImage1(productRequest.getImage1());
+        newProduct.setImage2(productRequest.getImage2());
+        newProduct.setImage3(productRequest.getImage3());
+        newProduct.setImage4(productRequest.getImage4());
         newProduct.setConfiguration(configuration);
 
         productService.addNewProduct(newProduct);
@@ -83,6 +88,10 @@ public class ProductController {
         product.setQuantity(productRequest.getQuantity());
         product.setPrice(productRequest.getPrice());
         product.setBrand(productRequest.getBrand());
+        product.setImage1(productRequest.getImage1());
+        product.setImage2(productRequest.getImage2());
+        product.setImage3(productRequest.getImage3());
+        product.setImage4(productRequest.getImage4());
         product.setCategory(productRequest.getCategory());
 
         productService.updateProduct(product, id);

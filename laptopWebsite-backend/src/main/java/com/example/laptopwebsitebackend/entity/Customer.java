@@ -48,9 +48,9 @@ public class Customer{
     )
     private List<Order> orders;
 
-    @OneToMany(
-            mappedBy = "customer",
-            cascade = CascadeType.ALL
-    )
-    private List<Warranty> warranties;
+//    @OneToMany(
+//            mappedBy = "customer",
+//            cascade = CascadeType.ALL
+//    )
+//    private List<Warranty> warranties;
 }

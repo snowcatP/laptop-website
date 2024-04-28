@@ -25,9 +25,16 @@ public class AccountService {
     public Account createNewAccount(Account newAccount, String permission) {
         Permission userPermission = permissionService.findByPermissionName(permission);
 
-        String password = newAccount.getPassword();
+        if (accountRepository.findByUsername(newAccount.getUsername()).isPresent()){
+            throw new RuntimeException("Username been used");
+        }
 
         newAccount.setPermission(userPermission);
         return accountRepository.save(newAccount);
+    }
+
+    public Account findByUsername(String username) {
+        return accountRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User is not exist."));
     }
 }

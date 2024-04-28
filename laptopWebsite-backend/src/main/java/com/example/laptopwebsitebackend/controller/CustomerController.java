@@ -1,6 +1,6 @@
 package com.example.laptopwebsitebackend.controller;
 
-import com.example.laptopwebsitebackend.dto.CustomerRequest;
+import com.example.laptopwebsitebackend.dto.request.CustomerRequest;
 import com.example.laptopwebsitebackend.entity.Customer;
 import com.example.laptopwebsitebackend.service.CustomerService;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,6 @@ public class CustomerController {
 
         var authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        log.info("Username: {}", authentication.getName());
         authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
 
         List<Customer> allCustomers = customerService.getAllCustomers();
