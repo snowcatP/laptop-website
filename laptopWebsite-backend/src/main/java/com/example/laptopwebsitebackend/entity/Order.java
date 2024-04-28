@@ -30,8 +30,5 @@ public class Order {
     @JoinColumn(name = "payment_id")
     private Payment payment;
 
-    @OneToMany(
-            mappedBy = "order"
-    )
-    private List<OrderDetails> orderDetailsList;
+
 }
