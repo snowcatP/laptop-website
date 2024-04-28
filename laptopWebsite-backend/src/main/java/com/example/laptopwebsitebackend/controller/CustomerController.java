@@ -34,7 +34,6 @@ public class CustomerController {
 
         var authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        log.info("Username: {}", authentication.getName());
         authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
 
         List<Customer> allCustomers = customerService.getAllCustomers();

@@ -49,7 +49,7 @@ public class CustomerService {
         String name = context.getAuthentication().getName();
 
         Customer myProfile = customerRepository.findByEmail(name)
-                .orElseThrow(() -> new RuntimeException("User not exist"));
+                .orElseThrow(() -> new RuntimeException("User is not exist"));
 
         return myProfile;
     }

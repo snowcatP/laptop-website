@@ -2,13 +2,16 @@ package com.example.laptopwebsitebackend.service;
 
 import com.example.laptopwebsitebackend.dto.request.AuthenticationRequest;
 import com.example.laptopwebsitebackend.dto.request.IntrospectRequest;
+import com.example.laptopwebsitebackend.dto.request.LogoutRequest;
 import com.example.laptopwebsitebackend.dto.response.AuthenticationResponse;
 import com.example.laptopwebsitebackend.dto.response.IntrospectResponse;
 import com.example.laptopwebsitebackend.entity.Account;
 import com.example.laptopwebsitebackend.entity.Customer;
+import com.example.laptopwebsitebackend.entity.InvalidatedToken;
 import com.example.laptopwebsitebackend.entity.Staff;
 import com.example.laptopwebsitebackend.repository.AccountRepository;
 import com.example.laptopwebsitebackend.repository.CustomerRepository;
+import com.example.laptopwebsitebackend.repository.InvalidatedTokenRepository;
 import com.example.laptopwebsitebackend.repository.StaffRepository;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
@@ -25,6 +28,7 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.UUID;
 
 @Service
 public class AuthenticationService {
@@ -32,21 +36,23 @@ public class AuthenticationService {
     @Autowired
     private CustomerRepository customerRepository;
 
+    @Autowired
+    private InvalidatedTokenRepository invalidatedTokenRepository;
+
     // Get signerKey value from file application.yml
     @Value("${jwt.signerKey}")
     protected String SIGNER_KEY;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
     @Autowired
-    private AccountRepository accountRepository;
+    private AccountService accountService;
 
     @Autowired
     private StaffRepository staffRepository;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) throws Exception {
-        Account account = accountRepository.findByUsername(request.getUsername());
+        Account account = accountService.findByUsername(request.getUsername());
 
         Staff staff = new Staff();
         Customer customer = new Customer();
@@ -55,10 +61,10 @@ public class AuthenticationService {
         if (account.getPermission().getPermissionName().equals("ADMIN")) {
             checkPermission = true;
             staff = staffRepository.findByEmail(request.getUsername())
-                    .orElseThrow(() -> new Exception("Employee is not exist"));
+                    .orElseThrow(() -> new RuntimeException("User is not exist"));
         } else {
             customer = customerRepository.findByEmail(request.getUsername())
-                    .orElseThrow(() -> new Exception("Customer is not exist"));
+                    .orElseThrow(() -> new RuntimeException("User is not exist"));
         }
 
         boolean authenticated = false;
@@ -83,7 +89,7 @@ public class AuthenticationService {
                 .build();
     }
 
-    public String generateToken(Account account, Long userId){
+    private String generateToken(Account account, Long userId){
 
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS256);
 
@@ -92,9 +98,10 @@ public class AuthenticationService {
                 .issuer("HHH")
                 .issueTime(new Date())
                 .expirationTime(new Date(
-                        Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()
+                        Instant.now().plus(24, ChronoUnit.HOURS).toEpochMilli()
                 ))
                 .claim("userId", userId)
+                .jwtID(UUID.randomUUID().toString())
                 .claim("scope", account.getPermission().getPermissionName())
                 .build();
 
@@ -112,7 +119,22 @@ public class AuthenticationService {
     public IntrospectResponse introspect(IntrospectRequest request)
             throws JOSEException, ParseException {
         String token = request.getToken();
+        boolean isValid = true;
 
+        try {
+            verifyToken(token);
+
+        } catch (RuntimeException e){
+            isValid = false;
+        }
+
+        return IntrospectResponse.builder()
+                .valid(isValid)
+                .build();
+
+    }
+
+    private SignedJWT verifyToken(String token) throws JOSEException, ParseException{
         JWSVerifier jwsVerifier = new MACVerifier(SIGNER_KEY);
 
         SignedJWT signedJWT = SignedJWT.parse(token);
@@ -121,9 +143,28 @@ public class AuthenticationService {
 
         boolean verified = signedJWT.verify(jwsVerifier);
 
-        return IntrospectResponse.builder()
-                .valid(verified && expiredTime.after(new Date()))
+        if (!(verified && expiredTime.after(new Date()))){
+            throw new RuntimeException("Unauthorized");
+        }
+
+        if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID())) {
+            throw new RuntimeException("Unauthorized");
+        }
+
+        return signedJWT;
+    }
+
+    public void logout(LogoutRequest request) throws ParseException, JOSEException {
+        var signedToken = verifyToken(request.getToken());
+
+        String tokenID = signedToken.getJWTClaimsSet().getJWTID();
+        Date expirationTime = signedToken.getJWTClaimsSet().getExpirationTime();
+
+        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
+                .id(tokenID)
+                .expiredTime(expirationTime)
                 .build();
 
+        invalidatedTokenRepository.save(invalidatedToken);
     }
 }
