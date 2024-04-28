@@ -21,7 +21,7 @@ public class CartDetails {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    private Double totalPrice;
+    private String totalPrice;
 
     @ManyToOne
     @JoinColumn(name = "cart_id")

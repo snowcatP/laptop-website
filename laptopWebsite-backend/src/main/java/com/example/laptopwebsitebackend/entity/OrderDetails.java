@@ -17,7 +17,7 @@ public class OrderDetails {
 
     private int quantity;
 
-    private Double totalPrice;
+    private String totalPrice;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
