@@ -46,9 +46,9 @@ public class WarrantyController {
 
     @GetMapping
     public ResponseEntity<List<Warranty>> get_All_Warranty(){
-        List<Warranty> allWarrantys = warrantyService.getListAllWarranty();
+        List<Warranty> allWarranties = warrantyService.getListAllWarranty();
 
-        return new ResponseEntity<>(allWarrantys, HttpStatus.OK);
+        return new ResponseEntity<>(allWarranties, HttpStatus.OK);
     }
 
     @GetMapping({"/{id}"})

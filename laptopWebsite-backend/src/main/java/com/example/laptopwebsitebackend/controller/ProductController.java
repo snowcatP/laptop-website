@@ -1,6 +1,6 @@
 package com.example.laptopwebsitebackend.controller;
 
-import com.example.laptopwebsitebackend.dto.ProductRequest;
+import com.example.laptopwebsitebackend.dto.request.ProductRequest;
 import com.example.laptopwebsitebackend.entity.Configuration;
 import com.example.laptopwebsitebackend.entity.Customer;
 import com.example.laptopwebsitebackend.entity.Product;
