@@ -4,6 +4,8 @@ import Navigation from "../components/Navigation";
 import Sidebar from "../components/Sidebar";
 import Letter from '../components/Letter';
 import Footer from '../components/Footer';
+import { Button } from 'bootstrap';
+import { Link } from 'react-router-dom';
 
 
 const UserOrders = () => {
@@ -25,6 +27,8 @@ const UserOrders = () => {
                 <div className="" style={{ margin: "2em" }}>
                   <h3>Orders</h3>
                   <hr />
+                  <Link to={"/checkout"}> <button className='primary-btn'>Change shipping address</button></Link>
+                 
                 </div>
                 
               </div>

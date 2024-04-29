@@ -28,6 +28,11 @@ public class OrderController {
     public ResponseEntity<List<Order>> getAllOrders(){
         return new ResponseEntity<>(orderService.getAllOrders(), HttpStatus.OK);
     }
+    @GetMapping("/{orderId}")
+    public ResponseEntity<Order> getOrderInformation(@PathVariable("orderId") Long orderId){
+        return new ResponseEntity<>(orderService.getOrder(orderId), HttpStatus.OK);
+
+    }
 
     @GetMapping("/order-details/{orderId}")
     public ResponseEntity<List<OrderDetails>> getAllOrderDetails(@PathVariable("orderId") Long orderId){

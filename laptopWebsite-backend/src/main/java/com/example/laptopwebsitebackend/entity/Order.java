@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -21,6 +22,12 @@ public class Order {
     private Double totalPrice;
 
     private String status;
+
+    private String address;
+
+    private Date orderDate;
+
+    private Date deliveredDate;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
