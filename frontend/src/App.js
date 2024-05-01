@@ -11,6 +11,12 @@ import UserRoutes from "./client/UserRoutes";
 import Admin from "./admin/Admin";
 
 import AdminLogin from "./admin/AdminLogin";
+import ListProduct from "./admin/ListProduct";
+import AddProduct from "./admin/AddProduct";
+import AddWarranty from "./admin/AddWarranty";
+import ListWarranty from "./admin/ListWarranty";
+import AddDiscount from "./admin/AddDiscount";
+import EditProduct from "./admin/EditProduct";
 
 function App() {
 
@@ -19,7 +25,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />}></Route>
         <Route path="/store" element={<Store />}></Route>
-        <Route path="/product" element={<Product />}></Route>
+        <Route path="/product/:id" element={<Product />}></Route>
         <Route path="/checkout" element={<Checkout />}></Route>
         <Route path="/auth/login" element={<Login />}></Route>
         <Route path="/register" element={<Register />}></Route>
@@ -28,6 +34,12 @@ function App() {
 
         <Route path="/admin" element={<Admin />}></Route>
         <Route path="/admin-login" element={<AdminLogin />}></Route>
+        <Route path="/admin/product-list" element={<ListProduct />}></Route>
+        <Route path="/admin/add-product" element={<AddProduct />}></Route>
+        <Route path="/admin/edit-product/:id" element={<EditProduct />}></Route>
+        <Route path="/admin/add-warranty" element={<AddWarranty />}></Route>
+        <Route path="/admin/warranty-list" element={<ListWarranty />}></Route>
+        <Route path="/admin/add-discount" element={<AddDiscount />}></Route>
       </Routes>
     </BrowserRouter>
   );

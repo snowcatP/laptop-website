@@ -21,7 +21,7 @@ const Sidebar = () => {
               to="#"
             >
               <i className="bi bi-menu-button-wide" />
-              <span>Components</span>
+              <span>Manage Product</span>
               <i className="bi bi-chevron-down ms-auto" />
             </Link>
             <ul
@@ -30,87 +30,15 @@ const Sidebar = () => {
               data-bs-parent="#sidebar-nav"
             >
               <li>
-                <Link to="components-alerts.html">
+                <Link to="/admin/product-list">
                   <i className="bi bi-circle" />
-                  <span>Alerts</span>
+                  <span>List Products</span>
                 </Link>
               </li>
               <li>
-                <Link to="components-accordion.html">
+                <Link to="/admin/add-product">
                   <i className="bi bi-circle" />
-                  <span>Accordion</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="components-badges.html">
-                  <i className="bi bi-circle" />
-                  <span>Badges</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="components-breadcrumbs.html">
-                  <i className="bi bi-circle" />
-                  <span>Breadcrumbs</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="components-buttons.html">
-                  <i className="bi bi-circle" />
-                  <span>Buttons</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="components-cards.html">
-                  <i className="bi bi-circle" />
-                  <span>Cards</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="components-carousel.html">
-                  <i className="bi bi-circle" />
-                  <span>Carousel</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="components-list-group.html">
-                  <i className="bi bi-circle" />
-                  <span>List group</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="components-modal.html">
-                  <i className="bi bi-circle" />
-                  <span>Modal</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="components-tabs.html">
-                  <i className="bi bi-circle" />
-                  <span>Tabs</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="components-pagination.html">
-                  <i className="bi bi-circle" />
-                  <span>Pagination</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="components-progress.html">
-                  <i className="bi bi-circle" />
-                  <span>Progress</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="components-spinners.html">
-                  <i className="bi bi-circle" />
-                  <span>Spinners</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="components-tooltips.html">
-                  <i className="bi bi-circle" />
-                  <span>Tooltips</span>
+                  <span>Import Product</span>
                 </Link>
               </li>
             </ul>
@@ -124,7 +52,7 @@ const Sidebar = () => {
               to="#"
             >
               <i className="bi bi-journal-text" />
-              <span>Forms</span>
+              <span>Manage Warranty</span>
               <i className="bi bi-chevron-down ms-auto" />
             </Link>
             <ul
@@ -133,27 +61,15 @@ const Sidebar = () => {
               data-bs-parent="#sidebar-nav"
             >
               <li>
-                <Link to="forms-elements.html">
+                <Link to="/admin/warranty-list">
                   <i className="bi bi-circle" />
-                  <span>Form Elements</span>
+                  <span>List Warranty</span>
                 </Link>
               </li>
               <li>
-                <Link to="forms-layouts.html">
+                <Link to="/admin/add-warranty">
                   <i className="bi bi-circle" />
-                  <span>Form Layouts</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="forms-editors.html">
-                  <i className="bi bi-circle" />
-                  <span>Form Editors</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="forms-validation.html">
-                  <i className="bi bi-circle" />
-                  <span>Form Validation</span>
+                  <span>Add Warranty</span>
                 </Link>
               </li>
             </ul>
@@ -167,7 +83,7 @@ const Sidebar = () => {
               to="#"
             >
               <i className="bi bi-layout-text-window-reverse" />
-              <span>Tables</span>
+              <span>Discount</span>
               <i className="bi bi-chevron-down ms-auto" />
             </Link>
             <ul
@@ -176,15 +92,15 @@ const Sidebar = () => {
               data-bs-parent="#sidebar-nav"
             >
               <li>
-                <Link to="tables-general.html">
+                <Link to="/admin/list-discount">
                   <i className="bi bi-circle" />
-                  <span>General Tables</span>
+                  <span>List Discounts</span>
                 </Link>
               </li>
               <li>
-                <Link to="tables-data.html">
+                <Link to="/admin/add-discount">
                   <i className="bi bi-circle" />
-                  <span>Data Tables</span>
+                  <span>Add Discount</span>
                 </Link>
               </li>
             </ul>

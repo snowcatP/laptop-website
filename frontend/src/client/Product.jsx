@@ -5,6 +5,8 @@ import Navigation from "./components/Navigation";
 import Letter from "./components/Letter";
 import Footer from "./components/Footer";
 import Slider from "react-slick";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const Product = () => {
   const [nav1, setNav1] = useState(null);
@@ -44,11 +46,38 @@ const Product = () => {
     ref: (slider) => (sliderRef1 = slider),
   };
 
+  const [token, setToken] = useState("");
+
   useEffect(() => {
     setNav1(sliderRef1);
     setNav2(sliderRef2);
+
+    // Lấy token từ Local Storage
+    const token = localStorage.getItem("token");
+    setToken(token);
   }, []);
 
+  const { id } = useParams(); // Lấy id từ địa chỉ URL
+  const [product, setProduct] = useState(null);
+  
+
+  useEffect(() => {
+    const fetchProductData = async () =>{
+      try {
+        const productResponse = await axios.get(`http://localhost:8080/product/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setProduct(productResponse.data);
+        console.log(productResponse.data);
+      } catch(error){
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchProductData();
+  },[id, token]);
   return (
     <>
       <Header />
@@ -63,17 +92,17 @@ const Product = () => {
               {/* Product main img */}
               <div className="col-md-5 col-md-push-2">
                 <Slider id="product-main-img" {...settingsMain}>
-                  <div className="product-preview">
-                    <img src="./assets/img/product01.png" alt="" />
+                <div className="product-preview">
+                    <img src={product?.image1} alt="" />
                   </div>
                   <div className="product-preview">
-                    <img src="./assets/img/product03.png" alt="" />
+                  <img src={product?.image2} alt="" />
                   </div>
                   <div className="product-preview">
-                    <img src="./assets/img/product06.png" alt="" />
+                  <img src={product?.image3} alt="" />
                   </div>
                   <div className="product-preview">
-                    <img src="./assets/img/product08.png" alt="" />
+                  <img src={product?.image4} alt="" />
                   </div>
                 </Slider>
               </div>
@@ -81,17 +110,17 @@ const Product = () => {
               {/* Product thumb imgs */}
               <div className="col-md-2  col-md-pull-5">
                 <Slider id="product-imgs" {...settings}>
-                  <div className="product-preview">
-                    <img src="./assets/img/product01.png" alt="" />
+                <div className="product-preview">
+                    <img src={product?.image1} alt="" />
                   </div>
                   <div className="product-preview">
-                    <img src="./assets/img/product03.png" alt="" />
+                  <img src={product?.image2} alt="" />
                   </div>
                   <div className="product-preview">
-                    <img src="./assets/img/product06.png" alt="" />
+                  <img src={product?.image3} alt="" />
                   </div>
                   <div className="product-preview">
-                    <img src="./assets/img/product08.png" alt="" />
+                  <img src={product?.image4} alt="" />
                   </div>
                 </Slider>
               </div>
@@ -99,50 +128,26 @@ const Product = () => {
               {/* Product details */}
               <div className="col-md-5">
                 <div className="product-details">
-                  <h2 className="product-name">product name goes here</h2>
-                  <div>
-                    <div className="product-rating">
-                      <i className="fa fa-star" />
-                      <i className="fa fa-star" />
-                      <i className="fa fa-star" />
-                      <i className="fa fa-star" />
-                      <i className="fa fa-star-o" />
-                    </div>
-                    <Link className="review-link" to="#">
-                      10 Review(s) | Add your review
-                    </Link>
-                  </div>
+                  <h2 className="product-name">{product?.productName}</h2>
+                  
                   <div>
                     <h3 className="product-price">
-                      $980.00 <del className="product-old-price">$990.00</del>
+                    {product?.price} <del className="product-old-price">132</del>
                     </h3>
                     <span className="product-available">In Stock</span>
                   </div>
-                  <p>
+                  {/* <p>
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit,
                     sed do eiusmod tempor incididunt ut labore et dolore magna
                     aliqua. Ut enim ad minim veniam, quis nostrud exercitation
                     ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                  </p>
-                  <div className="product-options">
-                    <label>
-                      Size
-                      <select className="input-select">
-                        <option value={0}>X</option>
-                      </select>
-                    </label>
-                    <label>
-                      Color
-                      <select className="input-select">
-                        <option value={0}>Red</option>
-                      </select>
-                    </label>
-                  </div>
+                  </p> */}
+                  
                   <div className="add-to-cart">
                     <div className="qty-label">
-                      Qty
+                      Quantiy
                       <div className="input-number">
-                        <input type="number" />
+                        <input type="number"/>
                         <span className="qty-up">+</span>
                         <span className="qty-down">-</span>
                       </div>
@@ -151,50 +156,14 @@ const Product = () => {
                       <i className="fa fa-shopping-cart" /> add to cart
                     </button>
                   </div>
-                  <ul className="product-btns">
-                    <li>
-                      <Link to="#">
-                        <i className="fa fa-heart-o" /> add to wishlist
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="#">
-                        <i className="fa fa-exchange" /> add to compare
-                      </Link>
-                    </li>
-                  </ul>
+                  
                   <ul className="product-links">
                     <li>Category:</li>
                     <li>
-                      <Link to="#">Headphones</Link>
-                    </li>
-                    <li>
-                      <Link to="#">Accessories</Link>
+                      <Link to="#">{product?.category}</Link>
                     </li>
                   </ul>
-                  <ul className="product-links">
-                    <li>Share:</li>
-                    <li>
-                      <Link to="#">
-                        <i className="fa fa-facebook" />
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="#">
-                        <i className="fa fa-twitter" />
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="#">
-                        <i className="fa fa-google-plus" />
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="#">
-                        <i className="fa fa-envelope" />
-                      </Link>
-                    </li>
-                  </ul>
+                  
                 </div>
               </div>
               {/* /Product details */}
@@ -225,18 +194,12 @@ const Product = () => {
                     {/* tab1  */}
                     <div id="tab1" className="tab-pane fade in active">
                       <div className="row">
-                        <div className="col-md-12">
-                          <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing
-                            elit, sed do eiusmod tempor incididunt ut labore et
-                            dolore magna aliqua. Ut enim ad minim veniam, quis
-                            nostrud exercitation ullamco laboris nisi ut aliquip
-                            ex ea commodo consequat. Duis aute irure dolor in
-                            reprehenderit in voluptate velit esse cillum dolore
-                            eu fugiat nulla pariatur. Excepteur sint occaecat
-                            cupidatat non proident, sunt in culpa qui officia
-                            deserunt mollit anim id est laborum.
-                          </p>
+                      <div className="col-md-12">
+                          <p>Graphic card: {product?.configuration.graphicCard}</p>
+                          <p>Memory: {product?.configuration.memory}</p>
+                          <p>Processor: {product?.configuration.processor}</p>
+                          <p>Ram: {product?.configuration.ram} GB</p>
+                          <p>Screen: {product?.configuration.screen} inches</p>
                         </div>
                       </div>
                     </div>
@@ -245,17 +208,11 @@ const Product = () => {
                     <div id="tab2" className="tab-pane fade in">
                       <div className="row">
                         <div className="col-md-12">
-                          <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing
-                            elit, sed do eiusmod tempor incididunt ut labore et
-                            dolore magna aliqua. Ut enim ad minim veniam, quis
-                            nostrud exercitation ullamco laboris nisi ut aliquip
-                            ex ea commodo consequat. Duis aute irure dolor in
-                            reprehenderit in voluptate velit esse cillum dolore
-                            eu fugiat nulla pariatur. Excepteur sint occaecat
-                            cupidatat non proident, sunt in culpa qui officia
-                            deserunt mollit anim id est laborum.
-                          </p>
+                          <p>Graphic card: {product?.configuration.graphicCard}</p>
+                          <p>Memory: {product?.configuration.memory}</p>
+                          <p>Processor: {product?.configuration.processor}</p>
+                          <p>Ram: {product?.configuration.ram} GB</p>
+                          <p>Screen: {product?.configuration.screen} inches</p>
                         </div>
                       </div>
                     </div>

@@ -19,6 +19,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/product")
+@CrossOrigin("*")
 public class ProductController {
 
     @Autowired
