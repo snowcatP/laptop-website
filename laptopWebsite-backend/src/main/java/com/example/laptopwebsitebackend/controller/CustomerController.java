@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 @Slf4j
+@CrossOrigin
 public class CustomerController {
 
     @Autowired
@@ -48,7 +49,7 @@ public class CustomerController {
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
-    @GetMapping("/my-profile")
+    @GetMapping("/profile")
     public ResponseEntity<Customer> getMyProfile() {
         return new ResponseEntity<>(customerService.getMyProfile(), HttpStatus.OK);
     }

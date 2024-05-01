@@ -33,13 +33,16 @@ import java.text.ParseException;
 public class WebSecurityConfig{
 
     private final String[] PUBLIC_ENDPOINT = {
+    // URL for authentication
             "/auth/login",
             "/auth/introspect",
+            "/auth/logout",
+            "/register",
+
+    //
             "/",
             "/store",
             "/product",
-            "/auth/logout",
-            "/register"
 
     };
 
