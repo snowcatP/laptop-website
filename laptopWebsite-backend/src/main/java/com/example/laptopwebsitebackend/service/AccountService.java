@@ -35,6 +35,6 @@ public class AccountService {
 
     public Account findByUsername(String username) {
         return accountRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User is not exist."));
+                .orElseThrow(() -> new RuntimeException("Wrong username or password"));
     }
 }
