@@ -77,7 +77,7 @@ public class AuthenticationService {
         }
 
         if (!authenticated) {
-            throw new Exception("Wrong username or password");
+            throw new RuntimeException("Wrong username or password");
         }
 
         String token = generateToken(account,
