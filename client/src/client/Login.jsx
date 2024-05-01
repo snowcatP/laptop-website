@@ -1,25 +1,27 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Header from "./components/Header";
 import Navigation from "./components/Navigation";
 import Letter from "./components/Letter";
 import Footer from "./components/Footer";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Form } from "react-bootstrap";
-import {loginResult} from "./service/ClientService"
-import { useNavigate } from "react-router-dom";
-import "./components/assets/css/bootstrap.min.css"
+import { loginResult } from "./service/ClientService";
+import { useAuth } from "./context/AuthContext";
+import { customerProfile } from "./service/ClientService";
+
 const Login = () => {
+  const { setUser, setIsLogged } = useAuth();
 
   const [form, setForm] = useState({
     username: "",
-    password: ""
-  })
+    password: "",
+  });
 
   const [focusedInput, setFocusedInput] = useState(null);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
 
   const inputs = [
     {
@@ -30,7 +32,7 @@ const Login = () => {
       placeholder: "Username",
       errorMessage: "Username shoule be in email format",
       required: true,
-      focused: false
+      focused: false,
     },
     {
       id: 2,
@@ -41,13 +43,13 @@ const Login = () => {
       errorMessage: "Password should be at least 8 characters",
       pattern: "^[a-zA-Z0-9]{8,}",
       required: true,
-      focused: false
-    }
-  ]
+      focused: false,
+    },
+  ];
 
   const onChangeInput = (e) => {
-    setForm({...form, [e.target.name]: e.target.value})
-  }
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const onFocusInput = (inputName) => {
     setFocusedInput(inputName);
@@ -57,37 +59,45 @@ const Login = () => {
     setFocusedInput(null);
   };
 
-
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     const credential = {
-      "username": form.username,
-      "password": form.password
-    }
+      username: form.username,
+      password: form.password,
+    };
 
     const userLogin = async () => {
       try {
         const response = await loginResult(credential);
-        
+
         if (response.status === 200) {
-          
           const token = response.data.token;
 
-          localStorage.setItem("token", token)
-          
-          setErrorMessage("")
+          localStorage.setItem("token", token);
 
-          navigate("/user/profile")
+          setErrorMessage("");
 
+          const user = async () => {
+            const headers = { Authorization: `Bearer ${token}` };
+
+            const response = await customerProfile(headers);
+            
+            setUser(response.data);
+            setIsLogged(true);
+          };
+
+          user();
+
+          navigate("/user/profile");
+          return;
         }
-      } catch (error) { 
-        setErrorMessage("Wrong username or password")
+      } catch (error) {
+        setErrorMessage("Wrong username or password");
       }
-    }
-
-    userLogin()
-  }
+    };
+    userLogin();
+  };
 
   return (
     <>
@@ -95,31 +105,32 @@ const Login = () => {
       <Navigation />
 
       {/* SECTION */}
-      <div className="section" >
+      <div className="section">
         {/* container */}
-        <div className="container" >
+        <div className="container">
           {/* row */}
-          <div className="row" style={{ paddingTop: "20px"}} >
+          <div className="row" style={{ paddingTop: "20px" }}>
             {/* Order Details */}
             <div className="col-md-3"></div>
             <div className="col-md-6 order-details">
-
-              <Form style={{ minHeight:"40vh" }}>
+              <Form onSubmit={handleSubmit} style={{ minHeight: "40vh" }}>
                 <div className="section-title text-center">
                   <h2 className="title">Login</h2>
                 </div>
 
                 <div className="caption">
-
                   {inputs.map((input) => (
                     <div className="form-group" key={input.id}>
-                      <label htmlFor={input.name}><i className="fa fa-lock"/> {input.label} <span style={{color:"red"}}>*</span></label>
+                      <label htmlFor={input.name}>
+                        <i className="fa fa-lock" /> {input.label}{" "}
+                        <span style={{ color: "red" }}>*</span>
+                      </label>
                       <input
-                        className= "input"
-                        type = {input.type}
-                        name = {input.name}
-                        placeholder = {input.placeholder}
-                        value = {form[input.name]}
+                        className="input"
+                        type={input.type}
+                        name={input.name}
+                        placeholder={input.placeholder}
+                        value={form[input.name]}
                         onChange={onChangeInput}
                         pattern={input.pattern}
                         required={input.required}
@@ -128,9 +139,11 @@ const Login = () => {
                         onBlur={onBlurInput}
                       />
 
-                      {focusedInput === input.name &&
-                        <span className="error-message">{input.errorMessage}</span>
-                      }
+                      {focusedInput === input.name && (
+                        <span className="error-message">
+                          {input.errorMessage}
+                        </span>
+                      )}
                     </div>
                   ))}
                   <div
@@ -140,19 +153,22 @@ const Login = () => {
                     <Link to="/register" style={{ alignSelf: "flex-start" }}>
                       Register
                     </Link>
-                    <Link to="/forgot-password" style={{ alignSelf: "flex-end" }}>
+                    <Link
+                      to="/forgot-password"
+                      style={{ alignSelf: "flex-end" }}
+                    >
                       Forgot your password?
                     </Link>
                   </div>
                   <div>
-                    <span style={{color: "red"}}>{errorMessage}</span>
+                    <span style={{ color: "red" }}>{errorMessage}</span>
                   </div>
                 </div>
                 {/* Submit button */}
                 <button
                   type="submit"
                   className="primary-btn order-submit"
-                  style={{ display: "block", margin: "auto", marginTop:'3em'}}
+                  style={{ display: "block", margin: "auto", marginTop: "3em" }}
                 >
                   Sign in
                 </button>

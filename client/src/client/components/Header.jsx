@@ -139,7 +139,7 @@ const Header = () => {
                   {/* /Cart */}
                   {/* Account */}
                   <div>
-                    <Link to="/login">
+                    <Link to="/auth/login">
                       <i className="fa fa-user" />
                       <span>Account</span>
                     </Link>

@@ -19,7 +19,9 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/product")
-public class ProductController {
+@CrossOrigin
+public class
+ProductController {
 
     @Autowired
     private ProductService productService;
