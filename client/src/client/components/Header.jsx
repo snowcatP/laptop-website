@@ -1,40 +1,64 @@
-import React, {useEffect, useState} from "react";
-import { Link } from "react-router-dom";
-
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import {useAuth} from '../context/AuthContext'
+import { customerLogout } from "../service/ClientService";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Header = () => {
-  
+  const {user, setUser, isLogged, setIsLogged} = useAuth()
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    const getToken = localStorage.getItem("token")
+
+    const token = {"token" : getToken}
+
+    const logout = async () => {
+      const response = await customerLogout(token)
+
+      if (response.status === 200){
+        setUser(null)
+        setIsLogged(false)
+        
+        navigate("/")
+        toast.success("Logout success!")
+      }
+    }
+
+    logout()
+  }
+
+
   return (
      <div>
     {/* HEADER */}
       
       <header>
+        
         {/* TOP HEADER */}
+
+        {isLogged ? 
         <div id="top-header">
           <div className="container">
             <ul className="header-links pull-left">
               <li>
                 <Link to="#">
-                  <i className="fa fa-phone" /> +84-2365-521
+                  <i className="fa fa-phone" /> {user.phone}
                 </Link>
               </li>
               <li>
                 <Link to="#">
-                  <i className="fa fa-envelope-o" /> email@email.com
+                  <i className="fa fa-envelope-o" /> {user.email}
                 </Link>
               </li>
               <li>
                 <Link to="#">
-                  <i className="fa fa-map-marker" /> 1 Vo Van Ngan
+                  <i className="fa fa-map-marker" /> {user.address}
                 </Link>
               </li>
             </ul>
             <ul className="header-links pull-right">
-              <li>
-                <Link to="#">
-                  <i className="fa fa-dollar" /> VND
-                </Link>
-              </li>
               <li>
                 <Link to="/user/profile">
                   <i className="fa fa-user-o" /> My Account
@@ -43,6 +67,8 @@ const Header = () => {
             </ul>
           </div>
         </div>
+        : <></>
+        }
         {/* /TOP HEADER */}
         {/* MAIN HEADER */}
         <div id="header">
@@ -78,6 +104,9 @@ const Header = () => {
               <div className="col-md-3 clearfix">
                 <div className="header-ctn">
                   {/* Cart */}
+
+                  {isLogged ?
+                  <>
                   <div className="dropdown">
                     <Link
                       to='#'
@@ -136,14 +165,47 @@ const Header = () => {
                       </div>
                     </div>
                   </div>
-                  {/* /Cart */}
-                  {/* Account */}
-                  <div>
-                    <Link to="/auth/login">
-                      <i className="fa fa-user" />
-                      <span>Account</span>
-                    </Link>
-                  </div>
+
+                  
+                    <div className="dropdown" > 
+                      <Link
+                        to='#'
+                        className="dropdown-toggle"
+                        data-toggle="dropdown"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="true"
+                        id="dropdownMenuButton1"
+                      >
+                        <i className="fa fa-user" />
+                        <span>Account</span>
+                      
+                      </Link>
+                      <div className="dropdown">
+                        <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                          <li><Link className="dropdown-item" to="/user/profile">My profile</Link></li>
+                          <li><Link className="dropdown-item" to="/user/cart">Cart</Link></li>
+                          <li><Link className="dropdown-item" onClick={handleLogout} >Logout</Link></li>
+
+                        </ul>
+                      </div>
+                    </div>
+                  </>
+                  :
+                  <>
+                    <div>
+                      <Link to="/register">
+                        <i className="fa fa-user" />
+                        <span>Register</span>
+                      </Link>
+                    </div>
+                    <div>
+                      <Link to="/auth/login">
+                        <i className="fa fa-user" />
+                        <span>Login</span>
+                      </Link>
+                    </div>
+                  </>
+                  }
                   {/* /Account */}
                   
                 </div>
@@ -157,6 +219,20 @@ const Header = () => {
         {/* /MAIN HEADER */}
       </header>
       {/* /HEADER */}
+
+      <ToastContainer
+        position="top-right"
+        autoClose={4000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+       
+      />
     </div>
   );
 };

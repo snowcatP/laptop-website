@@ -10,7 +10,6 @@ const LoginUtil = () => {
 
 
   useEffect(() => {
-    if (isLogged) {
       const token = localStorage.getItem("token");
   
       if (token) {
@@ -31,16 +30,15 @@ const LoginUtil = () => {
             
             setUser(response.data);
           };
-
+          
           user();
+          setIsLogged(true)
+
       } else {
           navigate("/auth/login");
           return;
       }
-    } else {
-      navigate("/auth/login");
-      return;
-    }
+
   }, [navigate, isLogged, setIsLogged, setUser])
   
 };

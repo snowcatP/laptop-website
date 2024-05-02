@@ -490,6 +490,11 @@ textarea.input {
   margin-right: 5px;
 }
 
+.dropdown > .dropdown-menu > li a {
+  padding: 10px;
+  margin: 2px;
+}
+
 /*----------------------------*\
 	Logo
 \*----------------------------*/
@@ -546,7 +551,7 @@ textarea.input {
 
 .header-ctn {
   float: right;
-  padding: 15px 0px;
+  padding: 10px 0px;
 }
 
 .header-ctn>div {

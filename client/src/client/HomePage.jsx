@@ -203,9 +203,9 @@ const HomePage = () => {
                                 <Link to="#">{product.productName}</Link>
                               </h3>
                               <h4 className="product-price">
-                                $980.00{" "}
+                                {product.price} VND
                                 <del className="product-old-price">
-                                  {product.price} VND
+                                  {product.price * 1.3} VND
                                 </del>
                               </h4>
                               <div className="product-rating">
