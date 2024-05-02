@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "./components/Header";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
 import Letter from "./components/Letter";
+import { getProducts } from "./service/ProductService";
 
 const HomePage = () => {
   const settingsSlider = {
@@ -44,6 +45,22 @@ const HomePage = () => {
     dots: false,
     arrows: true,
   };
+
+  const [products, setProducts] = useState([])
+
+  useEffect(() => {
+  
+    const getAllProducts = async () => {
+      try {
+        const response = await getProducts()
+
+        setProducts(response.data)
+      } catch(error) {console.log(error)}
+        
+    }
+
+    getAllProducts()
+  }, [])
 
   return (
     <>
@@ -162,60 +179,73 @@ const HomePage = () => {
                 <div className="row">
                   <div className="products-tabs">
                     {/* tab */}
-                    <div id="tab1" className="tab-pane active"  style={{padding:'0 20px 50px 20px'}}>
-                      <Slider
-                        className="products-slick"
-                        {...settingsSlider}
-                      >
+                    <div
+                      id="tab1"
+                      className="tab-pane active"
+                      style={{ padding: "0 20px 50px 20px" }}
+                    >
+                      <Slider className="products-slick" {...settingsSlider}>
+                        {products?.map((product) => (
+                          <div className="product"
+                            key={product.productId}>
+                            <div className="product-img">
+                              <img src={product.image1} alt="" />
+                              <div className="product-label">
+                                <span className="sale">-30%</span>
+                                <span className="new">NEW</span>
+                              </div>
+                            </div>
+                            <div className="product-body">
+                              <p className="product-category">
+                                {product.category}
+                              </p>
+                              <h3 className="product-name">
+                                <Link to="#">{product.productName}</Link>
+                              </h3>
+                              <h4 className="product-price">
+                                {product.price} VND
+                                <del className="product-old-price">
+                                  {product.price * 1.3} VND
+                                </del>
+                              </h4>
+                              <div className="product-rating">
+                                <i className="fa fa-star" />
+                                <i className="fa fa-star" />
+                                <i className="fa fa-star" />
+                                <i className="fa fa-star" />
+                                <i className="fa fa-star" />
+                              </div>
+                              <div className="product-btns">
+                                <button className="add-to-wishlist">
+                                  <i className="fa fa-heart-o" />
+                                  <span className="tooltipp">
+                                    add to wishlist
+                                  </span>
+                                </button>
+                                <button className="add-to-compare">
+                                  <i className="fa fa-exchange" />
+                                  <span className="tooltipp">
+                                    add to compare
+                                  </span>
+                                </button>
+                                <button className="quick-view">
+                                  <i className="fa fa-eye" />
+                                  <span className="tooltipp">quick view</span>
+                                </button>
+                              </div>
+                            </div>
+                            <div className="add-to-cart">
+                              <button className="add-to-cart-btn">
+                                <i className="fa fa-shopping-cart" /> add to
+                                cart
+                              </button>
+                            </div>
+                          </div>
+                        ))}
                         {/* product */}
-                        <div className="product">
-                          <div className="product-img">
-                            <img src="./assets/img/product01.png" alt="" />
-                            <div className="product-label">
-                              <span className="sale">-30%</span>
-                              <span className="new">NEW</span>
-                            </div>
-                          </div>
-                          <div className="product-body">
-                            <p className="product-category">Category</p>
-                            <h3 className="product-name">
-                              <Link to="#">product name goes here</Link>
-                            </h3>
-                            <h4 className="product-price">
-                              $980.00{" "}
-                              <del className="product-old-price">$990.00</del>
-                            </h4>
-                            <div className="product-rating">
-                              <i className="fa fa-star" />
-                              <i className="fa fa-star" />
-                              <i className="fa fa-star" />
-                              <i className="fa fa-star" />
-                              <i className="fa fa-star" />
-                            </div>
-                            <div className="product-btns">
-                              <button className="add-to-wishlist">
-                                <i className="fa fa-heart-o" />
-                                <span className="tooltipp">
-                                  add to wishlist
-                                </span>
-                              </button>
-                              <button className="add-to-compare">
-                                <i className="fa fa-exchange" />
-                                <span className="tooltipp">add to compare</span>
-                              </button>
-                              <button className="quick-view">
-                                <i className="fa fa-eye" />
-                                <span className="tooltipp">quick view</span>
-                              </button>
-                            </div>
-                          </div>
-                          <div className="add-to-cart">
-                            <button className="add-to-cart-btn">
-                              <i className="fa fa-shopping-cart" /> add to cart
-                            </button>
-                          </div>
-                        </div>
+
                         {/* /product */}
+
                         {/* product */}
                         <div className="product">
                           <div className="product-img">
@@ -502,7 +532,11 @@ const HomePage = () => {
                 <div className="row">
                   <div className="products-tabs">
                     {/* tab */}
-                    <div id="tab2" className="tab-pane fade in active" style={{padding:'0 20px 50px 20px'}}>
+                    <div
+                      id="tab2"
+                      className="tab-pane fade in active"
+                      style={{ padding: "0 20px 50px 20px" }}
+                    >
                       <Slider
                         className="products-slick"
                         data-nav="#slick-nav-2"
@@ -558,7 +592,7 @@ const HomePage = () => {
                         </div>
                         {/* /product */}
                         {/* product */}
-                        <div className="product" style={{padding: '0 20px'}}>
+                        <div className="product" style={{ padding: "0 20px" }}>
                           <div className="product-img">
                             <img src="./assets/img/product07.png" alt="" />
                             <div className="product-label">
@@ -757,7 +791,7 @@ const HomePage = () => {
           <div className="container">
             {/* row */}
             <div className="row">
-              <div className="col-md-4 col-xs-6" style={{padding:'0 20px'}}>
+              <div className="col-md-4 col-xs-6" style={{ padding: "0 20px" }}>
                 <div className="section-title">
                   <h4 className="title">Top selling</h4>
                   <div className="section-nav">
@@ -877,7 +911,7 @@ const HomePage = () => {
                   </div>
                 </Slider>
               </div>
-              <div className="col-md-4 col-xs-6" style={{padding:'0 20px'}}>
+              <div className="col-md-4 col-xs-6" style={{ padding: "0 20px" }}>
                 <div className="section-title">
                   <h4 className="title">Top selling</h4>
                   <div className="section-nav">
@@ -998,7 +1032,7 @@ const HomePage = () => {
                 </Slider>
               </div>
               <div className="clearfix visible-sm visible-xs" />
-              <div className="col-md-4 col-xs-6 " style={{padding:'0 20px'}}>
+              <div className="col-md-4 col-xs-6 " style={{ padding: "0 20px" }}>
                 <div className="section-title">
                   <h4 className="title">Top selling</h4>
                   <div className="section-nav">

@@ -60,7 +60,7 @@ const ForgotPassword = () => {
                     className="form-group"
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
-                    <Link to="/login" style={{ alignSelf: "flex-start" }}>
+                    <Link to="/auth/login" style={{ alignSelf: "flex-start" }}>
                       Login
                     </Link>
                     <Link to="/register" style={{ alignSelf: "flex-end" }}>

@@ -74,6 +74,44 @@ input:invalid ~ span.error-message{
   display: block;
 }
 
+.page_404{ 
+  padding:40px 0; 
+  background:#fff; 
+  font-family: 'Arvo', serif;
+}
+
+.page_404  img{ 
+  width:100%;
+}
+
+.four_zero_four_bg{
+  background-image: url(https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif);
+  height: 400px;
+  background-position: center;
+}
+ 
+ 
+.four_zero_four_bg h1{
+ font-size:80px;
+}
+ .four_zero_four_bg h3 {
+   font-size: 80px;
+ }
+
+ .link_404 {
+   color: #fff !important;
+   padding: 10px 20px;
+   background: #D10024;
+   border-radius: 2px;
+   margin: 20px 0;
+   display: inline-block;
+ }
+
+ .contant_box_404 {
+   margin-top: -50px;
+ }
+
+
 h1, h2, h3, h4, h5, h6 {
   color: #2B2D42;
   font-weight: 700;
@@ -452,6 +490,11 @@ textarea.input {
   margin-right: 5px;
 }
 
+.dropdown > .dropdown-menu > li a {
+  padding: 10px;
+  margin: 2px;
+}
+
 /*----------------------------*\
 	Logo
 \*----------------------------*/
@@ -508,7 +551,7 @@ textarea.input {
 
 .header-ctn {
   float: right;
-  padding: 15px 0px;
+  padding: 10px 0px;
 }
 
 .header-ctn>div {

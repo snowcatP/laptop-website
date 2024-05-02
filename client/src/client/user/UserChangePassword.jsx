@@ -5,10 +5,11 @@ import Sidebar from "../components/Sidebar";
 import Letter from "../components/Letter";
 import Footer from "../components/Footer";
 import PasswordInput from "../components/PasswordInput";
+import LoginUtil from "../util/LoginUtil";
 
-const UserChangePassword = (props) => {
+const UserChangePassword = () => {
 
-  //const profile = props.profile
+  LoginUtil()
 
   const [values, setValues] = useState({
     oldPassword: "",

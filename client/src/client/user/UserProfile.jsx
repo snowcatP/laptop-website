@@ -1,52 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Header from "../components/Header";
 import Navigation from "../components/Navigation";
 import Sidebar from "../components/Sidebar";
 import Letter from "../components/Letter";
 import Footer from "../components/Footer";
-import { jwtDecode } from "jwt-decode";
-import { useNavigate } from "react-router";
-
+import LoginUtil from "../util/LoginUtil";
+import { useAuth } from "../context/AuthContext";
 const UserProfile = () => {
 
-  //const [profile, setProfile] = useState(null)
-
-  //const navigate = useNavigate()
-
-  // useEffect(() => {
-  //   const token = localStorage.getItem("token")
-
-  //   if (!token) {
-  //     navigate("/login");
-  //     return;
-  //   }
-
-  //   const decode_token = jwtDecode(token)
-
-  //   const current = new Date()
-
-  //   if (decode_token.exp * 1000 < current.getTime) {
-  //     navigate("/login")
-  //     return;
-  //   } else {
-
-  //     const headers = { 'Authorization': `Bearer ${token}`}
-  //     const getProfile = async () => {
-  //       const response = await customerProfile(headers)
-
-  //       //console.log(response)
-  //       setProfile(response.data)
-  //       //console.log(response.data)
-  //     }
-
-  //     //getProfile()
-
-  //     console.log(profile)
-  //   }
-
-  // }, [])
-
+  LoginUtil()
   
+  const {user} = useAuth();
+
+  const profile = {...user}
   return (
     <>
       <Header />
@@ -84,7 +50,7 @@ const UserProfile = () => {
                           className="form-control"
                           name="email"
                           readOnly="true"
-                          //value={profile.email}
+                          value={profile.email}
                         />
                       </div>
                     </div>
@@ -97,7 +63,7 @@ const UserProfile = () => {
                           type="text"
                           className="form-control"
                           name="firstName"
-                          //value={profile.firstName}
+                          value={profile.firstName}
                         />
                       </div>
                     </div>
@@ -110,7 +76,7 @@ const UserProfile = () => {
                           type="text"
                           className="form-control"
                           name="lastName"
-                          //value={profile.lastName}
+                          value={profile.lastName}
                         />
                       </div>
                     </div>
@@ -121,7 +87,7 @@ const UserProfile = () => {
                           type="text"
                           className="form-control"
                           name="address"
-                          //value={profile.address}
+                          value={profile.address}
                         />
                       </div>
                     </div>
@@ -132,7 +98,7 @@ const UserProfile = () => {
                           type="text"
                           className="form-control"
                           name="phone"
-                          //value={profile.phone}
+                          value={profile.phone}
                         />
                       </div>
                     </div>

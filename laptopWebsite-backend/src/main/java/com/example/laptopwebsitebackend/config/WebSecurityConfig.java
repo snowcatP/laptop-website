@@ -39,10 +39,9 @@ public class WebSecurityConfig{
             "/auth/logout",
             "/register",
 
-    //
             "/",
             "/store",
-            "/product",
+            "/product/*",
 
     };
 
@@ -58,6 +57,7 @@ public class WebSecurityConfig{
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINT).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/product").permitAll()
                         .requestMatchers(HttpMethod.GET, "/user/**").hasRole("USER")
                         .requestMatchers(HttpMethod.GET, "/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated());
