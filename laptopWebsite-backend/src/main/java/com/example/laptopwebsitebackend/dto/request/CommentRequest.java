@@ -1,4 +1,4 @@
-package com.example.laptopwebsitebackend.dto;
+package com.example.laptopwebsitebackend.dto.request;
 
 import com.example.laptopwebsitebackend.entity.Customer;
 import jakarta.persistence.JoinColumn;

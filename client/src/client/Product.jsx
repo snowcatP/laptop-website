@@ -5,6 +5,10 @@ import Navigation from "./components/Navigation";
 import Letter from "./components/Letter";
 import Footer from "./components/Footer";
 import Slider from "react-slick";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import { getProductById } from "./service/DetailProduct";
+import { getListComment } from "./service/CommentService";
 
 const Product = () => {
   const [nav1, setNav1] = useState(null);
@@ -44,10 +48,62 @@ const Product = () => {
     ref: (slider) => (sliderRef1 = slider),
   };
 
+
+
   useEffect(() => {
     setNav1(sliderRef1);
     setNav2(sliderRef2);
+
   }, []);
+
+  const { id } = useParams(); // Lấy id từ địa chỉ URL
+  const [product, setProduct] = useState(null);
+  const [comments, setComments] = useState(null);
+
+  useEffect(() => {
+  
+    const getProduct = async () => {
+      try {
+        const response = await getProductById(id)
+
+        setProduct(response.data)
+      } catch(error) {console.log(error)}
+        
+    }
+
+    getProduct()
+
+    const getComment = async () => {
+      try {
+        const response = await getListComment(id)
+
+        setComments(response.data)
+        console.log(comments)
+      } catch(error) {console.log(error)}
+        
+    }
+
+    getComment()
+  }, [id])
+
+
+    const [activeTab, setActiveTab] = useState("tab1");
+  
+    const handleTabClick = (tabId) => {
+      setActiveTab(tabId);
+    };
+
+    const [quantity, setQuantity] = useState(1);
+
+    const handleIncrease = () => {
+      setQuantity(prevQuantity => prevQuantity + 1);
+    };
+
+    const handleDecrease = () => {
+      if (quantity > 1) {
+      setQuantity(prevQuantity => prevQuantity - 1);
+      }
+    };
 
   return (
     <>
@@ -63,17 +119,17 @@ const Product = () => {
               {/* Product main img */}
               <div className="col-md-5 col-md-push-2">
                 <Slider id="product-main-img" {...settingsMain}>
-                  <div className="product-preview">
-                    <img src="./assets/img/product01.png" alt="" />
+                <div className="product-preview">
+                    <img src={product?.image1} alt="" />
                   </div>
                   <div className="product-preview">
-                    <img src="./assets/img/product03.png" alt="" />
+                  <img src={product?.image2} alt="" />
                   </div>
                   <div className="product-preview">
-                    <img src="./assets/img/product06.png" alt="" />
+                  <img src={product?.image3} alt="" />
                   </div>
                   <div className="product-preview">
-                    <img src="./assets/img/product08.png" alt="" />
+                  <img src={product?.image4} alt="" />
                   </div>
                 </Slider>
               </div>
@@ -81,17 +137,17 @@ const Product = () => {
               {/* Product thumb imgs */}
               <div className="col-md-2  col-md-pull-5">
                 <Slider id="product-imgs" {...settings}>
-                  <div className="product-preview">
-                    <img src="./assets/img/product01.png" alt="" />
+                <div className="product-preview">
+                    <img src={product?.image1} alt="" />
                   </div>
                   <div className="product-preview">
-                    <img src="./assets/img/product03.png" alt="" />
+                  <img src={product?.image2} alt="" />
                   </div>
                   <div className="product-preview">
-                    <img src="./assets/img/product06.png" alt="" />
+                  <img src={product?.image3} alt="" />
                   </div>
                   <div className="product-preview">
-                    <img src="./assets/img/product08.png" alt="" />
+                  <img src={product?.image4} alt="" />
                   </div>
                 </Slider>
               </div>
@@ -99,102 +155,42 @@ const Product = () => {
               {/* Product details */}
               <div className="col-md-5">
                 <div className="product-details">
-                  <h2 className="product-name">product name goes here</h2>
-                  <div>
-                    <div className="product-rating">
-                      <i className="fa fa-star" />
-                      <i className="fa fa-star" />
-                      <i className="fa fa-star" />
-                      <i className="fa fa-star" />
-                      <i className="fa fa-star-o" />
-                    </div>
-                    <Link className="review-link" to="#">
-                      10 Review(s) | Add your review
-                    </Link>
-                  </div>
+                  <h2 className="product-name">{product?.productName}</h2>
+                  
                   <div>
                     <h3 className="product-price">
-                      $980.00 <del className="product-old-price">$990.00</del>
+                    {product?.price} <del className="product-old-price">132</del>
                     </h3>
                     <span className="product-available">In Stock</span>
                   </div>
-                  <p>
+                  {/* <p>
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit,
                     sed do eiusmod tempor incididunt ut labore et dolore magna
                     aliqua. Ut enim ad minim veniam, quis nostrud exercitation
                     ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                  </p>
-                  <div className="product-options">
-                    <label>
-                      Size
-                      <select className="input-select">
-                        <option value={0}>X</option>
-                      </select>
-                    </label>
-                    <label>
-                      Color
-                      <select className="input-select">
-                        <option value={0}>Red</option>
-                      </select>
-                    </label>
-                  </div>
+                  </p> */}
+                  
                   <div className="add-to-cart">
                     <div className="qty-label">
-                      Qty
+                      Quantiy
                       <div className="input-number">
-                        <input type="number" />
-                        <span className="qty-up">+</span>
-                        <span className="qty-down">-</span>
+                        <input type="number" value={quantity} readOnly/>
+                        <span className="qty-up" onClick={handleIncrease}>+</span>
+                        <span className="qty-down" onClick={handleDecrease}>-</span>
                       </div>
                     </div>
                     <button className="add-to-cart-btn">
                       <i className="fa fa-shopping-cart" /> add to cart
                     </button>
                   </div>
-                  <ul className="product-btns">
-                    <li>
-                      <Link to="#">
-                        <i className="fa fa-heart-o" /> add to wishlist
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="#">
-                        <i className="fa fa-exchange" /> add to compare
-                      </Link>
-                    </li>
-                  </ul>
+                  
                   <ul className="product-links">
                     <li>Category:</li>
                     <li>
-                      <Link to="#">Headphones</Link>
-                    </li>
-                    <li>
-                      <Link to="#">Accessories</Link>
+                      <Link to="#">{product?.category}</Link>
                     </li>
                   </ul>
-                  <ul className="product-links">
-                    <li>Share:</li>
-                    <li>
-                      <Link to="#">
-                        <i className="fa fa-facebook" />
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="#">
-                        <i className="fa fa-twitter" />
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="#">
-                        <i className="fa fa-google-plus" />
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="#">
-                        <i className="fa fa-envelope" />
-                      </Link>
-                    </li>
-                  </ul>
+                  
                 </div>
               </div>
               {/* /Product details */}
@@ -203,65 +199,37 @@ const Product = () => {
                 <div id="product-tab">
                   {/* product tab nav */}
                   <ul className="tab-nav">
-                    <li className="active">
-                      <Link data-toggle="tab" to="#tab1">
+                  <li className={activeTab === "tab1" ? "active" : ""}>
+                    <a href="#tab1" onClick={() => handleTabClick("tab1")}>
                         Description
-                      </Link>
+                    </a>
                     </li>
                     <li>
-                      <Link data-toggle="tab" to="#tab2">
-                        Details
-                      </Link>
-                    </li>
-                    <li>
-                      <Link data-toggle="tab" to="#tab3">
-                        Reviews (3)
-                      </Link>
+                    <a href="#tab2" onClick={() => handleTabClick("tab2")}>
+                        Review
+                    </a>
                     </li>
                   </ul>
                   {/* /product tab nav */}
                   {/* product tab content */}
                   <div className="tab-content">
                     {/* tab1  */}
-                    <div id="tab1" className="tab-pane fade in active">
+                    <div id="tab1" className={`tab-pane fade ${activeTab === "tab1" ? "in active" : ""}`}>
                       <div className="row">
-                        <div className="col-md-12">
-                          <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing
-                            elit, sed do eiusmod tempor incididunt ut labore et
-                            dolore magna aliqua. Ut enim ad minim veniam, quis
-                            nostrud exercitation ullamco laboris nisi ut aliquip
-                            ex ea commodo consequat. Duis aute irure dolor in
-                            reprehenderit in voluptate velit esse cillum dolore
-                            eu fugiat nulla pariatur. Excepteur sint occaecat
-                            cupidatat non proident, sunt in culpa qui officia
-                            deserunt mollit anim id est laborum.
-                          </p>
+                      <div className="col-md-12">
+                          <p>Graphic card: {product?.configuration.graphicCard}</p>
+                          <p>Memory: {product?.configuration.memory}</p>
+                          <p>Processor: {product?.configuration.processor}</p>
+                          <p>Ram: {product?.configuration.ram} GB</p>
+                          <p>Screen: {product?.configuration.screen} inches</p>
                         </div>
                       </div>
                     </div>
                     {/* /tab1  */}
                     {/* tab2  */}
-                    <div id="tab2" className="tab-pane fade in">
-                      <div className="row">
-                        <div className="col-md-12">
-                          <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing
-                            elit, sed do eiusmod tempor incididunt ut labore et
-                            dolore magna aliqua. Ut enim ad minim veniam, quis
-                            nostrud exercitation ullamco laboris nisi ut aliquip
-                            ex ea commodo consequat. Duis aute irure dolor in
-                            reprehenderit in voluptate velit esse cillum dolore
-                            eu fugiat nulla pariatur. Excepteur sint occaecat
-                            cupidatat non proident, sunt in culpa qui officia
-                            deserunt mollit anim id est laborum.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
                     {/* /tab2  */}
                     {/* tab3  */}
-                    <div id="tab3" className="tab-pane fade in">
+                    <div id="tab2" className={`tab-pane fade ${activeTab === "tab2" ? "in active" : ""}`}>
                       <div className="row">
                         {/* Rating */}
                         <div className="col-md-3">
@@ -350,66 +318,29 @@ const Product = () => {
                         <div className="col-md-6">
                           <div id="reviews">
                             <ul className="reviews">
+                            {comments?.map((comment) => (
                               <li>
-                                <div className="review-heading">
-                                  <h5 className="name">John</h5>
-                                  <p className="date">27 DEC 2018, 8:0 PM</p>
-                                  <div className="review-rating">
-                                    <i className="fa fa-star" />
-                                    <i className="fa fa-star" />
-                                    <i className="fa fa-star" />
-                                    <i className="fa fa-star" />
-                                    <i className="fa fa-star-o empty" />
-                                  </div>
+                              <div className="review-heading" key={comment.commentId}>
+                                <h5 className="name">{comment.customer.firstName} {comment.customer.lastName} </h5>
+                                <p className="date">{comment.commentDate}</p>
+                                <div className="review-rating">
+                                  <i className="fa fa-star" />
+                                  <i className="fa fa-star" />
+                                  <i className="fa fa-star" />
+                                  <i className="fa fa-star" />
+                                  <i className="fa fa-star-o empty" />
                                 </div>
-                                <div className="review-body">
-                                  <p>
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipisicing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua
-                                  </p>
-                                </div>
-                              </li>
-                              <li>
-                                <div className="review-heading">
-                                  <h5 className="name">John</h5>
-                                  <p className="date">27 DEC 2018, 8:0 PM</p>
-                                  <div className="review-rating">
-                                    <i className="fa fa-star" />
-                                    <i className="fa fa-star" />
-                                    <i className="fa fa-star" />
-                                    <i className="fa fa-star" />
-                                    <i className="fa fa-star-o empty" />
-                                  </div>
-                                </div>
-                                <div className="review-body">
-                                  <p>
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipisicing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua
-                                  </p>
-                                </div>
-                              </li>
-                              <li>
-                                <div className="review-heading">
-                                  <h5 className="name">John</h5>
-                                  <p className="date">27 DEC 2018, 8:0 PM</p>
-                                  <div className="review-rating">
-                                    <i className="fa fa-star" />
-                                    <i className="fa fa-star" />
-                                    <i className="fa fa-star" />
-                                    <i className="fa fa-star" />
-                                    <i className="fa fa-star-o empty" />
-                                  </div>
-                                </div>
-                                <div className="review-body">
-                                  <p>
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipisicing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua
-                                  </p>
-                                </div>
-                              </li>
+                              </div>
+                              <div className="review-body">
+                                <p>
+                                  {comment.content}
+                                </p>
+                              </div>
+                            </li>
+                            ))}
+
+                              
+                              
                             </ul>
                             <ul className="reviews-pagination">
                               <li className="active">1</li>

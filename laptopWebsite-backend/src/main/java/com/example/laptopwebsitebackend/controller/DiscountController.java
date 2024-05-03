@@ -18,7 +18,7 @@ public class DiscountController {
     @Autowired
     private DiscountService discountService;
 
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<Discount> create_New_Discount(@Valid @RequestBody DiscountRequest discountRequest){
 
         Discount discount = new Discount();
