@@ -11,10 +11,10 @@ const PasswordInput = (props) => {
   return (
     <>
       <div className="row mb-3" style={{ paddingBottom: "1em" }}>
-        <label className="col-sm-4 col-form-label">
+        <label className="col-sm-3 col-form-label">
           {label}
         </label>
-        <div className="col-sm-7">
+        <div className="col-sm-8">
           <input
             className="form-control"
             {...inputProps}

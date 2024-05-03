@@ -1,5 +1,6 @@
 package com.example.laptopwebsitebackend.controller;
 
+import com.example.laptopwebsitebackend.dto.request.ChangePasswordRequest;
 import com.example.laptopwebsitebackend.dto.request.CustomerRequest;
 import com.example.laptopwebsitebackend.entity.Customer;
 import com.example.laptopwebsitebackend.service.CustomerService;
@@ -68,5 +69,12 @@ public class CustomerController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete_Customer(@PathVariable("id") Long id) {
         return ResponseEntity.ok(customerService.deleteCustomer(id));
+    }
+
+    @PutMapping("/change-password")
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest request){
+
+        return ResponseEntity.ok(
+                customerService.changeCustomerPassword(request.getOldPassword(), request.getNewPassword()));
     }
 }

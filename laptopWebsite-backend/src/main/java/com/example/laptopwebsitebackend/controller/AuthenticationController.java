@@ -42,4 +42,13 @@ public class AuthenticationController {
         authenticationService.logout(request);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping("/admin-login")
+    public ResponseEntity<AuthenticationResponse> adminLogin(@RequestBody AuthenticationRequest request) throws Exception {
+        if (request == null || request.getUsername().isEmpty() || request.getPassword().isEmpty()){
+            throw new RuntimeException("Wrong username or password");
+        }
+        AuthenticationResponse result = authenticationService.adminAuthenticate(request);
+        return ResponseEntity.ok(result);
+    }
 }

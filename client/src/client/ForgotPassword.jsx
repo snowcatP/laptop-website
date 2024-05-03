@@ -63,7 +63,7 @@ const ForgotPassword = () => {
                     <Link to="/auth/login" style={{ alignSelf: "flex-start" }}>
                       Login
                     </Link>
-                    <Link to="/register" style={{ alignSelf: "flex-end" }}>
+                    <Link to="/auth/register" style={{ alignSelf: "flex-end" }}>
                       Signup
                     </Link>
                   </div>

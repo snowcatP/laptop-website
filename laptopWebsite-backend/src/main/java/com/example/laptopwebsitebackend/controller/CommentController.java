@@ -1,6 +1,7 @@
 package com.example.laptopwebsitebackend.controller;
 
-import com.example.laptopwebsitebackend.dto.CommentRequest;
+
+import com.example.laptopwebsitebackend.dto.request.CommentRequest;
 import com.example.laptopwebsitebackend.entity.Comment;
 import com.example.laptopwebsitebackend.service.CommentService;
 import com.example.laptopwebsitebackend.service.CustomerService;
@@ -47,7 +48,7 @@ public class CommentController {
         return new ResponseEntity<>(allComment, HttpStatus.OK);
     }
 
-    @GetMapping({"/{product_id}"})
+    @GetMapping("/{product_id}")
     public ResponseEntity<List<Comment>> get_Comment_By_Product_Id(@PathVariable("product_id") Long product_Id) {
         List<Comment> allComment = commentService.getListCommentByProductID(product_Id);
 
