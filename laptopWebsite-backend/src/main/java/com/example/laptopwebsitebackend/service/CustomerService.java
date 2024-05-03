@@ -1,16 +1,16 @@
 package com.example.laptopwebsitebackend.service;
 
-import com.example.laptopwebsitebackend.entity.Bill;
-import com.example.laptopwebsitebackend.entity.Cart;
-import com.example.laptopwebsitebackend.entity.Customer;
-import com.example.laptopwebsitebackend.entity.Order;
+import com.example.laptopwebsitebackend.entity.*;
+import com.example.laptopwebsitebackend.repository.AccountRepository;
 import com.example.laptopwebsitebackend.repository.CustomerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.NoResultException;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +24,12 @@ public class CustomerService {
 
     @Autowired
     private CustomerRepository customerRepository;
+
+    @Autowired
+    private AccountRepository accountRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public Customer createNewCustomer(Customer customer) {
         if (customerRepository.existsByEmail(customer.getEmail())){
@@ -68,5 +74,22 @@ public class CustomerService {
 
         customerRepository.deleteById(customer_id);
         return "Delete customer success";
+    }
+
+    public String changeCustomerPassword(String oldPassword, String newPassword) {
+        SecurityContext context = SecurityContextHolder.getContext();
+        String email = context.getAuthentication().getName();
+
+        Account account = accountRepository.findByUsername(email)
+                .orElseThrow(() -> new RuntimeException("Could not find user!"));
+
+        if (!passwordEncoder.matches(oldPassword, account.getPassword())) {
+            throw new RuntimeException("Old password is not correct");
+        } else {
+            account.setPassword(passwordEncoder.encode(newPassword));
+        }
+
+        accountRepository.save(account);
+        return "Change password success";
     }
 }

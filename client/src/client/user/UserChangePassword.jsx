@@ -5,17 +5,19 @@ import Sidebar from "../components/Sidebar";
 import Letter from "../components/Letter";
 import Footer from "../components/Footer";
 import PasswordInput from "../components/PasswordInput";
-import LoginUtil from "../util/LoginUtil";
-
+import { Form } from "react-bootstrap";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const UserChangePassword = () => {
 
-  LoginUtil()
 
   const [values, setValues] = useState({
     oldPassword: "",
     newPassword: "",
     confirmNewPassword: ""
   })
+
+  //const [changeSuccess, setChangeSuccess] = useState("")
 
   const inputs = [
     {
@@ -40,9 +42,9 @@ const UserChangePassword = () => {
     },
     {
       id: 3,
-      name: "confirmNewPassword",
+      name: "confirmPassword",
       type: "password",
-      label: "Confirm new password",
+      label: "Confirm password",
       errorMessage: "Password does not match!",
       pattern: values.newPassword,
       required: true,
@@ -52,6 +54,13 @@ const UserChangePassword = () => {
 
   const onChange = (e) => {
     setValues({...values, [e.target.name]: e.target.value})
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    console.log(values)
+    toast.success("Change password success!")
   }
 
   return (
@@ -74,7 +83,12 @@ const UserChangePassword = () => {
                   <p>Manage your information to protect the account</p>
                   <hr />
                 </div>
-                <form action="change_user_profile" method="post">
+
+
+                <Form 
+                  onSubmit={handleSubmit}
+                >
+                  <h4 className="change-password-success">Change success!</h4>
                   <input
                     type="hidden"
                     name="action"
@@ -107,7 +121,7 @@ const UserChangePassword = () => {
                       </div>
                     </div>
                   </div>
-                </form>
+                </Form>
               </div>
             </div>
           </div>
@@ -116,6 +130,19 @@ const UserChangePassword = () => {
 
       <Letter/>
       <Footer/>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      
+      />
     </>
   );
 };

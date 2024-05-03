@@ -8,6 +8,8 @@ import { Form } from "react-bootstrap";
 import { loginResult } from "./service/ClientService";
 import { useAuth } from "./context/AuthContext";
 import { customerProfile } from "./service/ClientService";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
   const { setUser, setIsLogged } = useAuth();
@@ -88,15 +90,20 @@ const Login = () => {
           };
 
           user();
-
-          navigate("/user/profile");
-          return;
+          toast.success("Login success!")
+          
+          setTimeout(() => {
+            navigate("/");
+          }, 2000)
+          
         }
       } catch (error) {
         setErrorMessage("Wrong username or password");
       }
     };
+
     userLogin();
+
   };
 
   return (
@@ -150,7 +157,7 @@ const Login = () => {
                     className="form-group"
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
-                    <Link to="/register" style={{ alignSelf: "flex-start" }}>
+                    <Link to="/auth/register" style={{ alignSelf: "flex-start" }}>
                       Register
                     </Link>
                     <Link
@@ -185,6 +192,20 @@ const Login = () => {
 
       <Letter />
       <Footer />
+
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      
+      />
     </>
   );
 };

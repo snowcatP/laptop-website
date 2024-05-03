@@ -9,6 +9,7 @@ const Header = () => {
   const {user, setUser, isLogged, setIsLogged} = useAuth()
   const navigate = useNavigate()
 
+
   const handleLogout = () => {
     const getToken = localStorage.getItem("token")
 
@@ -28,7 +29,6 @@ const Header = () => {
 
     logout()
   }
-
 
   return (
      <div>
@@ -193,8 +193,8 @@ const Header = () => {
                   :
                   <>
                     <div>
-                      <Link to="/register">
-                        <i className="fa fa-user" />
+                      <Link to="/auth/register">
+                        <i className="fa fa-user"/>
                         <span>Register</span>
                       </Link>
                     </div>

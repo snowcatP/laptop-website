@@ -37,9 +37,10 @@ public class WebSecurityConfig{
             "/auth/login",
             "/auth/introspect",
             "/auth/logout",
-            "/register",
+            "/auth/register",
+            "/auth/admin-login",
 
-    //
+
             "/",
             "/store",
             "/product/**",

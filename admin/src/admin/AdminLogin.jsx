@@ -1,116 +1,127 @@
 import React from "react";
+import { useState } from "react";
+import FormInput from "./components/FormInput";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { adminLogin } from "./service/AdminService";
 
 const AdminLogin = () => {
+  const [values, setValues] = useState({
+    username: "",
+    password: "",
+  });
+
+  const inputs = [
+    {
+      id: 1,
+      name: "username",
+      type: "email",
+      label: "Username",
+      placeholder: "Username or email",
+      errorMessage: "Username shoule be in email type",
+      required: true,
+      focused: false,
+    },
+    {
+      id: 2,
+      name: "password",
+      type: "password",
+      label: "Password",
+      placeholder: "Password",
+      // errorMessage: "Password shoule be at least 8 characters",
+      // pattern: "^[a-zA-Z0-9]{8,}",
+      required: true,
+      focused: false,
+    },
+  ];
+
+  const onChange = (e) => {
+    setValues({ ...values, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    const adminLog = async () => {
+      const response = await adminLogin(values)
+
+      if (response.status === 200) {
+        const token = response.data["token"]
+        localStorage.setItem("token", token)
+        toast.success("Loggin successs!")
+      }
+    }
+
+    adminLog()
+
+  };
 
   return (
-    <div className="container">
-      <section className="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
-        <div className="container">
-          <div className="row justify-content-center">
-            <div className="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
-              <div className="d-flex justify-content-center py-4">
-                <a
-                  href="index.html"
-                  className="logo d-flex align-items-center w-auto"
-                >
-                  <img src="./assets/img/logo.png" alt="" />
-                  <span className="d-none d-lg-block">NiceAdmin</span>
-                </a>
-              </div>
-              {/* End Logo */}
-              <div className="card mb-3">
-                <div className="card-body">
-                  <div className="pt-4 pb-2">
-                    <h5 className="card-title text-center pb-0 fs-4">
-                      Login to Your Account
-                    </h5>
-                    <p className="text-center small">
-                      Enter your username &amp; password to login
-                    </p>
-                  </div>
-                  <form className="row g-3 needs-validation" noValidate="">
-                    <div className="col-12">
-                      <label htmlFor="yourUsername" className="form-label">
-                        Username
-                      </label>
-                      <div className="input-group has-validation">
-                        <span
-                          className="input-group-text"
-                          id="inputGroupPrepend"
-                        >
-                          @
-                        </span>
-                        <input
-                          type="text"
-                          name="username"
-                          className="form-control"
-                          id="yourUsername"
-                          required=""
-                        />
-                        <div className="invalid-feedback">
-                          Please enter your username.
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-12">
-                      <label htmlFor="yourPassword" className="form-label">
-                        Password
-                      </label>
-                      <input
-                        type="password"
-                        name="password"
-                        className="form-control"
-                        id="yourPassword"
-                        required=""
-                      />
-                      <div className="invalid-feedback">
-                        Please enter your password!
-                      </div>
-                    </div>
-                    <div className="col-12">
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          name="remember"
-                          defaultValue="true"
-                          id="rememberMe"
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor="rememberMe"
-                        >
-                          Remember me
-                        </label>
-                      </div>
-                    </div>
-                    <div className="col-12">
-                      <button className="btn btn-primary w-100" type="submit">
-                        Login
-                      </button>
-                    </div>
-                    <div className="col-12">
-                      <p className="small mb-0">
-                        Don't have account?{" "}
-                        <a href="pages-register.html">Create an account</a>
+    <>
+      <div className="container">
+        <section className="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+          <div className="container">
+            <div className="row justify-content-center">
+              <div className="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+                <div className="d-flex justify-content-center py-4">
+                  <a
+                    href="index.html"
+                    className="logo d-flex align-items-center w-auto"
+                  >
+                    <img src="./assets/img/logo.png" alt="" />
+                    <span className="d-none d-lg-block">NiceAdmin</span>
+                  </a>
+                </div>
+                {/* End Logo */}
+                <div className="card mb-3">
+                  <div className="card-body">
+                    <div className="pt-4 pb-2">
+                      <h5 className="card-title text-center pb-0 fs-4">
+                        Login to Your Account
+                      </h5>
+                      <p className="text-center small">
+                        Enter your username &amp; password to login
                       </p>
                     </div>
-                  </form>
+
+                    <form onSubmit={handleSubmit} className="row g-3">
+                      {inputs.map((input) => (
+                        <FormInput
+                          key={input.id}
+                          {...input}
+                          value={values[input.name]}
+                          onChange={onChange}
+                        />
+                      ))}
+                      <div className="col-12">
+                        <button
+                          className="btn btn-primary w-100 mt-3 p-2"
+                          type="submit"
+                        >
+                          Login
+                        </button>
+                      </div>
+                    </form>
+                  </div>
                 </div>
-              </div>
-              <div className="credits">
-                {/* All the links in the footer should remain intact. */}
-                {/* You can delete the links only if you purchased the pro version. */}
-                {/* Licensing information: https://bootstrapmade.com/license/ */}
-                {/* Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ */}
-                Designed by{" "}
-                <a href="https://bootstrapmade.com/">BootstrapMade</a>
               </div>
             </div>
           </div>
-        </div>
-      </section>
-    </div>
+        </section>
+      </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={4000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+    </>
   );
 };
 
