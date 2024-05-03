@@ -67,6 +67,7 @@ public class WebSecurityConfig{
                         .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINT).permitAll()
                         .requestMatchers(HttpMethod.GET, "/product").permitAll()
                         .requestMatchers(HttpMethod.GET, "/product/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/product/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/discount").permitAll()
                         .requestMatchers(HttpMethod.GET, "/discount/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/warranty").permitAll()
