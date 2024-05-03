@@ -1,16 +1,18 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Sidebar = () => {
 
-  //const profile = props.profile
+  const {user} = useAuth()
+  const profile = {...user}
 
   return (
     <>
       {/* ASIDE */}
       <div id="aside" className="col-md-3">
         <h2 className="d-inline-flex pb-3">Dashboard</h2>
-        <h4 className="d-inline-flex pb-3">Hello Ho th</h4>
+        <h4 className="d-inline-flex pb-3">Hello {profile.firstName + " " + profile.lastName}</h4>
         {/* aside Widget */}
         <div className="aside">
           <h3 className="aside-title" style={{ paddingTop: "0.5em" }}>

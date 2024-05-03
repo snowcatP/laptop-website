@@ -125,7 +125,7 @@ const Register = () => {
                   >
                     <Link to="" style={{ alignSelf: "flex-start" }}/>
                     <Link
-                      to="/login"
+                      to="/auth/login"
                       style={{ alignSelf: "flex-end" }}
                     >
                       Have an account?

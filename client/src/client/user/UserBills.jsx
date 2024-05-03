@@ -4,8 +4,11 @@ import Navigation from "../components/Navigation";
 import Sidebar from "../components/Sidebar";
 import Letter from '../components/Letter';
 import Footer from '../components/Footer';
+import LoginUtil from '../util/LoginUtil';
 
-const UserBills = (props) => {
+const UserBills = () => {
+
+  LoginUtil()
   // const profile = props.profile
 
   return (

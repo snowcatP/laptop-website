@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "./components/Header";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
 import Letter from "./components/Letter";
-import { useState, useEffect } from 'react';
-import axios from "axios";
+import { getProducts } from "./service/ProductService";
+import { getTop5Products } from "./service/Top5ProductService";
 
 const HomePage = () => {
   const settingsSlider = {
@@ -47,41 +47,36 @@ const HomePage = () => {
     arrows: true,
   };
 
-  const [sale_products, setsale_Products] = useState([]);
-  const [products, setProducts] = useState([]);
-  const [token, setToken] = useState("");
+  const [products, setProducts] = useState([])
+
   useEffect(() => {
-    const fetchData = async () => {
-      try{
-        // Gửi yêu cầu để nhận token
-        const tokenResponse = await axios.post("http://localhost:8080/auth/login", {
-          username: "admin@gmail.com",
-          password: "admin"
-        });
+  
+    const getAllProducts = async () => {
+      try {
+        const response = await getProducts()
 
-        const token = tokenResponse.data.token;
-        console.log(token);
+        setProducts(response.data)
+      } catch(error) {console.log(error)}
+        
+    }
 
-        localStorage.setItem("token",token);
-        setToken(token);
+    getAllProducts()
+  }, [])
 
-        //Gửi yêu cầu để lấy dữ liệu sản phẩm với token đã nhận được
-        const productsResponse = await axios.get("http://localhost:8080/product", {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+  const [top5products, set5Products] = useState([])
 
-        setsale_Products(productsResponse.data);
-        setProducts(productsResponse.data);
-        console.log(productsResponse.data);
-      }catch (error){
-        console.error("Error fetching data: ", error);
-      };
-    };
+  useEffect(() =>{
+    const get_All_5_Product_By_Price = async () => {
+      try {
+        const response = await getTop5Products()
 
-    fetchData();
-  },[]);
+        set5Products(response.data)
+      } catch(error) {console.log(error)}
+        
+    }
+
+    get_All_5_Product_By_Price()
+  }, [])
 
   return (
     <>
@@ -89,8 +84,7 @@ const HomePage = () => {
       <Navigation />
 
       <>
-        {/* SECTION */}
-        
+    
         {/* /SECTION */}
         {/* SECTION */}
         <div className="section">
@@ -120,44 +114,53 @@ const HomePage = () => {
                 <div className="row">
                   <div className="products-tabs">
                     {/* tab */}
-                    <div id="tab1" className="tab-pane active"  style={{padding:'0 20px 50px 20px'}}>
-                      <Slider
-                        className="products-slick"
-                        {...settingsSlider}
-                      >
-                        {/* product */}
-
-
-                        {sale_products.map((product, index) => (
-                          <div className="product" key={index}>
-                          <div className="product-img">
-                            <img src={product?.image1} alt="" />
-                            <div className="product-label">
-                              <span className="sale">-30%</span>
-                              <span className="new">NEW</span>
+                    <div
+                      id="tab1"
+                      className="tab-pane active"
+                      style={{ padding: "0 20px 50px 20px" }}
+                    >
+                      <Slider className="products-slick" {...settingsSlider}>
+                        {products?.map((product) => (
+                          <div className="product"
+                            key={product.productId}>
+                            <div className="product-img">
+                              <img src={product.image1} alt="" />
+                              <div className="product-label">
+                                <span className="sale">-30%</span>
+                                <span className="new">NEW</span>
+                              </div>
+                            </div>
+                            <div className="product-body">
+                              <p className="product-category">
+                                {product.category}
+                              </p>
+                              <h3 className="product-name">
+                                <Link to={`/product/${product?.productId}`}>{product.productName}</Link>
+                              </h3>
+                              <h4 className="product-price">
+                                {product.price} VND
+                                <del className="product-old-price">
+                                  {product.price * 1.3} VND
+                                </del>
+                              </h4>
+                              <div className="product-rating">
+                                <i className="fa fa-star" />
+                                <i className="fa fa-star" />
+                                <i className="fa fa-star" />
+                                <i className="fa fa-star" />
+                                <i className="fa fa-star" />
+                              </div>
+                              
+                            </div>
+                            <div className="add-to-cart">
+                              <button className="add-to-cart-btn">
+                                <i className="fa fa-shopping-cart" /> add to
+                                cart
+                              </button>
                             </div>
                           </div>
-                          <div className="product-body">
-                            <p className="product-category">{product?.category}</p>
-                            <h3 className="product-name">
-                              <Link to={`/product/${product?.productId}`}>{product?.productName}</Link>
-                            </h3>
-                            <h4 className="product-price">
-                              {product?.price}{" "}
-                              <del className="product-old-price">$990.00</del>
-                            </h4>
-                          </div>
-                          <div className="add-to-cart">
-                            <button className="add-to-cart-btn">
-                              <i className="fa fa-shopping-cart" /> add to cart
-                            </button>
-                          </div>
-                        </div>
                         ))}
-
-                        
-                        {/* /product */}
-                        
+                        {/* product */}
                       </Slider>
                       {/* <div id="slick-nav-1" className="products-slick-nav" /> */}
                     </div>
@@ -231,7 +234,7 @@ const HomePage = () => {
               {/* section title */}
               <div className="col-md-12">
                 <div className="section-title">
-                  <h3 className="title">Outstanding laptop</h3>
+                  <h3 className="title">Top Product</h3>
                   <div className="section-nav">
                     <ul className="section-tab-nav tab-nav">
                       <li className="active">
@@ -239,7 +242,6 @@ const HomePage = () => {
                           Laptops
                         </Link>
                       </li>
-                      
                     </ul>
                   </div>
                 </div>
@@ -250,41 +252,58 @@ const HomePage = () => {
                 <div className="row">
                   <div className="products-tabs">
                     {/* tab */}
-                    <div id="tab2" className="tab-pane fade in active" style={{padding:'0 20px 50px 20px'}}>
+                    <div
+                      id="tab2"
+                      className="tab-pane fade in active"
+                      style={{ padding: "0 20px 50px 20px" }}
+                    >
                       <Slider
                         className="products-slick"
                         data-nav="#slick-nav-2"
                         {...settingsSlider}
                       >
                         {/* product */}
-                        {products.map((product, index) => (
-                          <div className="product" key={index}>
-                          <div className="product-img">
-                            <img src={product?.image1} alt="" />
-                            <div className="product-label">
-                              <span className="sale">-30%</span>
-                              <span className="new">NEW</span>
+                        {top5products?.map((topproduct) => (
+                          <div className="product"
+                            key={topproduct.productId}>
+                            <div className="product-img">
+                              <img src={topproduct.image1} alt="" />
+                              <div className="product-label">
+                                <span className="sale">-30%</span>
+                                <span className="new">NEW</span>
+                              </div>
+                            </div>
+                            <div className="product-body">
+                              <p className="product-category">
+                                {topproduct.category}
+                              </p>
+                              <h3 className="product-name">
+                                <Link to={`/product/${topproduct?.productId}`}>{topproduct.productName}</Link>
+                              </h3>
+                              <h4 className="product-price">
+                                {topproduct.price} VND
+                                <del className="product-old-price">
+                                  {topproduct.price * 1.3} VND
+                                </del>
+                              </h4>
+                              <div className="product-rating">
+                                <i className="fa fa-star" />
+                                <i className="fa fa-star" />
+                                <i className="fa fa-star" />
+                                <i className="fa fa-star" />
+                                <i className="fa fa-star" />
+                              </div>
+                              
+                            </div>
+                            <div className="add-to-cart">
+                              <button className="add-to-cart-btn">
+                                <i className="fa fa-shopping-cart" /> add to
+                                cart
+                              </button>
                             </div>
                           </div>
-                          <div className="product-body">
-                            <p className="product-category">{product?.category}</p>
-                            <h3 className="product-name">
-                              <Link to={`/product/${product?.productId}`}>{product?.productName}</Link>
-                            </h3>
-                            <h4 className="product-price">
-                              {product?.price}{" "}
-                              <del className="product-old-price">$990.00</del>
-                            </h4>
-                          </div>
-                          <div className="add-to-cart">
-                            <button className="add-to-cart-btn">
-                              <i className="fa fa-shopping-cart" /> add to cart
-                            </button>
-                          </div>
-                        </div>
                         ))}
                         {/* /product */}
-                      
                       </Slider>
                       <div id="slick-nav-2" className="products-slick-nav" />
                     </div>
@@ -305,7 +324,7 @@ const HomePage = () => {
           <div className="container">
             {/* row */}
             <div className="row">
-              <div className="col-md-4 col-xs-6" style={{padding:'0 20px'}}>
+              <div className="col-md-4 col-xs-6" style={{ padding: "0 20px" }}>
                 <div className="section-title">
                   <h4 className="title">Top selling</h4>
                   <div className="section-nav">
@@ -425,7 +444,7 @@ const HomePage = () => {
                   </div>
                 </Slider>
               </div>
-              <div className="col-md-4 col-xs-6" style={{padding:'0 20px'}}>
+              <div className="col-md-4 col-xs-6" style={{ padding: "0 20px" }}>
                 <div className="section-title">
                   <h4 className="title">Top selling</h4>
                   <div className="section-nav">
@@ -546,7 +565,7 @@ const HomePage = () => {
                 </Slider>
               </div>
               <div className="clearfix visible-sm visible-xs" />
-              <div className="col-md-4 col-xs-6 " style={{padding:'0 20px'}}>
+              <div className="col-md-4 col-xs-6 " style={{ padding: "0 20px" }}>
                 <div className="section-title">
                   <h4 className="title">Top selling</h4>
                   <div className="section-nav">

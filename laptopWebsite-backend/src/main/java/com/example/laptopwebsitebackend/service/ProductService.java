@@ -117,6 +117,11 @@ public class ProductService {
         return productRepository.findAll(pageable).getContent();
     }
 
+    public List<Product> get_Top_5_Highest_Priced_Products() {
+        // Tạo một trang đầu tiên có 6 sản phẩm, sắp xếp theo giá giảm dần
+        PageRequest pageable = PageRequest.of(0, 6, Sort.by("price").descending());
+        return productRepository.findAll(pageable).getContent();
+    }
 
     public List<Product> searchProducts(String keyword,String category, String brand, Double minPrice, Double maxPrice) {
 

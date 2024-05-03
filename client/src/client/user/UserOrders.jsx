@@ -4,11 +4,11 @@ import Navigation from "../components/Navigation";
 import Sidebar from "../components/Sidebar";
 import Letter from '../components/Letter';
 import Footer from '../components/Footer';
+import LoginUtil from '../util/LoginUtil';
 
+const UserOrders = () => {
 
-const UserOrders = (props) => {
-
-  //const profile = props.profile
+  LoginUtil()
 
   return (
     <>

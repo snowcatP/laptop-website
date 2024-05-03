@@ -21,7 +21,7 @@ const Sidebar = () => {
               to="#"
             >
               <i className="bi bi-menu-button-wide" />
-              <span>Manage Product</span>
+              <span>Product Management</span>
               <i className="bi bi-chevron-down ms-auto" />
             </Link>
             <ul
@@ -30,15 +30,15 @@ const Sidebar = () => {
               data-bs-parent="#sidebar-nav"
             >
               <li>
-                <Link to="/admin/product-list">
+                <Link to="/list-product">
                   <i className="bi bi-circle" />
                   <span>List Products</span>
                 </Link>
               </li>
               <li>
-                <Link to="/admin/add-product">
+                <Link to="/add-product">
                   <i className="bi bi-circle" />
-                  <span>Import Product</span>
+                  <span>Add Product</span>
                 </Link>
               </li>
             </ul>
@@ -52,7 +52,7 @@ const Sidebar = () => {
               to="#"
             >
               <i className="bi bi-journal-text" />
-              <span>Manage Warranty</span>
+              <span>Warranty Management</span>
               <i className="bi bi-chevron-down ms-auto" />
             </Link>
             <ul
@@ -61,13 +61,13 @@ const Sidebar = () => {
               data-bs-parent="#sidebar-nav"
             >
               <li>
-                <Link to="/admin/warranty-list">
+                <Link to="/list-warranty">
                   <i className="bi bi-circle" />
                   <span>List Warranty</span>
                 </Link>
               </li>
               <li>
-                <Link to="/admin/add-warranty">
+                <Link to="/add-warranty">
                   <i className="bi bi-circle" />
                   <span>Add Warranty</span>
                 </Link>
@@ -114,7 +114,7 @@ const Sidebar = () => {
               to="#"
             >
               <i className="bi bi-bar-chart" />
-              <span>Charts</span>
+              <span>Customer Management</span>
               <i className="bi bi-chevron-down ms-auto" />
             </Link>
             <ul
@@ -125,21 +125,10 @@ const Sidebar = () => {
               <li>
                 <Link to="charts-chartjs.html">
                   <i className="bi bi-circle" />
-                  <span>Chart.js</span>
+                  <span>List Customer</span>
                 </Link>
               </li>
-              <li>
-                <Link to="charts-apexcharts.html">
-                  <i className="bi bi-circle" />
-                  <span>ApexCharts</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="charts-echarts.html">
-                  <i className="bi bi-circle" />
-                  <span>ECharts</span>
-                </Link>
-              </li>
+              
             </ul>
           </li>
           {/* End Charts Nav */}
@@ -151,7 +140,7 @@ const Sidebar = () => {
               to="#"
             >
               <i className="bi bi-gem" />
-              <span>Icons</span>
+              <span>Order Management</span>
               <i className="bi bi-chevron-down ms-auto" />
             </Link>
             <ul
@@ -162,19 +151,7 @@ const Sidebar = () => {
               <li>
                 <Link to="icons-bootstrap.html">
                   <i className="bi bi-circle" />
-                  <span>Bootstrap Icons</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="icons-remix.html">
-                  <i className="bi bi-circle" />
-                  <span>Remix Icons</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="icons-boxicons.html">
-                  <i className="bi bi-circle" />
-                  <span>Boxicons</span>
+                  <span>List Order</span>
                 </Link>
               </li>
             </ul>

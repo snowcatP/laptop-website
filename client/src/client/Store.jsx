@@ -6,44 +6,24 @@ import Footer from "./components/Footer";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useState,useEffect } from "react";
+import { getListProducts } from "./service/StoreService";
 
 const Store = () => {
 
-  const [sale_products, setsale_Products] = useState([]);
   const [products, setProducts] = useState([]);
-  const [token, setToken] = useState("");
   useEffect(() => {
-    const fetchData = async () => {
-      try{
-        // Gửi yêu cầu để nhận token
-        const tokenResponse = await axios.post("http://localhost:8080/auth/login", {
-          username: "admin@gmail.com",
-          password: "admin"
-        });
+  
+    const getListProduct = async () => {
+      try {
+        const response = await getListProducts()
 
-        const token = tokenResponse.data.token;
-        console.log(token);
+        setProducts(response.data)
+      } catch(error) {console.log(error)}
+        
+    }
 
-        localStorage.setItem("token",token);
-        setToken(token);
-
-        //Gửi yêu cầu để lấy dữ liệu sản phẩm với token đã nhận được
-        const productsResponse = await axios.get("http://localhost:8080/product", {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-
-        setsale_Products(productsResponse.data);
-        setProducts(productsResponse.data);
-        console.log(productsResponse.data);
-      }catch (error){
-        console.error("Error fetching data: ", error);
-      };
-    };
-
-    fetchData();
-  },[]);
+    getListProduct()
+  },[])
 
   return (
     <>

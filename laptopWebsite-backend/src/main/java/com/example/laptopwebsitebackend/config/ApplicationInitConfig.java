@@ -29,7 +29,7 @@ public class ApplicationInitConfig {
                                         RoleRepository roleRepository,
                                         PermissionRepository permissionRepository) {
         return args -> {
-            if (accountRepository.findByUsername("admin@gmail.com") == null) {
+            if (accountRepository.findByUsername("admin@gmail.com").isEmpty()) {
 
                 Permission permission = permissionRepository.findByPermissionName("ADMIN");
 

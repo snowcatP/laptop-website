@@ -7,6 +7,8 @@ import Footer from "./components/Footer";
 import Slider from "react-slick";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { getProductById } from "./service/DetailProduct";
+import { getListComment } from "./service/CommentService";
 
 const Product = () => {
   const [nav1, setNav1] = useState(null);
@@ -46,38 +48,63 @@ const Product = () => {
     ref: (slider) => (sliderRef1 = slider),
   };
 
-  const [token, setToken] = useState("");
+
 
   useEffect(() => {
     setNav1(sliderRef1);
     setNav2(sliderRef2);
 
-    // Lấy token từ Local Storage
-    const token = localStorage.getItem("token");
-    setToken(token);
   }, []);
 
   const { id } = useParams(); // Lấy id từ địa chỉ URL
   const [product, setProduct] = useState(null);
-  
+  const [comments, setComments] = useState(null);
 
   useEffect(() => {
-    const fetchProductData = async () =>{
+  
+    const getProduct = async () => {
       try {
-        const productResponse = await axios.get(`http://localhost:8080/product/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        setProduct(productResponse.data);
-        console.log(productResponse.data);
-      } catch(error){
-        console.error("Error fetching data:", error);
+        const response = await getProductById(id)
+
+        setProduct(response.data)
+      } catch(error) {console.log(error)}
+        
+    }
+
+    getProduct()
+
+    const getComment = async () => {
+      try {
+        const response = await getListComment(id)
+
+        setComments(response.data)
+        console.log(comments)
+      } catch(error) {console.log(error)}
+        
+    }
+
+    getComment()
+  }, [id])
+
+
+    const [activeTab, setActiveTab] = useState("tab1");
+  
+    const handleTabClick = (tabId) => {
+      setActiveTab(tabId);
+    };
+
+    const [quantity, setQuantity] = useState(1);
+
+    const handleIncrease = () => {
+      setQuantity(prevQuantity => prevQuantity + 1);
+    };
+
+    const handleDecrease = () => {
+      if (quantity > 1) {
+      setQuantity(prevQuantity => prevQuantity - 1);
       }
     };
 
-    fetchProductData();
-  },[id, token]);
   return (
     <>
       <Header />
@@ -147,9 +174,9 @@ const Product = () => {
                     <div className="qty-label">
                       Quantiy
                       <div className="input-number">
-                        <input type="number"/>
-                        <span className="qty-up">+</span>
-                        <span className="qty-down">-</span>
+                        <input type="number" value={quantity} readOnly/>
+                        <span className="qty-up" onClick={handleIncrease}>+</span>
+                        <span className="qty-down" onClick={handleDecrease}>-</span>
                       </div>
                     </div>
                     <button className="add-to-cart-btn">
@@ -172,27 +199,22 @@ const Product = () => {
                 <div id="product-tab">
                   {/* product tab nav */}
                   <ul className="tab-nav">
-                    <li className="active">
-                      <Link data-toggle="tab" to="#tab1">
+                  <li className={activeTab === "tab1" ? "active" : ""}>
+                    <a href="#tab1" onClick={() => handleTabClick("tab1")}>
                         Description
-                      </Link>
+                    </a>
                     </li>
                     <li>
-                      <Link data-toggle="tab" to="#tab2">
-                        Details
-                      </Link>
-                    </li>
-                    <li>
-                      <Link data-toggle="tab" to="#tab3">
-                        Reviews (3)
-                      </Link>
+                    <a href="#tab2" onClick={() => handleTabClick("tab2")}>
+                        Review
+                    </a>
                     </li>
                   </ul>
                   {/* /product tab nav */}
                   {/* product tab content */}
                   <div className="tab-content">
                     {/* tab1  */}
-                    <div id="tab1" className="tab-pane fade in active">
+                    <div id="tab1" className={`tab-pane fade ${activeTab === "tab1" ? "in active" : ""}`}>
                       <div className="row">
                       <div className="col-md-12">
                           <p>Graphic card: {product?.configuration.graphicCard}</p>
@@ -205,20 +227,9 @@ const Product = () => {
                     </div>
                     {/* /tab1  */}
                     {/* tab2  */}
-                    <div id="tab2" className="tab-pane fade in">
-                      <div className="row">
-                        <div className="col-md-12">
-                          <p>Graphic card: {product?.configuration.graphicCard}</p>
-                          <p>Memory: {product?.configuration.memory}</p>
-                          <p>Processor: {product?.configuration.processor}</p>
-                          <p>Ram: {product?.configuration.ram} GB</p>
-                          <p>Screen: {product?.configuration.screen} inches</p>
-                        </div>
-                      </div>
-                    </div>
                     {/* /tab2  */}
                     {/* tab3  */}
-                    <div id="tab3" className="tab-pane fade in">
+                    <div id="tab2" className={`tab-pane fade ${activeTab === "tab2" ? "in active" : ""}`}>
                       <div className="row">
                         {/* Rating */}
                         <div className="col-md-3">
@@ -307,66 +318,29 @@ const Product = () => {
                         <div className="col-md-6">
                           <div id="reviews">
                             <ul className="reviews">
+                            {comments?.map((comment) => (
                               <li>
-                                <div className="review-heading">
-                                  <h5 className="name">John</h5>
-                                  <p className="date">27 DEC 2018, 8:0 PM</p>
-                                  <div className="review-rating">
-                                    <i className="fa fa-star" />
-                                    <i className="fa fa-star" />
-                                    <i className="fa fa-star" />
-                                    <i className="fa fa-star" />
-                                    <i className="fa fa-star-o empty" />
-                                  </div>
+                              <div className="review-heading" key={comment.commentId}>
+                                <h5 className="name">{comment.customer.firstName} {comment.customer.lastName} </h5>
+                                <p className="date">{comment.commentDate}</p>
+                                <div className="review-rating">
+                                  <i className="fa fa-star" />
+                                  <i className="fa fa-star" />
+                                  <i className="fa fa-star" />
+                                  <i className="fa fa-star" />
+                                  <i className="fa fa-star-o empty" />
                                 </div>
-                                <div className="review-body">
-                                  <p>
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipisicing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua
-                                  </p>
-                                </div>
-                              </li>
-                              <li>
-                                <div className="review-heading">
-                                  <h5 className="name">John</h5>
-                                  <p className="date">27 DEC 2018, 8:0 PM</p>
-                                  <div className="review-rating">
-                                    <i className="fa fa-star" />
-                                    <i className="fa fa-star" />
-                                    <i className="fa fa-star" />
-                                    <i className="fa fa-star" />
-                                    <i className="fa fa-star-o empty" />
-                                  </div>
-                                </div>
-                                <div className="review-body">
-                                  <p>
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipisicing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua
-                                  </p>
-                                </div>
-                              </li>
-                              <li>
-                                <div className="review-heading">
-                                  <h5 className="name">John</h5>
-                                  <p className="date">27 DEC 2018, 8:0 PM</p>
-                                  <div className="review-rating">
-                                    <i className="fa fa-star" />
-                                    <i className="fa fa-star" />
-                                    <i className="fa fa-star" />
-                                    <i className="fa fa-star" />
-                                    <i className="fa fa-star-o empty" />
-                                  </div>
-                                </div>
-                                <div className="review-body">
-                                  <p>
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipisicing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua
-                                  </p>
-                                </div>
-                              </li>
+                              </div>
+                              <div className="review-body">
+                                <p>
+                                  {comment.content}
+                                </p>
+                              </div>
+                            </li>
+                            ))}
+
+                              
+                              
                             </ul>
                             <ul className="reviews-pagination">
                               <li className="active">1</li>
