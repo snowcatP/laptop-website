@@ -7,3 +7,7 @@ export const loginResult = (credential) => axios.post(URL + "/auth/login", crede
 export const customerProfile = (headers) => axios.get(URL + "/user/profile", {headers})
 
 export const customerLogout = (token) => axios.post(URL + "/auth/logout", token)
+
+export const customerRegister = (customer) => axios.post(URL + "/auth/register", customer)
+
+export const checkValidToken = (token) => axios.post(URL + "/auth/introspect", token)

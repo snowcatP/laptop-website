@@ -19,6 +19,19 @@ body {
   color: #444444;
 }
 
+span.error-message {
+  color: red;
+  display: none;
+}
+
+input:invalid[focused="true"] ~ span.error-message{
+  display: block;
+}
+
+input:invalid ~ span.error-message{
+  display: block;
+}
+
 a {
   color: #4154f1;
   text-decoration: none;

@@ -15,22 +15,13 @@ const Navigation = () => {
                 <Link to="/">Home</Link>
               </li>
               <li>
-                <Link to="#">Hot Deals</Link>
+                <Link to="/store">Store</Link>
               </li>
               <li>
-                <Link to="#">Categories</Link>
+                <Link to="#">Contact</Link>
               </li>
               <li>
-                <Link to="#">Laptops</Link>
-              </li>
-              <li>
-                <Link to="#">Smartphones</Link>
-              </li>
-              <li>
-                <Link to="#">Cameras</Link>
-              </li>
-              <li>
-                <Link to="#">Accessories</Link>
+                <Link to="#">Support</Link>
               </li>
             </ul>
             {/* /NAV */}

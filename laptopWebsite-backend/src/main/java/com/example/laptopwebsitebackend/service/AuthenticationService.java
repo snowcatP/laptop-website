@@ -53,35 +53,43 @@ public class AuthenticationService {
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) throws Exception {
         Account account = accountService.findByUsername(request.getUsername());
-
-        Staff staff = new Staff();
         Customer customer = new Customer();
-        boolean checkPermission = false;
-
-        if (account.getPermission().getPermissionName().equals("ADMIN")) {
-            checkPermission = true;
-            staff = staffRepository.findByEmail(request.getUsername())
-                    .orElseThrow(() -> new RuntimeException("User is not exist"));
-        } else {
-            customer = customerRepository.findByEmail(request.getUsername())
-                    .orElseThrow(() -> new RuntimeException("User is not exist"));
-        }
+        customer = customerRepository.findByEmail(request.getUsername())
+                .orElseThrow(() -> new RuntimeException("User is not exist"));
 
         boolean authenticated = false;
-        if (checkPermission) {
-            authenticated = passwordEncoder.matches(request.getPassword(),
-                    staff.getAccount().getPassword());
-        } else {
-            authenticated = passwordEncoder.matches(request.getPassword(),
-                    customer.getAccount().getPassword());
-        }
+
+        authenticated = passwordEncoder.matches(request.getPassword(), customer.getAccount().getPassword());
 
         if (!authenticated) {
             throw new RuntimeException("Wrong username or password");
         }
 
-        String token = generateToken(account,
-                (checkPermission) ? staff.getStaffId() : customer.getCustomerId());
+        String token = generateToken(account, customer.getCustomerId());
+
+        return AuthenticationResponse.builder()
+                .token(token)
+                .authenticated(true)
+                .build();
+    }
+
+    public AuthenticationResponse adminAuthenticate(AuthenticationRequest request) throws Exception {
+        Account account = accountService.findByUsername(request.getUsername());
+
+        Staff staff = new Staff();
+
+        staff = staffRepository.findByEmail(request.getUsername())
+                .orElseThrow(() -> new RuntimeException("User is not exist"));
+
+        boolean authenticated = false;
+        authenticated = passwordEncoder.matches(request.getPassword(),
+                staff.getAccount().getPassword());
+
+        if (!authenticated) {
+            throw new RuntimeException("Wrong username or password");
+        }
+
+        String token = generateToken(account, staff.getStaffId());
 
         return AuthenticationResponse.builder()
                 .token(token)

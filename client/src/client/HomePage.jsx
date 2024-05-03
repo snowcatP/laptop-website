@@ -61,6 +61,8 @@ const HomePage = () => {
     }
 
     getAllProducts()
+
+
   }, [])
 
   const [top5products, set5Products] = useState([])

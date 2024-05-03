@@ -90,8 +90,11 @@ const Login = () => {
           };
 
           user();
+          toast.success("Login success!")
           
-          navigate("/");
+          setTimeout(() => {
+            navigate("/");
+          }, 2000)
           
         }
       } catch (error) {
@@ -100,8 +103,7 @@ const Login = () => {
     };
 
     userLogin();
-    toast.success("Login success!")
-    
+
   };
 
   return (
@@ -155,7 +157,7 @@ const Login = () => {
                     className="form-group"
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
-                    <Link to="/register" style={{ alignSelf: "flex-start" }}>
+                    <Link to="/auth/register" style={{ alignSelf: "flex-start" }}>
                       Register
                     </Link>
                     <Link
@@ -193,7 +195,7 @@ const Login = () => {
 
       <ToastContainer
         position="top-right"
-        autoClose={4000}
+        autoClose={5000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
