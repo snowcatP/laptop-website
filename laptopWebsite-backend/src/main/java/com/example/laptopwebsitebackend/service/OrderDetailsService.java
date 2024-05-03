@@ -14,10 +14,10 @@ public class OrderDetailsService {
     @Autowired
     private OrderDetailsRepository orderDetailsRepository;
 
-    public List<OrderDetails> findOrderDetailsByOrderId(Long orderId) {
-        return orderDetailsRepository.findAllByOrderOrderId(orderId);
-
-    }
+//    public List<OrderDetails> findOrderDetailsByOrderId(Long orderId) {
+//        return orderDetailsRepository.findAllByOrderOrderId(orderId);
+//
+//    }
 
     public OrderDetails findById(Long orderDetailsId) {
         return orderDetailsRepository.findById(orderDetailsId).get();

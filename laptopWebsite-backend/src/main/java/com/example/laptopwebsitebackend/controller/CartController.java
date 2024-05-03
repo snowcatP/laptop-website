@@ -32,28 +32,28 @@ public class CartController {
         return new ResponseEntity<>(cartDetailService.getAllCartDetailsByCartId(id), HttpStatus.OK);
     }
 
-    @PostMapping("/add-item-to-cart/{cartId}/{productId}/{quatity}")
+    @PostMapping("/add-item-to-cart/{cartId}/{productId}/{quantity}")
     public ResponseEntity<CartDetails> addItemToCart(@PathVariable("cartId") Long cartId, @PathVariable("productId") Long productId,
-                                                @PathVariable("quatity") int quatity ){
+                                                @PathVariable("quantity") int quantity ){
         Product product = productService.findProductByID(productId);
         Cart cart = cartService.findCartById(cartId);
 
         CartDetails cartDetails = new CartDetails();
         cartDetails.setProduct(product);
         cartDetails.setCart(cart);
-        cartDetails.setQuantity(quatity);
+        cartDetails.setQuantity(quantity);
 
         //Calculate the total price of this item
         int discountValue = (product.getDiscount()!=null) ? product.getDiscount().getDiscountValue() : 0;
         double costPrice = product.getPrice();
         Locale localeVN = new Locale("vi", "VN");
         NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
-        Double totalPrice = costPrice*quatity;
+        Double totalPrice = costPrice*quantity;
         String totalPriceStr = currencyVN.format(totalPrice-(totalPrice*discountValue/100));
         cartDetails.setTotalPrice(totalPriceStr);
 
         //Update the availibility quantity of this product
-        product.setQuantity(product.getQuantity()-quatity);
+        product.setQuantity(product.getQuantity()-quantity);
 
 
         return new ResponseEntity<>(cartDetailService.addItemToCart(cartDetails),HttpStatus.OK);
