@@ -21,7 +21,7 @@ const Sidebar = () => {
               to="#"
             >
               <i className="bi bi-menu-button-wide" />
-              <span>Components</span>
+              <span>Product Management</span>
               <i className="bi bi-chevron-down ms-auto" />
             </Link>
             <ul
@@ -30,87 +30,15 @@ const Sidebar = () => {
               data-bs-parent="#sidebar-nav"
             >
               <li>
-                <Link to="components-alerts.html">
+                <Link to="/list-product">
                   <i className="bi bi-circle" />
-                  <span>Alerts</span>
+                  <span>List Products</span>
                 </Link>
               </li>
               <li>
-                <Link to="components-accordion.html">
+                <Link to="/add-product">
                   <i className="bi bi-circle" />
-                  <span>Accordion</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="components-badges.html">
-                  <i className="bi bi-circle" />
-                  <span>Badges</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="components-breadcrumbs.html">
-                  <i className="bi bi-circle" />
-                  <span>Breadcrumbs</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="components-buttons.html">
-                  <i className="bi bi-circle" />
-                  <span>Buttons</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="components-cards.html">
-                  <i className="bi bi-circle" />
-                  <span>Cards</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="components-carousel.html">
-                  <i className="bi bi-circle" />
-                  <span>Carousel</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="components-list-group.html">
-                  <i className="bi bi-circle" />
-                  <span>List group</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="components-modal.html">
-                  <i className="bi bi-circle" />
-                  <span>Modal</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="components-tabs.html">
-                  <i className="bi bi-circle" />
-                  <span>Tabs</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="components-pagination.html">
-                  <i className="bi bi-circle" />
-                  <span>Pagination</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="components-progress.html">
-                  <i className="bi bi-circle" />
-                  <span>Progress</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="components-spinners.html">
-                  <i className="bi bi-circle" />
-                  <span>Spinners</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="components-tooltips.html">
-                  <i className="bi bi-circle" />
-                  <span>Tooltips</span>
+                  <span>Add Product</span>
                 </Link>
               </li>
             </ul>
@@ -124,7 +52,7 @@ const Sidebar = () => {
               to="#"
             >
               <i className="bi bi-journal-text" />
-              <span>Forms</span>
+              <span>Warranty Management</span>
               <i className="bi bi-chevron-down ms-auto" />
             </Link>
             <ul
@@ -133,27 +61,15 @@ const Sidebar = () => {
               data-bs-parent="#sidebar-nav"
             >
               <li>
-                <Link to="forms-elements.html">
+                <Link to="/list-warranty">
                   <i className="bi bi-circle" />
-                  <span>Form Elements</span>
+                  <span>List Warranty</span>
                 </Link>
               </li>
               <li>
-                <Link to="forms-layouts.html">
+                <Link to="/add-warranty">
                   <i className="bi bi-circle" />
-                  <span>Form Layouts</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="forms-editors.html">
-                  <i className="bi bi-circle" />
-                  <span>Form Editors</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="forms-validation.html">
-                  <i className="bi bi-circle" />
-                  <span>Form Validation</span>
+                  <span>Add Warranty</span>
                 </Link>
               </li>
             </ul>
@@ -167,7 +83,7 @@ const Sidebar = () => {
               to="#"
             >
               <i className="bi bi-layout-text-window-reverse" />
-              <span>Tables</span>
+              <span>Discount</span>
               <i className="bi bi-chevron-down ms-auto" />
             </Link>
             <ul
@@ -176,15 +92,15 @@ const Sidebar = () => {
               data-bs-parent="#sidebar-nav"
             >
               <li>
-                <Link to="tables-general.html">
+                <Link to="/admin/list-discount">
                   <i className="bi bi-circle" />
-                  <span>General Tables</span>
+                  <span>List Discounts</span>
                 </Link>
               </li>
               <li>
-                <Link to="tables-data.html">
+                <Link to="/admin/add-discount">
                   <i className="bi bi-circle" />
-                  <span>Data Tables</span>
+                  <span>Add Discount</span>
                 </Link>
               </li>
             </ul>
@@ -198,7 +114,7 @@ const Sidebar = () => {
               to="#"
             >
               <i className="bi bi-bar-chart" />
-              <span>Charts</span>
+              <span>Customer Management</span>
               <i className="bi bi-chevron-down ms-auto" />
             </Link>
             <ul
@@ -209,21 +125,10 @@ const Sidebar = () => {
               <li>
                 <Link to="charts-chartjs.html">
                   <i className="bi bi-circle" />
-                  <span>Chart.js</span>
+                  <span>List Customer</span>
                 </Link>
               </li>
-              <li>
-                <Link to="charts-apexcharts.html">
-                  <i className="bi bi-circle" />
-                  <span>ApexCharts</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="charts-echarts.html">
-                  <i className="bi bi-circle" />
-                  <span>ECharts</span>
-                </Link>
-              </li>
+              
             </ul>
           </li>
           {/* End Charts Nav */}
@@ -235,7 +140,7 @@ const Sidebar = () => {
               to="#"
             >
               <i className="bi bi-gem" />
-              <span>Icons</span>
+              <span>Order Management</span>
               <i className="bi bi-chevron-down ms-auto" />
             </Link>
             <ul
@@ -246,19 +151,7 @@ const Sidebar = () => {
               <li>
                 <Link to="icons-bootstrap.html">
                   <i className="bi bi-circle" />
-                  <span>Bootstrap Icons</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="icons-remix.html">
-                  <i className="bi bi-circle" />
-                  <span>Remix Icons</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="icons-boxicons.html">
-                  <i className="bi bi-circle" />
-                  <span>Boxicons</span>
+                  <span>List Order</span>
                 </Link>
               </li>
             </ul>

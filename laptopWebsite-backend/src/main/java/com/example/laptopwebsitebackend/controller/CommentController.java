@@ -1,6 +1,5 @@
 package com.example.laptopwebsitebackend.controller;
 
-
 import com.example.laptopwebsitebackend.dto.request.CommentRequest;
 import com.example.laptopwebsitebackend.entity.Comment;
 import com.example.laptopwebsitebackend.service.CommentService;
@@ -16,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/comment")
+@CrossOrigin
 public class CommentController {
 
     @Autowired
@@ -28,7 +28,7 @@ public class CommentController {
     private CustomerService customerService;
 
 
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<Comment> create_New_Comment(@Valid @RequestBody CommentRequest commentRequest){
 
         Comment comment = new Comment();

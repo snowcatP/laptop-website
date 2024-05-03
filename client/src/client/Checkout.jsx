@@ -245,7 +245,7 @@ const Checkout = () => {
                     <input type="radio" name="payment" id="payment-1" />
                     <label htmlFor="payment-1">
                       <span />
-                      Direct Bank Transfer
+                      Cash on Delivery (COD)
                     </label>
                     <div className="caption">
                       <p>
@@ -273,7 +273,7 @@ const Checkout = () => {
                     <input type="radio" name="payment" id="payment-3" />
                     <label htmlFor="payment-3">
                       <span />
-                      Paypal System
+                      PayPal
                     </label>
                     <div className="caption">
                       <p>

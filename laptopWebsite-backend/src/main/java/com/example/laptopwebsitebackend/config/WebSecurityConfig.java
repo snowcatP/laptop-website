@@ -43,7 +43,13 @@ public class WebSecurityConfig{
 
             "/",
             "/store",
-            "/product/*",
+            "/product/**",
+            "/comment/**",
+            "/comment",
+            "/discount",
+            "/discount/**",
+            "/warranty",
+            "/warranty/**"
 
     };
 
@@ -60,6 +66,13 @@ public class WebSecurityConfig{
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINT).permitAll()
                         .requestMatchers(HttpMethod.GET, "/product").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/product/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/discount").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/discount/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/warranty").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/warranty/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/comment").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/comment/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/user/**").hasRole("USER")
                         .requestMatchers(HttpMethod.GET, "/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated());

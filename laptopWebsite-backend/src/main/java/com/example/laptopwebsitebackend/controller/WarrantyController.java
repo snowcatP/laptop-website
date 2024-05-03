@@ -19,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/warranty")
+@CrossOrigin
 public class WarrantyController {
 
     @Autowired
