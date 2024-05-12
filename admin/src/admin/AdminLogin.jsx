@@ -4,12 +4,21 @@ import FormInput from "./components/FormInput";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { adminLogin } from "./service/AdminService";
+import {useNavigate} from "react-router-dom"
+import { useAuth } from "./context/AuthContext";
+import {adminProfile} from "./service/AdminService";
 
 const AdminLogin = () => {
+  const navigate = useNavigate()
+
+  const { setAdmin, setIsLogged} = useAuth()
+
   const [values, setValues] = useState({
     username: "",
     password: "",
   });
+
+  const [error, setError] = useState("")
 
   const inputs = [
     {
@@ -48,13 +57,32 @@ const AdminLogin = () => {
       if (response.status === 200) {
         const token = response.data["token"]
         localStorage.setItem("token", token)
-        toast.success("Loggin successs!")
+
+        const admin = async () => {
+          const headers = { Authorization: `Bearer ${token}` };
+
+            const response = await adminProfile(headers);
+            
+            setAdmin(response.data)
+            setIsLogged(true);
+        }
+
+        admin()
+
+        toast.success("Login successs!")
+
+        setTimeout(() => {
+          navigate("/")
+        }, 2000)
+      } else {
+        toast.warn("Fail to login!")
+
+        setError("Wrong username or password!")
       }
     }
-
     adminLog()
-
   };
+
 
   return (
     <>
@@ -84,6 +112,10 @@ const AdminLogin = () => {
                       </p>
                     </div>
 
+                    {error !== "" && 
+                      <p className="text-center medium" style={{color: "red"}}>{error}</p>
+                    }
+                    
                     <form onSubmit={handleSubmit} className="row g-3">
                       {inputs.map((input) => (
                         <FormInput

@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Sidebar from "./components/Sidebar";
-import { Form, Link, useNavigate } from "react-router-dom";
-import { addProduct } from "./services/AddProductService";
+import { addProduct } from "./service/ProductService";
 const AddProduct = ({ allproductList, message }) => {
 
   const [form, setForm] = useState({

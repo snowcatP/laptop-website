@@ -1,8 +1,41 @@
 import React from "react";
-import { Link } from "react-router-dom";
-const Header = () => {
+import { Link, useNavigate } from "react-router-dom";
+import {useAuth} from '../context/AuthContext';
+import { adminLogout } from "../service/AdminService";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-  
+const Header = () => {
+  const {setAdmin, admin, setIsLogged} = useAuth()
+  const profile = {...admin}
+
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    const getToken = localStorage.getItem("token")
+
+    const token = {"token": getToken}
+
+    const logout = async () => {
+
+      const response = await adminLogout(token)
+
+      if (response.status === 200) {
+        
+        toast.success("Logout success!")
+        
+        setTimeout(() => {
+          setAdmin(null)
+          setIsLogged(false)
+
+          navigate("/auth/admin-login")
+        }, 2000)
+      } else {
+        toast.error("Fail to logout!")
+      }
+    }
+    logout()
+  }
 
   return (
     <div>
@@ -12,8 +45,8 @@ const Header = () => {
         className="header fixed-top d-flex align-items-center"
       >
         <div className="d-flex align-items-center justify-content-between">
-          <Link href="/admin" className="logo d-flex align-items-center">
-            <img src="./assets/img/logo.png" alt="aaaaaa" />
+          <Link to="/" className="logo d-flex align-items-center">
+            <img src="./assets/img/logo.png" alt="" />
             <span className="d-none d-lg-block">NiceAdmin</span>
           </Link>
           <i className="bi bi-list toggle-sidebar-btn" />
@@ -58,14 +91,14 @@ const Header = () => {
                   className="rounded-circle"
                 />
                 <span className="d-none d-md-block dropdown-toggle ps-2">
-                  K. Anderson
+                {`${profile.firstName} ${profile.lastName}`}
                 </span>
               </Link>
               {/* End Profile Iamge Icon */}
               <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                 <li className="dropdown-header">
-                  <h6>Kevin Anderson</h6>
-                  <span>Web Designer</span>
+                  <h6>{`${profile.firstName} ${profile.lastName}`}</h6>
+                  <span>{profile.role.roleName}</span>
                 </li>
                 <li>
                   <hr className="dropdown-divider" />
@@ -73,7 +106,7 @@ const Header = () => {
                 <li>
                   <Link
                     className="dropdown-item d-flex align-items-center"
-                    href="users-profile.html"
+                    to="/admin/profile"
                   >
                     <i className="bi bi-person" />
                     <span>My Profile</span>
@@ -85,34 +118,10 @@ const Header = () => {
                 <li>
                   <Link
                     className="dropdown-item d-flex align-items-center"
-                    href="users-profile.html"
-                  >
-                    <i className="bi bi-gear" />
-                    <span>Account Settings</span>
-                  </Link>
-                </li>
-                <li>
-                  <hr className="dropdown-divider" />
-                </li>
-                <li>
-                  <Link
-                    className="dropdown-item d-flex align-items-center"
-                    href="pages-faq.html"
-                  >
-                    <i className="bi bi-question-circle" />
-                    <span>Need Help?</span>
-                  </Link>
-                </li>
-                <li>
-                  <hr className="dropdown-divider" />
-                </li>
-                <li>
-                  <Link
-                    className="dropdown-item d-flex align-items-center"
-                    href="#"
+                    onClick={handleLogout}
                   >
                     <i className="bi bi-box-arrow-right" />
-                    <span>Sign Out</span>
+                    <span>Log Out</span>
                   </Link>
                 </li>
               </ul>
@@ -124,7 +133,21 @@ const Header = () => {
         {/* End Icons Navigation */}
       </div>
       {/* End Header */}
+      <ToastContainer
+        position="top-right"
+        autoClose={4000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+       
+      />
     </div>
+    
   );
 };
 

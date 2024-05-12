@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useContext } from "react";
 import {jwtDecode} from 'jwt-decode'
-import { checkValidToken } from "../service/AdminService";
+import { checkValidToken, adminProfile } from "../service/AdminService";
 
 const AuthContext = createContext()
 
@@ -18,30 +18,33 @@ export const AuthContextProvider = (props) => {
     useEffect(() => {
         const token = localStorage.getItem("token");
 
-        const decoded_token = jwtDecode(token);
+        if (token) {
+            const decoded_token = jwtDecode(token);
 
-        const current = new Date();
-
-        if(decoded_token.exp * 1000 > current.getTime()){
-            const checkIsValid = async () => {
-                const response = await checkValidToken({
-                    "token": token
-                });
-
-                if(response.data["valid"] === true) {
-                    const getAdminProfile = async () => {
-                        const headers = { Authorization: `Bearer ${token}` };
-
-                        const response = await adminProfile(headers);
-
-                        setAdmin(response.data)
-                        setIsLogged(true)
+            const current = new Date();
+    
+            if(decoded_token.exp * 1000 > current.getTime()){
+                const checkIsValid = async () => {
+                    const response = await checkValidToken({
+                        "token": token
+                    });
+    
+                    if(response.data["valid"] === true) {
+                        const getAdminProfile = async () => {
+                            const headers = { Authorization: `Bearer ${token}` };
+    
+                            const response = await adminProfile(headers);
+    
+                            setAdmin(response.data)
+                            setIsLogged(true)
+                        }
+                        getAdminProfile()
                     }
-                    getAdminProfile()
                 }
+                checkIsValid()
             }
-            checkIsValid()
         }
+        
     }, [admin, isLogged])
 
     const values = {

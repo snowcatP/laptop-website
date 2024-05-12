@@ -6,17 +6,16 @@ import com.example.laptopwebsitebackend.entity.Role;
 import com.example.laptopwebsitebackend.entity.Staff;
 import com.example.laptopwebsitebackend.repository.RoleRepository;
 import com.example.laptopwebsitebackend.repository.StaffRepository;
+import com.example.laptopwebsitebackend.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/admin/staff")
+@RequestMapping("/admin")
+@CrossOrigin
 public class StaffController {
 
     @Autowired
@@ -26,9 +25,12 @@ public class StaffController {
     private RoleRepository roleRepository;
 
     @Autowired
+    private StaffService staffService;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @PostMapping
+    @PostMapping("/staff")
     private ResponseEntity<Staff> createNewStaff(@RequestBody StaffRequest request) {
 
         Account newAccount = new Account();
@@ -47,5 +49,10 @@ public class StaffController {
         newStaff.setAccount(newAccount);
 
         return ResponseEntity.ok(staffRepository.save(newStaff));
+    }
+
+    @GetMapping("/profile")
+    private ResponseEntity<Staff> getProfile() {
+        return ResponseEntity.ok(staffService.getMyProfile());
     }
 }

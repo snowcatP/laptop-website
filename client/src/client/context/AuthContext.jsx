@@ -16,29 +16,31 @@ export const AuthContextProvider = (props) => {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    const decoded_token = jwtDecode(token);
+    if (token) {
+      const decoded_token = jwtDecode(token);
 
-    const current = new Date();
+      const current = new Date();
 
-    if (decoded_token.exp * 1000 > current.getTime()) {
-      const checkIsValid = async () => {
-        const response = await checkValidToken({
-          token: token,
-        });
+      if (decoded_token.exp * 1000 > current.getTime()) {
+        const checkIsValid = async () => {
+          const response = await checkValidToken({
+            token: token,
+          });
 
-        if (response.data["valid"] === true) {
-          const userProfile = async () => {
-            const headers = { Authorization: `Bearer ${token}` };
+          if (response.data["valid"] === true) {
+            const userProfile = async () => {
+              const headers = { Authorization: `Bearer ${token}` };
 
-            const response = await customerProfile(headers);
+              const response = await customerProfile(headers);
 
-            setUser(response.data);
-            setIsLogged(true);
-          };
-          userProfile();
-        }
-      };
-      checkIsValid();
+              setUser(response.data);
+              setIsLogged(true);
+            };
+            userProfile();
+          }
+        };
+        checkIsValid();
+      }
     }
   }, [user, isLogged]);
 
