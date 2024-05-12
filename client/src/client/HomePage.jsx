@@ -123,6 +123,7 @@ const HomePage = () => {
                     >
                       <Slider className="products-slick" {...settingsSlider}>
                         {products?.map((product) => (
+                          <Link to={`/product/${product?.productId}`}>
                           <div className="product"
                             key={product.productId}>
                             <div className="product-img">
@@ -137,7 +138,7 @@ const HomePage = () => {
                                 {product.category}
                               </p>
                               <h3 className="product-name">
-                                <Link to={`/product/${product?.productId}`}>{product.productName}</Link>
+                                {product.productName}
                               </h3>
                               <h4 className="product-price">
                                 {product.price} VND
@@ -161,6 +162,7 @@ const HomePage = () => {
                               </button>
                             </div>
                           </div>
+                          </Link>
                         ))}
                         {/* product */}
                       </Slider>
@@ -266,6 +268,7 @@ const HomePage = () => {
                       >
                         {/* product */}
                         {top5products?.map((topproduct) => (
+                          <Link to={`/product/${topproduct?.productId}`}>
                           <div className="product"
                             key={topproduct.productId}>
                             <div className="product-img">
@@ -280,7 +283,7 @@ const HomePage = () => {
                                 {topproduct.category}
                               </p>
                               <h3 className="product-name">
-                                <Link to={`/product/${topproduct?.productId}`}>{topproduct.productName}</Link>
+                                {topproduct.productName}
                               </h3>
                               <h4 className="product-price">
                                 {topproduct.price} VND
@@ -304,6 +307,7 @@ const HomePage = () => {
                               </button>
                             </div>
                           </div>
+                          </Link>
                         ))}
                         {/* /product */}
                       </Slider>
