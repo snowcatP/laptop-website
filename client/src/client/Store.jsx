@@ -4,7 +4,6 @@ import Header from "./components/Header";
 import Letter from "./components/Letter";
 import Footer from "./components/Footer";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import { useState,useEffect } from "react";
 import { getListProducts } from "./service/StoreService";
 

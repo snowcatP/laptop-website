@@ -5,7 +5,6 @@ import Navigation from "./components/Navigation";
 import Letter from "./components/Letter";
 import Footer from "./components/Footer";
 import Slider from "react-slick";
-import axios from "axios";
 import { useParams } from "react-router-dom";
 import { getProductById } from "./service/DetailProduct";
 import { getListComment } from "./service/CommentService";
@@ -84,7 +83,7 @@ const Product = () => {
     }
 
     getComment()
-  }, [id])
+  }, [id, comments, product])
 
 
     const [activeTab, setActiveTab] = useState("tab1");

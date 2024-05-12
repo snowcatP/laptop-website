@@ -28,9 +28,9 @@ input:invalid[focused="true"] ~ span.error-message{
   display: block;
 }
 
-input:invalid ~ span.error-message{
+/* input:invalid ~ span.error-message{
   display: block;
-}
+} */
 
 a {
   color: #4154f1;

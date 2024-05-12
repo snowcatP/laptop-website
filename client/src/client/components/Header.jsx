@@ -19,11 +19,13 @@ const Header = () => {
       const response = await customerLogout(token)
 
       if (response.status === 200){
-        setUser(null)
-        setIsLogged(false)
-        
-        navigate("/")
         toast.success("Logout success!")
+        
+        setTimeout(() => {
+          setUser(null)
+          setIsLogged(false)
+          navigate("/")
+        }, 2000)
       }
     }
 
