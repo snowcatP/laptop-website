@@ -10,19 +10,93 @@ import { getListProducts } from "./service/StoreService";
 const Store = () => {
 
   const [products, setProducts] = useState([]);
-  useEffect(() => {
+  const [currentPage, setCurrentPage] = useState(0);
+  const [searchParams, setSearchParams] = useState({});
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  // useEffect(() => {
   
-    const getListProduct = async () => {
-      try {
-        const response = await getListProducts()
+  //   const getListProduct = async () => {
+  //     try {
+  //       const response = await getListProducts()
 
-        setProducts(response.data)
-      } catch(error) {console.log(error)}
+  //       setProducts(response.data)
+  //     } catch(error) {console.log(error)}
         
-    }
+  //   }
 
-    getListProduct()
-  },[])
+  //   getListProduct()
+  // },[])
+
+    
+    useEffect(() => {
+      fetchProductsByPage(0);
+    }, []);
+
+    const fetchProductsByPage = async (page) => {
+        try {
+            const response = await getListProducts(page)
+            setProducts(response.data);
+            setCurrentPage(page);
+        } catch (error) {
+            console.error('Error fetching products:', error);
+        }
+    };
+
+    const fetchSearchResults = async () => {
+      try {
+          const response = await axios.get("http://localhost:8080/product/search", {
+              params: searchParams
+          });
+          setProducts(response.data);
+          setCurrentPage(0);
+      } catch (error) {
+          console.error('Error fetching search results:', error);
+      }
+  };
+
+//   const handleCategoryClick = (category) => {
+//     setSearchParams({ ...searchParams, category });
+//     fetchSearchResults();
+// };
+
+// Hàm xử lý khi chọn hoặc bỏ tích chọn Category
+const handleCategoryClick = (category) => {
+  // Kiểm tra xem category đã được chọn hay chưa
+  const isCategorySelected = searchParams.category === category;
+
+  // Nếu category đã được chọn, bỏ tích chọn
+  if (isCategorySelected) {
+      setSearchParams({ ...searchParams, category: null });
+  } 
+  // Nếu chưa được chọn, chọn category
+  else {
+      setSearchParams({ ...searchParams, category });
+  }
+
+  // Gọi hàm fetchSearchResults để cập nhật kết quả tìm kiếm
+  fetchSearchResults();
+};
+
+
+
+const handleBrandClick = (brand) => {
+    setSearchParams({ ...searchParams, brand });
+    fetchSearchResults();
+};
+
+// Hàm xử lý khi bỏ tích chọn Category
+const handleCategoryUnchecked = () => {
+  setSearchParams({ ...searchParams, category: null });
+  fetchProductsByPage(currentPage);
+};
+
+// Hàm xử lý khi bỏ tích chọn Brand
+const handleBrandUnchecked = () => {
+  setSearchParams({ ...searchParams, brand: null });
+  fetchProductsByPage(currentPage);
+};
+
+    
 
   return (
     <>
@@ -41,22 +115,22 @@ const Store = () => {
                 <div className="aside">
                   <h3 className="aside-title">Categories</h3>
                   <div className="checkbox-filter">
-                    <div className="input-checkbox">
-                      <input type="checkbox" id="category-1" />
+                    <div className="input-checkbox" onClick={() => handleCategoryClick('Office')}>
+                      <input type="checkbox" id="category-1"  name="category" value="Office" />
                       <label htmlFor="category-1">
                         <span />
                         Office
                       </label>
                     </div>
-                    <div className="input-checkbox">
-                      <input type="checkbox" id="category-2" />
-                      <label htmlFor="category-2">
-                        <span />
-                        Gaming
-                      </label>
-                    </div>         
-                    
-                  </div>
+                      <div className="input-checkbox" onClick={() => handleCategoryClick('Gaming')}>
+                        <input type="checkbox" id="category-2" name="category" value="Gaming" />
+                        <label htmlFor="category-2">
+                          <span />
+                          Gaming
+                        </label>
+                      </div>         
+                      
+                    </div>
                 </div>
                 {/* /aside Widget */}
                 {/* aside Widget */}
@@ -82,7 +156,7 @@ const Store = () => {
                 <div className="aside">
                   <h3 className="aside-title">Brand</h3>
                   <div className="checkbox-filter">
-                    <div className="input-checkbox">
+                    <div className="input-checkbox" onClick={() => handleBrandClick('ASUS')}>
                       <input type="checkbox" id="brand-1" />
                       <label htmlFor="brand-1">
                         <span />
@@ -212,7 +286,8 @@ const Store = () => {
                 <div className="row">
                   {/* product */}
                   
-                  {products.map((product, index) => (
+                  {products?.map((product, index) => (
+                    <Link to={`/product/${product?.productId}`}>
                     <div className="col-md-4 col-xs-6">
                           <div className="product" key={index}>
                           <div className="product-img">
@@ -225,11 +300,11 @@ const Store = () => {
                           <div className="product-body">
                             <p className="product-category">{product?.category}</p>
                             <h3 className="product-name">
-                              <Link to={`/product/${product?.productId}`}>{product?.productName}</Link>
+                             {product?.productName}
                             </h3>
                             <h4 className="product-price">
                               {product?.price}{" "}
-                              <del className="product-old-price">$990.00</del>
+                              <del className="product-old-price">{product?.price * 1.3}</del>
                             </h4>
                           </div>
                           <div className="add-to-cart">
@@ -239,6 +314,7 @@ const Store = () => {
                           </div>
                         </div>
                         </div>
+                        </Link>
                         ))}
                   
                   {/* /product */}
@@ -246,27 +322,22 @@ const Store = () => {
                 </div>
                 {/* /store products */}
                 {/* store bottom filter */}
-                <div className="store-filter clearfix">
-                  <span className="store-qty">Showing 15-100 products</span>
-                  <ul className="store-pagination">
-                    <li className="active">1</li>
-                    <li>
-                      <Link to="#">2</Link>
-                    </li>
-                    <li>
-                      <Link to="#">3</Link>
-                    </li>
-                    <li>
-                      <Link to="#">4</Link>
-                    </li>
-                    <li>
-                      <Link to="#">
-                        <i className="fa fa-angle-right" />
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-                {/* /store bottom filter */}
+                    <div className="store-filter clearfix">
+                        {/* Show current page */}
+                        <span className="store-qty">Page {currentPage + 1}</span>
+                        {/* Pagination links */}
+                        <ul className="store-pagination">
+                            {[...Array(4).keys()].map((index) => (
+                                <li key={index} className={index === currentPage ? 'active' : ''}>
+                                    {/* Handle pagination button click */}
+                                    <Link to="#" onClick={() => fetchProductsByPage(index)}>
+                                        {index + 1}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+            {/* /store bottom filter */}
               </div>
               {/* /STORE */}
             </div>

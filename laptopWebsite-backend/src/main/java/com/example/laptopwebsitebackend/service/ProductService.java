@@ -123,6 +123,20 @@ public class ProductService {
         return productRepository.findAll(pageable).getContent();
     }
 
+    public List<Product> get_9_Products() {
+        // Tạo một trang đầu tiên có 9 sản phẩm
+        PageRequest pageable = PageRequest.of(0, 9);
+        return productRepository.findAll(pageable).getContent();
+    }
+
+    public List<Product> getProductsByPage(int page, int size) {
+        PageRequest pageable = PageRequest.of(page, size);
+        return productRepository.findAll(pageable).getContent();
+    }
+
+
+
+
     public List<Product> searchProducts(String keyword,String category, String brand, Double minPrice, Double maxPrice) {
 
         if (keyword!=null){
