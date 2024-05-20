@@ -54,7 +54,6 @@ const UserCart = () => {
       try {
         const response = await getCartById(cartId, header);
         setCarts(response.data);
-        
       } catch (error) {
         console.log(error);
       }
@@ -62,7 +61,8 @@ const UserCart = () => {
     getCart();
   }, [cartId,carts]);
 
-  function handleDeleteSubmit(cartDetailsId, header) {
+  function handleDeleteSubmit(e,cartDetailsId, header) {
+    e.preventDefault();
     const deleteToCart = async () => {
       try {
         const deleteResponse = await deleteItemToCart(cartDetailsId, header);
@@ -76,14 +76,30 @@ const UserCart = () => {
     };
     deleteToCart();
   }
-
-  function handleEditSubmit(cartDetailsId, new_quantity, header) {
+  
+  const handleQuantityChange = (e,cartDetailsId, change) => {
+    e.preventDefault();
+    const cartIndex = carts.findIndex((cart) => cart.cartDetailsId === cartDetailsId);
+    if (cartIndex !== -1) {
+      const updatedCarts = [...carts];
+      const newQuantity = updatedCarts[cartIndex].quantity + change;
+      if (newQuantity > 0 && newQuantity <= 10) {
+        updatedCarts[cartIndex].quantity = newQuantity;
+        setCarts(updatedCarts);
+        handleEditSubmit(e,cartDetailsId, newQuantity, header);
+      }else if(newQuantity <= 0){
+        handleDeleteSubmit(e,cartDetailsId, header);
+      }else{
+        toast.error("You can only buy maximum 10 products at a time!");
+      }
+    }
+  };
+  const handleEditSubmit = (e,cartDetailsId, new_quantity, header) =>{
+    e.preventDefault();
     const editItem = async () => {
       try {
         const editResponse = await editItemInCart(cartDetailsId, new_quantity, header);
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
+        
       } catch (error) {
         console.log(error);
       }
@@ -156,7 +172,6 @@ const UserCart = () => {
                                       {carts.map((cart, index) => {
                                         const product = cart.product;
                                         const Price = cart.price;
-
                                         return (
                                           <tr key={index}>
                                             <td className="p-4">
@@ -187,23 +202,23 @@ const UserCart = () => {
                                             <td className="align-midle p-4 align-middle">
                                               {/* Update */}
                                               <div className="quantity-input">
-                                                <span style={{ cursor: "pointer" }} onClick={() => { cart.quantity <= 0 ? (cart.quantity = 0) : (cart.quantity -= 1) }}>
+                                                <span style={{ cursor: "pointer" }} onClick={(e) => handleQuantityChange(e,cart.cartDetailsId, -1)}>
                                                   -
                                                 </span>
                                                 {/* <span style={{ cursor: "pointer" }} onClick={()=>decreaseQuantity(cart.quantity)}>-</span> */}
                                                 <input type="text" style={{ width: "50px", margin: "0 5px", textAlign: "center" }} value={cart.quantity} />
-                                                <span style={{ cursor: "pointer" }} onClick={() => { cart.quantity >= 100 ? (cart.quantity = 1) : (cart.quantity += 1) }}>
+                                                <span style={{ cursor: "pointer" }} onClick={(e) => handleQuantityChange(e,cart.cartDetailsId, 1)}>
                                                   +
                                                 </span>
                                                 <br />
-                                                <button
+                                                {/* <button
                                                   style={{ marginTop: "5px" }}
                                                   onClick={() => {
                                                     handleEditSubmit(cart.cartDetailsId, cart.quantity, header);
                                                   }}
                                                 >
                                                   Update
-                                                </button>
+                                                </button> */}
                                               </div>
                                             </td>
                                             <td className="text-center font-weight-semibold align-middle p-4">
@@ -212,7 +227,7 @@ const UserCart = () => {
                                             </td>
                                             <td className="text-center align-middle px-0 align-middle">
                                               {/* Delete */}
-                                              <button className="shop-tooltip float-none text-center" type="button" onClick={() => handleDeleteSubmit(cart.cartDetailsId, header)}>
+                                              <button className="shop-tooltip float-none text-center" type="button" onClick={() => handleDeleteSubmit(cart.cartDetailsId,header)}>
                                                 Delete
                                               </button>
                                             </td>
@@ -235,7 +250,7 @@ const UserCart = () => {
                                 <div className="float-right" style={{ paddingTop: "1em" }}>
                                   <div className="col-md-8"></div>
                                   <div className="col-md-4">
-                                    <a href="home" className="btn btn-lg btn-danger md-btn-flat" style={{ marginRight: "2em" }}>
+                                    <a href="/home" className="btn btn-lg btn-danger md-btn-flat" style={{ marginRight: "2em" }}>
                                       Back
                                     </a>
                                     <Link to="/checkout" state={{ carts: carts, totalPrice: totalPrice,user: user }} className="btn btn-lg btn-danger">

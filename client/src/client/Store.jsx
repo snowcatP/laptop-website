@@ -30,7 +30,7 @@ const Store = () => {
     getListProduct()
   },[])
   
-  function handleAddToCart(id){
+  const handleAddToCart = (id) =>{
     
     const cartId = user.customerId;
 
@@ -265,7 +265,7 @@ const Store = () => {
                             </h4>
                           </div>
                           <div className="add-to-cart">
-                            <button className="add-to-cart-btn" onClick={handleAddToCart(product?.productId)}>
+                            <button className="add-to-cart-btn" onClick={()=> handleAddToCart(product.productId)}>
                               <i className="fa fa-shopping-cart" /> add to cart
                             </button>
                           </div>

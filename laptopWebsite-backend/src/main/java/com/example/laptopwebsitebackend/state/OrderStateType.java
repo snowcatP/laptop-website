@@ -1,4 +1,4 @@
-package com.example.laptopwebsitebackend.entity;
+package com.example.laptopwebsitebackend.state;
 
 public enum OrderStateType {
     PENDING,

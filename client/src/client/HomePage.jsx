@@ -2,13 +2,18 @@ import React, { useEffect, useState } from "react";
 import Header from "./components/Header";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import Letter from "./components/Letter";
-import { getProducts } from "./service/ProductService";
+import { addToCart, getProducts } from "./service/ProductService";
 import { getTop5Products } from "./service/Top5ProductService";
+import { toast } from "react-toastify";
+import { useAuth } from "./context/AuthContext";
 
 const HomePage = () => {
+  const {user} = useAuth();
+  const [quantity, setQuantity] = useState(1);
+  const navigate = useNavigate();
   const settingsSlider = {
     slidesToShow: 4,
     slidesToScroll: 1,
@@ -79,6 +84,31 @@ const HomePage = () => {
 
     get_All_5_Product_By_Price()
   }, [])
+  const handleAddToCart = (id) =>{
+    
+    const cartId = user.customerId;
+
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`
+    }
+    
+    const addProductToCart = async () => {
+      try {
+        const response = await addToCart(cartId, id, quantity, headers)
+
+        if (response.status === 200) {
+          toast.success("Add to cart successfully")
+
+          setTimeout(() => {  
+            navigate("/user/cart")
+          }, 2000)
+        }
+      } catch(error) {
+        toast.error("Add to cart failed")
+      }
+    }
+    addProductToCart();
+  }
 
   return (
     <>
@@ -155,7 +185,7 @@ const HomePage = () => {
                               
                             </div>
                             <div className="add-to-cart">
-                              <button className="add-to-cart-btn">
+                              <button className="add-to-cart-btn" onClick={()=> handleAddToCart(product.productId)}>
                                 <i className="fa fa-shopping-cart" /> add to
                                 cart
                               </button>
