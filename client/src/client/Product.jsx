@@ -1,21 +1,25 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Header from "./components/Header";
 import Navigation from "./components/Navigation";
 import Letter from "./components/Letter";
 import Footer from "./components/Footer";
 import Slider from "react-slick";
-import axios from "axios";
 import { useParams } from "react-router-dom";
 import { getProductById } from "./service/DetailProduct";
 import { getListComment } from "./service/CommentService";
+import { useAuth } from "./context/AuthContext";
+import { Button } from "bootstrap";
+import { toast } from "react-toastify";
+import { addToCart } from "./service/ProductService";
 
 const Product = () => {
+  const {user} = useAuth()
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);
   let sliderRef1 = useRef(null);
   let sliderRef2 = useRef(null);
-
+  const navigate = useNavigate()
   const settings = {
     slidesToShow: 3,
     slidesToScroll: 1,
@@ -53,7 +57,6 @@ const Product = () => {
   useEffect(() => {
     setNav1(sliderRef1);
     setNav2(sliderRef2);
-
   }, []);
 
   const { id } = useParams(); // Lấy id từ địa chỉ URL
@@ -71,18 +74,17 @@ const Product = () => {
         
     }
 
-    getProduct()
+     
 
     const getComment = async () => {
       try {
         const response = await getListComment(id)
 
         setComments(response.data)
-        console.log(comments)
       } catch(error) {console.log(error)}
         
     }
-
+    getProduct()
     getComment()
   }, [id])
 
@@ -104,6 +106,33 @@ const Product = () => {
       setQuantity(prevQuantity => prevQuantity - 1);
       }
     };
+
+    const handleAddToCart = (e) => {
+      e.preventDefault();
+      
+      const cartId = user.customerId;
+
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+      
+      const addProductToCart = async () => {
+        try {
+          const response = await addToCart(cartId, id, quantity, headers)
+
+          if (response.status === 200) {
+            toast.success("Add to cart successfully")
+
+            setTimeout(() => {  
+              navigate("/user/cart")
+            }, 2000)
+          }
+        } catch(error) {
+          toast.error("Add to cart failed")
+        }
+      }
+      addProductToCart()
+    }
 
   return (
     <>
@@ -163,12 +192,6 @@ const Product = () => {
                     </h3>
                     <span className="product-available">In Stock</span>
                   </div>
-                  {/* <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                  </p> */}
                   
                   <div className="add-to-cart">
                     <div className="qty-label">
@@ -179,7 +202,7 @@ const Product = () => {
                         <span className="qty-down" onClick={handleDecrease}>-</span>
                       </div>
                     </div>
-                    <button className="add-to-cart-btn">
+                    <button className="add-to-cart-btn" onClick={handleAddToCart}>
                       <i className="fa fa-shopping-cart" /> add to cart
                     </button>
                   </div>

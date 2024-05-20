@@ -3,14 +3,19 @@ import Navigation from "./components/Navigation";
 import Header from "./components/Header";
 import Letter from "./components/Letter";
 import Footer from "./components/Footer";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useState,useEffect } from "react";
 import { getListProducts } from "./service/StoreService";
+import { addToCart } from "./service/ProductService";
+import { useAuth } from "./context/AuthContext";
+import { toast } from "react-toastify";
 
 const Store = () => {
-
+  const {user} = useAuth()
+  const [quantity, setQuantity] = useState(1);
   const [products, setProducts] = useState([]);
+  const navigate = useNavigate();
   useEffect(() => {
   
     const getListProduct = async () => {
@@ -24,7 +29,32 @@ const Store = () => {
 
     getListProduct()
   },[])
+  
+  function handleAddToCart(id){
+    
+    const cartId = user.customerId;
 
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`
+    }
+    
+    const addProductToCart = async () => {
+      try {
+        const response = await addToCart(cartId, id, quantity, headers)
+
+        if (response.status === 200) {
+          toast.success("Add to cart successfully")
+
+          setTimeout(() => {  
+            navigate("/user/cart")
+          }, 2000)
+        }
+      } catch(error) {
+        toast.error("Add to cart failed")
+      }
+    }
+    addProductToCart();
+  }
   return (
     <>
       <Header />
@@ -228,13 +258,14 @@ const Store = () => {
                             <h3 className="product-name">
                               <Link to={`/product/${product?.productId}`}>{product?.productName}</Link>
                             </h3>
+                            
                             <h4 className="product-price">
                               {product?.price}{" "}
                               <del className="product-old-price">$990.00</del>
                             </h4>
                           </div>
                           <div className="add-to-cart">
-                            <button className="add-to-cart-btn">
+                            <button className="add-to-cart-btn" onClick={handleAddToCart(product?.productId)}>
                               <i className="fa fa-shopping-cart" /> add to cart
                             </button>
                           </div>
