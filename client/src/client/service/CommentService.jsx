@@ -1,5 +1,7 @@
 import axios from "axios";
 
-const URL = "http://localhost:8080"
+const URL = process.env.REACT_APP_API_ENDPOINT
 
 export const getListComment = (id) => axios.get(URL + `/comment/${id}`)
+
+export const addNewComment = (comment, headers) => axios.post(URL + "/comment/add", comment, {headers})

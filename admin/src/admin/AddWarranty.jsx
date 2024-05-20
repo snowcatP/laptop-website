@@ -68,7 +68,6 @@ const AddWarranty = () => {
     <>
       <Header />
       <Sidebar />
-
       <main id="main" className="main">
         <div className="pagetitle">
           <h1>Manage Warranty</h1>
@@ -157,13 +156,16 @@ const AddWarranty = () => {
                       </table>
                     </div>
                   </div>
+                  <div className="col-lg-2"></div>
+                  {/* Additional card */}
+                  {/* Add additional card as needed */}
                 </div>
+
               </div>
             </form>
           </div>
         </section>
       </main>
-
       <Footer />
     </>
   );

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const URL = "http://localhost:8080";
+const URL = process.env.REACT_APP_API_ENDPOINT
 
 export const loginResult = (credential) => axios.post(URL + "/auth/login", credential);
 

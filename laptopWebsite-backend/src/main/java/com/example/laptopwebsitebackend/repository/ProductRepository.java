@@ -47,4 +47,6 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
             " OR LOWER(p.configuration.processor) LIKE %:keyword%" )
     List<Product> searchByKeyword(@Param("keyword") String keyword);
 
+    @Query("SELECT p FROM Product p WHERE p.discount.discountId = :discountId")
+    List<Product> getProductsByDiscountId(@Param("discountId") Long id);
 }

@@ -5,15 +5,18 @@ import Navigation from "./components/Navigation";
 import Letter from "./components/Letter";
 import Footer from "./components/Footer";
 import Slider from "react-slick";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getProductById } from "./service/DetailProduct";
-import { getListComment } from "./service/CommentService";
+import { addNewComment, getListComment } from "./service/CommentService";
 import { useAuth } from "./context/AuthContext";
+import {ToastContainer,  toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { addToCart } from "./service/ProductService";
-import { toast } from "react-toastify";
 
 const Product = () => {
-  const {user} = useAuth()
+
+  const {user, isLogged} = useAuth()
+  const navigate = useNavigate()
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);
   let sliderRef1 = useRef(null);
@@ -52,61 +55,97 @@ const Product = () => {
     ref: (slider) => (sliderRef1 = slider),
   };
 
-
-
   useEffect(() => {
     setNav1(sliderRef1);
     setNav2(sliderRef2);
-
   }, []);
 
   const { id } = useParams(); // Lấy id từ địa chỉ URL
   const [product, setProduct] = useState(null);
-  const [comments, setComments] = useState(null);
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
-  
     const getProduct = async () => {
       try {
-        const response = await getProductById(id)
+        const response = await getProductById(id);
+        setProduct(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-        setProduct(response.data)
-      } catch(error) {console.log(error)}
-        
-    }
-
-    getProduct()
+    getProduct();
 
     const getComment = async () => {
       try {
-        const response = await getListComment(id)
-
-        setComments(response.data)
-      } catch(error) {console.log(error)}
-        
-    }
-
-    getComment()
-  }, [id, comments, product])
-
-
-    const [activeTab, setActiveTab] = useState("tab1");
-  
-    const handleTabClick = (tabId) => {
-      setActiveTab(tabId);
-    };
-
-    const [quantity, setQuantity] = useState(1);
-
-    const handleIncrease = () => {
-      setQuantity(prevQuantity => prevQuantity + 1);
-    };
-
-    const handleDecrease = () => {
-      if (quantity > 1) {
-      setQuantity(prevQuantity => prevQuantity - 1);
+        const response = await getListComment(id);
+        setComments(response.data.reverse());
+      } catch (error) {
+        console.log(error);
       }
     };
+
+    getComment();
+  }, [id, comments]);
+
+  const [quantity, setQuantity] = useState(1);
+
+  const handleIncrease = () => {
+    setQuantity((prevQuantity) => prevQuantity + 1);
+  };
+
+  const handleDecrease = () => {
+    if (quantity > 1) {
+      setQuantity((prevQuantity) => prevQuantity - 1);
+    }
+  };
+
+  const handleSubmitComment = (e) => {
+
+    if (!user || !isLogged) {
+      navigate("/auth/login")
+      return;
+    }
+
+    e.preventDefault()
+  
+    const current = new Date()
+    const currentDate = (current.getDate() + 1 < 10 ? "0" + (current.getDate() + 1): current.getDate() + 1)
+    const currentMonth = (current.getMonth() < 10 ? "0" + current.getMonth() : current.getMonth())
+
+    const commentDate = `${current.getFullYear()}-${currentMonth}-${currentDate}`
+
+    const commentRequest = {
+      "content": e.target.content.value,
+      "commentDate": commentDate,
+      "customer_id": user.customerId,
+      "product_id": product.productId
+    }
+
+    const token = localStorage.getItem("token")
+
+    const headers = { Authorization: `Bearer ${token}` };
+
+    const addComment = async () => {
+
+      try {
+        const response = await addNewComment(commentRequest, headers)
+
+        if(response.status === 200) {
+          toast.success("Add new comment success!")
+  
+          const newComment = response.data
+          comments.push(newComment)
+  
+          e.target.content.value = ""
+        }
+      } catch(error) {
+        console.log(error)
+      }
+    }
+    addComment()
+  }
+
 
     const handleAddToCart = (e) => {
       e.preventDefault();
@@ -149,17 +188,17 @@ const Product = () => {
               {/* Product main img */}
               <div className="col-md-5 col-md-push-2">
                 <Slider id="product-main-img" {...settingsMain}>
-                <div className="product-preview">
+                  <div className="product-preview">
                     <img src={product?.image1} alt="" />
                   </div>
                   <div className="product-preview">
-                  <img src={product?.image2} alt="" />
+                    <img src={product?.image2} alt="" />
                   </div>
                   <div className="product-preview">
-                  <img src={product?.image3} alt="" />
+                    <img src={product?.image3} alt="" />
                   </div>
                   <div className="product-preview">
-                  <img src={product?.image4} alt="" />
+                    <img src={product?.image4} alt="" />
                   </div>
                 </Slider>
               </div>
@@ -167,17 +206,17 @@ const Product = () => {
               {/* Product thumb imgs */}
               <div className="col-md-2  col-md-pull-5">
                 <Slider id="product-imgs" {...settings}>
-                <div className="product-preview">
+                  <div className="product-preview">
                     <img src={product?.image1} alt="" />
                   </div>
                   <div className="product-preview">
-                  <img src={product?.image2} alt="" />
+                    <img src={product?.image2} alt="" />
                   </div>
                   <div className="product-preview">
-                  <img src={product?.image3} alt="" />
+                    <img src={product?.image3} alt="" />
                   </div>
                   <div className="product-preview">
-                  <img src={product?.image4} alt="" />
+                    <img src={product?.image4} alt="" />
                   </div>
                 </Slider>
               </div>
@@ -186,10 +225,11 @@ const Product = () => {
               <div className="col-md-5">
                 <div className="product-details">
                   <h2 className="product-name">{product?.productName}</h2>
-                  
+
                   <div>
                     <h3 className="product-price">
-                    {product?.price} <del className="product-old-price">132</del>
+                      {product?.price}{" "}
+                      <del className="product-old-price">132</del>
                     </h3>
                     <span className="product-available">In Stock</span>
                   </div>
@@ -199,28 +239,31 @@ const Product = () => {
                     aliqua. Ut enim ad minim veniam, quis nostrud exercitation
                     ullamco laboris nisi ut aliquip ex ea commodo consequat.
                   </p> */}
-                  
+
                   <div className="add-to-cart">
                     <div className="qty-label">
                       Quantiy
                       <div className="input-number">
-                        <input type="number" value={quantity} readOnly/>
-                        <span className="qty-up" onClick={handleIncrease}>+</span>
-                        <span className="qty-down" onClick={handleDecrease}>-</span>
+                        <input type="number" value={quantity} readOnly />
+                        <span className="qty-up" onClick={handleIncrease}>
+                          +
+                        </span>
+                        <span className="qty-down" onClick={handleDecrease}>
+                          -
+                        </span>
                       </div>
                     </div>
                     <button className="add-to-cart-btn" onClick={handleAddToCart}>
                       <i className="fa fa-shopping-cart" /> add to cart
                     </button>
                   </div>
-                  
+
                   <ul className="product-links">
                     <li>Category:</li>
                     <li>
                       <Link to="#">{product?.category}</Link>
                     </li>
                   </ul>
-                  
                 </div>
               </div>
               {/* /Product details */}
@@ -229,148 +272,112 @@ const Product = () => {
                 <div id="product-tab">
                   {/* product tab nav */}
                   <ul className="tab-nav">
-                  <li className={activeTab === "tab1" ? "active" : ""}>
-                    <a href="#tab1" onClick={() => handleTabClick("tab1")}>
-                        Description
-                    </a>
-                    </li>
-                    <li>
-                    <a href="#tab2" onClick={() => handleTabClick("tab2")}>
-                        Review
-                    </a>
+                    <li className="">
+                      <a href="#tab1">Description</a>
                     </li>
                   </ul>
                   {/* /product tab nav */}
                   {/* product tab content */}
                   <div className="tab-content">
                     {/* tab1  */}
-                    <div id="tab1" className={`tab-pane fade ${activeTab === "tab1" ? "in active" : ""}`}>
+                    {/* <div id="tab1" className={`tab-pane fade ${activeTab === "tab1" ? "in active" : ""}`}> */}
+                    <div id="tab1" className="">
                       <div className="row">
-                      <div className="col-md-12">
-                          <p>Graphic card: {product?.configuration.graphicCard}</p>
+                        <div className="col-md-2"></div>
+                        <div className="col-md-8">
+                          <p>
+                            Graphic card: {product?.configuration.graphicCard}
+                          </p>
                           <p>Memory: {product?.configuration.memory}</p>
                           <p>Processor: {product?.configuration.processor}</p>
                           <p>Ram: {product?.configuration.ram} GB</p>
                           <p>Screen: {product?.configuration.screen} inches</p>
                         </div>
+                        <div className="col-md-2"></div>
                       </div>
                     </div>
                     {/* /tab1  */}
                     {/* tab2  */}
                     {/* /tab2  */}
                     {/* tab3  */}
-                    <div id="tab2" className={`tab-pane fade ${activeTab === "tab2" ? "in active" : ""}`}>
+                    <ul className="tab-nav">
+                      <li>
+                        <a href="#tab2">Review</a>
+                      </li>
+                    </ul>
+
+                    <div id="tab2" className="">
                       <div className="row">
-                        {/* Rating */}
-                        <div className="col-md-3">
-                          <div id="rating">
-                            <div className="rating-avg">
-                              <span>4.5</span>
-                              <div className="rating-stars">
-                                <i className="fa fa-star" />
-                                <i className="fa fa-star" />
-                                <i className="fa fa-star" />
-                                <i className="fa fa-star" />
-                                <i className="fa fa-star-o" />
-                              </div>
-                            </div>
-                            <ul className="rating">
-                              <li>
-                                <div className="rating-stars">
-                                  <i className="fa fa-star" />
-                                  <i className="fa fa-star" />
-                                  <i className="fa fa-star" />
-                                  <i className="fa fa-star" />
-                                  <i className="fa fa-star" />
-                                </div>
-                                <div className="rating-progress">
-                                  <div style={{ width: "80%" }} />
-                                </div>
-                                <span className="sum">3</span>
-                              </li>
-                              <li>
-                                <div className="rating-stars">
-                                  <i className="fa fa-star" />
-                                  <i className="fa fa-star" />
-                                  <i className="fa fa-star" />
-                                  <i className="fa fa-star" />
-                                  <i className="fa fa-star-o" />
-                                </div>
-                                <div className="rating-progress">
-                                  <div style={{ width: "60%" }} />
-                                </div>
-                                <span className="sum">2</span>
-                              </li>
-                              <li>
-                                <div className="rating-stars">
-                                  <i className="fa fa-star" />
-                                  <i className="fa fa-star" />
-                                  <i className="fa fa-star" />
-                                  <i className="fa fa-star-o" />
-                                  <i className="fa fa-star-o" />
-                                </div>
-                                <div className="rating-progress">
-                                  <div />
-                                </div>
-                                <span className="sum">0</span>
-                              </li>
-                              <li>
-                                <div className="rating-stars">
-                                  <i className="fa fa-star" />
-                                  <i className="fa fa-star" />
-                                  <i className="fa fa-star-o" />
-                                  <i className="fa fa-star-o" />
-                                  <i className="fa fa-star-o" />
-                                </div>
-                                <div className="rating-progress">
-                                  <div />
-                                </div>
-                                <span className="sum">0</span>
-                              </li>
-                              <li>
-                                <div className="rating-stars">
-                                  <i className="fa fa-star" />
-                                  <i className="fa fa-star-o" />
-                                  <i className="fa fa-star-o" />
-                                  <i className="fa fa-star-o" />
-                                  <i className="fa fa-star-o" />
-                                </div>
-                                <div className="rating-progress">
-                                  <div />
-                                </div>
-                                <span className="sum">0</span>
-                              </li>
-                            </ul>
+                        <div className="col-md-2"></div>
+                        {/* Review Form */}
+                        <div className="col-md-8">
+                          <div id="reviews">
+
+                            <form
+                              onSubmit={handleSubmitComment}
+                            >
+                              <ul className="reviews">
+                                <li>
+                                  <div class="review-heading">
+                                    <i
+                                      class="fa fa-user"
+                                      style={{ fontSize: "30px" }}
+                                    ></i>
+                                    {user &&
+                                      <h5 class="name">{`${user.firstName} ${user.lastName}`}</h5>
+                                    }
+                                  </div>
+                                  <div class="review-body">
+                                  <textarea class="input" name="content" placeholder="Your Review"></textarea>
+                                  </div>
+                                </li>
+                                <li>
+                                  <div class="d-flex flex-row-reverse">
+                                    <button className="primary-btn" style={{fontSize: "11px"}} type="submit">Add comment</button>
+                                  </div>
+                                </li>
+                              </ul>
+                            </form>
                           </div>
                         </div>
-                        {/* /Rating */}
+                        <div className="col-md-2"></div>
+                        </div>
+                    </div>
+                    {/* /Review Form */}
+
+                    <div id="tab2" className="">
+                      <div className="row">
+                        <div className="col-md-2"></div>
                         {/* Reviews */}
-                        <div className="col-md-6">
+                        <div className="col-md-8">
                           <div id="reviews">
                             <ul className="reviews">
-                            {comments?.map((comment) => (
-                              <li>
-                              <div className="review-heading" key={comment.commentId}>
-                                <h5 className="name">{comment.customer.firstName} {comment.customer.lastName} </h5>
-                                <p className="date">{comment.commentDate}</p>
-                                <div className="review-rating">
-                                  <i className="fa fa-star" />
-                                  <i className="fa fa-star" />
-                                  <i className="fa fa-star" />
-                                  <i className="fa fa-star" />
-                                  <i className="fa fa-star-o empty" />
-                                </div>
-                              </div>
-                              <div className="review-body">
-                                <p>
-                                  {comment.content}
-                                </p>
-                              </div>
-                            </li>
-                            ))}
-
-                              
-                              
+                              {comments?.map((comment) => (
+                                <li>
+                                  <div
+                                    className="review-heading"
+                                    key={comment.commentId}
+                                  >
+                                    <h5 className="name">
+                                      {comment.customer.firstName}{" "}
+                                      {comment.customer.lastName}{" "}
+                                    </h5>
+                                    <p className="date">
+                                      {comment.commentDate}
+                                    </p>
+                                    <div className="review-rating">
+                                      <i className="fa fa-star" />
+                                      <i className="fa fa-star" />
+                                      <i className="fa fa-star" />
+                                      <i className="fa fa-star" />
+                                      <i className="fa fa-star-o empty" />
+                                    </div>
+                                  </div>
+                                  <div className="review-body">
+                                    <p>{comment.content}</p>
+                                  </div>
+                                </li>
+                              ))}
                             </ul>
                             <ul className="reviews-pagination">
                               <li className="active">1</li>
@@ -391,71 +398,7 @@ const Product = () => {
                             </ul>
                           </div>
                         </div>
-                        {/* /Reviews */}
-                        {/* Review Form */}
-                        <div className="col-md-3">
-                          <div id="review-form">
-                            <form className="review-form">
-                              <input
-                                className="input"
-                                type="text"
-                                placeholder="Your Name"
-                              />
-                              <input
-                                className="input"
-                                type="email"
-                                placeholder="Your Email"
-                              />
-                              <textarea
-                                className="input"
-                                placeholder="Your Review"
-                                defaultValue={""}
-                              />
-                              <div className="input-rating">
-                                <span>Your Rating: </span>
-                                <div className="stars">
-                                  <input
-                                    id="star5"
-                                    name="rating"
-                                    defaultValue={5}
-                                    type="radio"
-                                  />
-                                  <label htmlFor="star5" />
-                                  <input
-                                    id="star4"
-                                    name="rating"
-                                    defaultValue={4}
-                                    type="radio"
-                                  />
-                                  <label htmlFor="star4" />
-                                  <input
-                                    id="star3"
-                                    name="rating"
-                                    defaultValue={3}
-                                    type="radio"
-                                  />
-                                  <label htmlFor="star3" />
-                                  <input
-                                    id="star2"
-                                    name="rating"
-                                    defaultValue={2}
-                                    type="radio"
-                                  />
-                                  <label htmlFor="star2" />
-                                  <input
-                                    id="star1"
-                                    name="rating"
-                                    defaultValue={1}
-                                    type="radio"
-                                  />
-                                  <label htmlFor="star1" />
-                                </div>
-                              </div>
-                              <button className="primary-btn">Submit</button>
-                            </form>
-                          </div>
-                        </div>
-                        {/* /Review Form */}
+                        <div className="col-md-2"></div>
                       </div>
                     </div>
                     {/* /tab3  */}
@@ -473,6 +416,19 @@ const Product = () => {
       </>
 
       <Letter />
+      <ToastContainer
+        position="top-right"
+        autoClose={4000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      
+      />
       <Footer />
     </>
   );

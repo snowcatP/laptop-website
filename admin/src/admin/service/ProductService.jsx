@@ -10,3 +10,4 @@ export const editProductById = (id,credential) => axios.put(URL + `/product/edit
 
 export const getListProducts = () => axios.get(URL + "/product")
 
+export const deleteProductById = (id) => axios.delete(URL + `/product/delete/${id}`)

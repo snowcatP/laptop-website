@@ -14,6 +14,7 @@ import 'rc-slider/assets/index.css';
 import Button from 'react-bootstrap/Button';
 import { useAuth } from "./context/AuthContext";
 import { toast } from "react-toastify";
+
 const Store = () => {
 
   const {user} = useAuth()

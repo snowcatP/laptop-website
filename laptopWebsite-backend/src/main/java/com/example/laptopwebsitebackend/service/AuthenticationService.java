@@ -124,6 +124,31 @@ public class AuthenticationService {
         }
     }
 
+    public String generateResetPasswordToken(String userEmail){
+
+        JWSHeader header = new JWSHeader(JWSAlgorithm.HS256);
+
+        JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
+                .subject(userEmail)
+                .issuer("HHH")
+                .issueTime(new Date())
+                .expirationTime(new Date(
+                        Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()
+                ))
+                .jwtID(UUID.randomUUID().toString())
+                .build();
+
+        Payload payload = new Payload(jwtClaimsSet.toJSONObject());
+        JWSObject jwsObject = new JWSObject(header, payload);
+
+        try {
+            jwsObject.sign(new MACSigner(SIGNER_KEY.getBytes()));
+            return jwsObject.serialize();
+        } catch (JOSEException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public IntrospectResponse introspect(IntrospectRequest request)
             throws JOSEException, ParseException {
         String token = request.getToken();

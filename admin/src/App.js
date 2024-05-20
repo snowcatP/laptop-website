@@ -11,6 +11,9 @@ import EditProduct from "./admin/EditProduct";
 import ListWarranty from "./admin/ListWarranty";
 import AddWarranty from "./admin/AddWarranty";
 import ProtectedRoute from "./admin/util/ProtectedRoute";
+import ListDiscount from "./admin/ListDiscount";
+import AddDiscount from "./admin/AddDiscount";
+import EditDiscount from "./admin/EditDiscount";
 import ListCustomer from "./admin/ListCustomer";
 
 function App() {
@@ -75,6 +78,33 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/list-discount"
+          element={
+            <ProtectedRoute>
+              <ListDiscount />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route 
+          path="/add-discount"
+          element={
+            <ProtectedRoute>
+              <AddDiscount />
+            </ProtectedRoute>
+        }
+        />
+        <Route
+          path="/edit-discount/:id"
+          element={
+            <ProtectedRoute>
+              <EditDiscount />
+            </ProtectedRoute>
+          }
+        />
+            
         <Route
           path="/list-customer"
           element={

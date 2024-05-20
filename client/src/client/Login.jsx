@@ -13,6 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
   const { setUser, setIsLogged } = useAuth();
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     username: "",
@@ -21,7 +22,6 @@ const Login = () => {
 
   const [focusedInput, setFocusedInput] = useState(null);
 
-  const navigate = useNavigate();
 
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -105,6 +105,8 @@ const Login = () => {
     userLogin();
 
   };
+
+  
 
   return (
     <>

@@ -39,13 +39,16 @@ public class WebSecurityConfig{
             "/auth/logout",
             "/auth/register",
             "/auth/admin-login",
+            "/forgot-password",
+            "/reset-password",
             "/",
             "/store",
             "/product/**",
             "/comment/**",
             "/comment",
+            "/comment/add",
             "/discount",
-            "/discount/**",
+            "/discount/*",
             "/warranty",
             "/warranty/**",
             "/user",
@@ -121,3 +124,4 @@ public class WebSecurityConfig{
         return new BCryptPasswordEncoder(10);
     }
 }
+
