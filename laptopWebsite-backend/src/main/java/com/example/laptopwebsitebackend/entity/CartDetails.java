@@ -1,6 +1,5 @@
 package com.example.laptopwebsitebackend.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,10 +21,9 @@ public class CartDetails {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    private Double Price;
+    private String totalPrice;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "cart_id")
-    @JsonBackReference
     private Cart cart;
 }

@@ -1,77 +1,16 @@
-import React , {useEffect, useState} from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import React from "react";
+import { Link } from "react-router-dom";
 import Header from "./components/Header";
 import Navigation from "./components/Navigation";
 import Letter from "./components/Letter";
 import Footer from "./components/Footer";
-import { toast } from "react-toastify";
-import { checkout } from "./service/Order";
 
-function Checkout(props){
-  const location = useLocation();
-  const { carts,totalPrice,user  } = location.state || {};
-  const token = localStorage.getItem("token");
-  const header = {
-    ContentType: 'application/json',
-    Authorization: "Bearer " + token,
-  };
-  
-  const [form, setForm] = useState({
-    customerId:user.customerId,
-    firstName:user.firstName,
-    lastName:user.lastName,
-    email:user.email,
-    phone:user.phone,
-    address:user.address,
-    paymentId:"",
-    lstCartDetailsId:""
-  });
-  
-  const navigate = useNavigate();
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const credential = {
-      customerId:user.customerId,
-      firstName:form.firstName,
-      lastName:form.lastName,
-      email:form.email,
-      phone:form.phone,
-      address:form.address,
-      paymentId:form.paymentId,
-      lstCartDetailsId:form.lstCartDetailsId
-    }
-    try {
-      const response = await checkout(credential,header);
-      if (response.status === 200) {
-        toast.success("Order successfully!");
-        navigate("/user/orders");
-      }
-    }
-    catch (error) {
-      toast.error(error.response.data.message);
-    }
-  };
-  
-  const onChangeInput = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-    
-  };
-  
-  useEffect (() => {
-    const cartDetailsIds = carts.map(cart => cart.cartDetailsId);
-    setForm((prevForm) => ({
-      ...prevForm,
-      lstCartDetailsId: cartDetailsIds
-    }));
-  }, [carts]);
-
+const Checkout = () => {
   return (
     <>
       <Header />
-      
       <Navigation />
-      
+
       <>
         {/* SECTION */}
         <div className="section">
@@ -83,27 +22,22 @@ function Checkout(props){
                 {/* Billing Details */}
                 <div className="billing-details">
                   <div className="section-title">
-                    <h3 className="title">Billing address </h3>
+                    <h3 className="title">Billing address</h3>
                   </div>
                   <div className="form-group">
                     <input
                       className="input"
                       type="text"
-                      name="firstName"
-                      placeholder={user ? user.firstName : ""}
-                      value={form.firstName}
-                      onChange={onChangeInput}
+                      name="first-name"
+                      placeholder="First Name"
                     />
-                    
                   </div>
                   <div className="form-group">
                     <input
                       className="input"
                       type="text"
-                      name="lastName"
-                      placeholder={user ? user.lastName : ""}
-                      value={form.lastName}
-                      onChange={onChangeInput}
+                      name="last-name"
+                      placeholder="Last Name"
                     />
                   </div>
                   <div className="form-group">
@@ -111,9 +45,7 @@ function Checkout(props){
                       className="input"
                       type="email"
                       name="email"
-                      placeholder={user ? user.email : ""}
-                      value={form.email}
-                      onChange={onChangeInput}
+                      placeholder="Email"
                     />
                   </div>
                   <div className="form-group">
@@ -121,19 +53,39 @@ function Checkout(props){
                       className="input"
                       type="text"
                       name="address"
-                      placeholder={user ? user.address : ""}
-                      value={form.address}
-                      onChange={onChangeInput}
+                      placeholder="Address"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <input
+                      className="input"
+                      type="text"
+                      name="city"
+                      placeholder="City"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <input
+                      className="input"
+                      type="text"
+                      name="country"
+                      placeholder="Country"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <input
+                      className="input"
+                      type="text"
+                      name="zip-code"
+                      placeholder="ZIP Code"
                     />
                   </div>
                   <div className="form-group">
                     <input
                       className="input"
                       type="tel"
-                      name="phone"
-                      placeholder={user ? user.phone : ""}
-                      value={form.phone}
-                      onChange={onChangeInput}
+                      name="tel"
+                      placeholder="Telephone"
                     />
                   </div>
                   <div className="form-group">
@@ -142,9 +94,12 @@ function Checkout(props){
                       <label htmlFor="create-account">
                         <span />
                         Create Account?
-                        
                       </label>
                       <div className="caption">
+                        <p>
+                          Lorem ipsum dolor sit amet, consectetur adipisicing
+                          elit, sed do eiusmod tempor incididunt.
+                        </p>
                         <input
                           className="input"
                           type="password"
@@ -162,31 +117,26 @@ function Checkout(props){
                     <h3 className="title">Shiping address</h3>
                   </div>
                   <div className="input-checkbox">
-                    <input type="checkbox" id="shiping-address"  />
+                    <input type="checkbox" id="shiping-address" />
                     <label htmlFor="shiping-address">
                       <span />
                       Ship to a diffrent address?
                     </label>
-
-                    {/* <div className="caption">
+                    <div className="caption">
                       <div className="form-group">
                         <input
                           className="input"
                           type="text"
-                          name="firstName"
+                          name="first-name"
                           placeholder="First Name"
-                          value={form2.firstName}
-                          onChange={onChangeInput2}
                         />
                       </div>
                       <div className="form-group">
                         <input
                           className="input"
                           type="text"
-                          name="lastName"
+                          name="last-name"
                           placeholder="Last Name"
-                          value={form2.lastName}
-                          onChange={onChangeInput2}
                         />
                       </div>
                       <div className="form-group">
@@ -195,8 +145,6 @@ function Checkout(props){
                           type="email"
                           name="email"
                           placeholder="Email"
-                          value={form2.email}
-                          onChange={onChangeInput2}
                         />
                       </div>
                       <div className="form-group">
@@ -205,12 +153,24 @@ function Checkout(props){
                           type="text"
                           name="address"
                           placeholder="Address"
-                          value={form2.address}
-                          onChange={onChangeInput2}
                         />
                       </div>
-                     
-                     
+                      <div className="form-group">
+                        <input
+                          className="input"
+                          type="text"
+                          name="city"
+                          placeholder="City"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <input
+                          className="input"
+                          type="text"
+                          name="country"
+                          placeholder="Country"
+                        />
+                      </div>
                       <div className="form-group">
                         <input
                           className="input"
@@ -223,13 +183,11 @@ function Checkout(props){
                         <input
                           className="input"
                           type="tel"
-                          name="phone"
+                          name="tel"
                           placeholder="Telephone"
-                          value={form2.phone}
-                          onChange={onChangeInput2}
                         />
                       </div>
-                    </div> */}
+                    </div>
                   </div>
                 </div>
                 {/* /Shiping Details */}
@@ -248,8 +206,7 @@ function Checkout(props){
                 <div className="section-title text-center">
                   <h3 className="title">Your Order</h3>
                 </div>
-                
-                    <div className="order-summary">
+                <div className="order-summary">
                   <div className="order-col">
                     <div>
                       <strong>PRODUCT</strong>
@@ -258,18 +215,16 @@ function Checkout(props){
                       <strong>TOTAL</strong>
                     </div>
                   </div>
-                  {carts ? carts.map((cart, index)=> {
-                    return( 
-                    <div className="order-products">
+                  <div className="order-products">
                     <div className="order-col">
-                      <div>{cart.quantity}x</div>
-                      <div>{cart.product.productName}</div>
-                      <div>{Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(cart.product.price)}</div>
+                      <div>1x Product Name Goes Here</div>
+                      <div>$980.00</div>
                     </div>
-                  </div>);
-                 
-                  }):null }
-
+                    <div className="order-col">
+                      <div>2x Product Name Goes Here</div>
+                      <div>$980.00</div>
+                    </div>
+                  </div>
                   <div className="order-col">
                     <div>Shiping</div>
                     <div>
@@ -281,27 +236,52 @@ function Checkout(props){
                       <strong>TOTAL</strong>
                     </div>
                     <div>
-                      <strong className="order-total">{Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(totalPrice)}</strong>
+                      <strong className="order-total">$2940.00</strong>
                     </div>
                   </div>
                 </div>
-
-                  
-                
                 <div className="payment-method">
                   <div className="input-radio">
-                  <input type="radio" name="paymentId" id="payment-1" value={1} onChange={onChangeInput}/>
+                    <input type="radio" name="payment" id="payment-1" />
                     <label htmlFor="payment-1">
                       <span />
                       Cash on Delivery (COD)
                     </label>
+                    <div className="caption">
+                      <p>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing
+                        elit, sed do eiusmod tempor incididunt ut labore et
+                        dolore magna aliqua.
+                      </p>
+                    </div>
                   </div>
                   <div className="input-radio">
-                  <input type="radio" name="paymentId" id="payment-2" value={2} onChange={onChangeInput}/>
+                    <input type="radio" name="payment" id="payment-2" />
                     <label htmlFor="payment-2">
+                      <span />
+                      Cheque Payment
+                    </label>
+                    <div className="caption">
+                      <p>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing
+                        elit, sed do eiusmod tempor incididunt ut labore et
+                        dolore magna aliqua.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="input-radio">
+                    <input type="radio" name="payment" id="payment-3" />
+                    <label htmlFor="payment-3">
                       <span />
                       PayPal
                     </label>
+                    <div className="caption">
+                      <p>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing
+                        elit, sed do eiusmod tempor incididunt ut labore et
+                        dolore magna aliqua.
+                      </p>
+                    </div>
                   </div>
                 </div>
                 <div className="input-checkbox">
@@ -312,8 +292,7 @@ function Checkout(props){
                     <Link to="#">terms &amp; conditions</Link>
                   </label>
                 </div>
-                <Link to="/user/bills" className="primary-btn order-submit" state={{totalPrice: totalPrice}} onClick={handleSubmit}>
-                {/* <Link to="/user/bills" className="primary-btn order-submit" > */}
+                <Link to="#" className="primary-btn order-submit">
                   Place order
                 </Link>
               </div>
