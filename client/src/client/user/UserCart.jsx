@@ -6,9 +6,8 @@ import Letter from "../components/Letter";
 import Footer from "../components/Footer";
 import { jwtDecode } from "jwt-decode";
 import { checkValidToken, customerProfile } from "../service/ClientService";
-import { deleteItemToCart, editItemInCart, getCartByCustomerId, getCartById } from "../service/Cart";
+import { deleteItemToCart, editItemInCart, getCartById } from "../service/Cart";
 import { toast } from "react-toastify";
-import Checkout from "../Checkout";
 import { Link } from "react-router-dom";
 
 const UserCart = () => {
@@ -44,12 +43,13 @@ const UserCart = () => {
     }
   }, [user, isLogged]);
 
-  const token = localStorage.getItem("token");
-  const header = {
-    Authorization: "Bearer " + token,
-  };
+  
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    const header = {
+      Authorization: "Bearer " + token,
+    };
     const getCart = async () => {
       try {
         const response = await getCartById(cartId, header);
@@ -61,9 +61,13 @@ const UserCart = () => {
     getCart();
   }, [cartId,carts]);
 
-  function handleDeleteSubmit(e,cartDetailsId, header) {
+  function handleDeleteSubmit(e,cartDetailsId) {
     e.preventDefault();
     const deleteToCart = async () => {
+      const token = localStorage.getItem("token");
+      const header = {
+        Authorization: "Bearer " + token,
+      };
       try {
         const deleteResponse = await deleteItemToCart(cartDetailsId, header);
         toast.success(deleteResponse.data);
@@ -79,6 +83,10 @@ const UserCart = () => {
   
   const handleQuantityChange = (e,cartDetailsId, change) => {
     e.preventDefault();
+    const token = localStorage.getItem("token");
+    const header = {
+      Authorization: "Bearer " + token,
+    };
     const cartIndex = carts.findIndex((cart) => cart.cartDetailsId === cartDetailsId);
     if (cartIndex !== -1) {
       const updatedCarts = [...carts];
@@ -98,8 +106,8 @@ const UserCart = () => {
     e.preventDefault();
     const editItem = async () => {
       try {
-        const editResponse = await editItemInCart(cartDetailsId, new_quantity, header);
-        
+        await editItemInCart(cartDetailsId, new_quantity, header);
+
       } catch (error) {
         console.log(error);
       }
@@ -162,7 +170,7 @@ const UserCart = () => {
                                           Total Price
                                         </th> 
                                         <th className="text-center align-middle py-3 px-0" style={{ minWidth: "40px" }}>
-                                          <a href="#" className="shop-tooltip float-none " title="" data-original-title="Clear cart">
+                                          <a href="/#" className="shop-tooltip float-none " title="" data-original-title="Clear cart">
                                             <i className="ino ion-md-trash"></i>
                                           </a>
                                         </th>
@@ -227,7 +235,7 @@ const UserCart = () => {
                                             </td>
                                             <td className="text-center align-middle px-0 align-middle">
                                               {/* Delete */}
-                                              <button className="shop-tooltip float-none text-center" type="button" onClick={() => handleDeleteSubmit(cart.cartDetailsId,header)}>
+                                              <button className="shop-tooltip float-none text-center" type="button" onClick={() => handleDeleteSubmit(cart.cartDetailsId)}>
                                                 Delete
                                               </button>
                                             </td>
@@ -248,9 +256,9 @@ const UserCart = () => {
                                   </div>
                                 </div>
                                 <div className="float-right" style={{ paddingTop: "1em" }}>
-                                  <div className="col-md-8"></div>
-                                  <div className="col-md-4">
-                                    <a href="/home" className="btn btn-lg btn-danger md-btn-flat" style={{ marginRight: "2em" }}>
+                                  <div className="col-md-4"></div>
+                                  <div className="col-md-8 d-flex justify-content-end">
+                                    <a href="/" className="btn btn-lg btn-danger md-btn-flat" style={{ marginRight: "2em" }}>
                                       Back
                                     </a>
                                     <Link to="/checkout" state={{ carts: carts, totalPrice: totalPrice,user: user }} className="btn btn-lg btn-danger">

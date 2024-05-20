@@ -4,11 +4,8 @@ import Footer from "./components/Footer";
 import Sidebar from "./components/Sidebar";
 import { useEffect, useState } from "react";
 import { getListCustomers } from "./service/CustomerService";
-import DataTable from 'datatables.net-dt';
 const ListCustomer = ({ allCustomerList, message }) => {
-    const [users, setUsers] = useState([]);
-  let table = new DataTable('#myTable');
-  
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     const getAllCustomers = async () => {

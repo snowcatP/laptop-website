@@ -8,7 +8,6 @@ import { useState,useEffect } from "react";
 import { getListProducts } from "./service/StoreService";
 import { searchProducts } from "./service/SearchProduct";
 import { addToCart, getProducts } from "./service/ProductService";
-import axios from "axios";
 import Slider from "rc-slider";
 import 'rc-slider/assets/index.css';
 import Button from 'react-bootstrap/Button';
