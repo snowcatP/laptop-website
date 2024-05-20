@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Header from "./components/Header";
 import Navigation from "./components/Navigation";
 import Letter from "./components/Letter";
 import Footer from "./components/Footer";
 import Slider from "react-slick";
-import { useParams, useNavigate } from "react-router-dom";
 import { getProductById } from "./service/DetailProduct";
 import { addNewComment, getListComment } from "./service/CommentService";
 import { useAuth } from "./context/AuthContext";
@@ -14,14 +13,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import { addToCart } from "./service/ProductService";
 
 const Product = () => {
-
   const {user, isLogged} = useAuth()
   const navigate = useNavigate()
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);
   let sliderRef1 = useRef(null);
   let sliderRef2 = useRef(null);
-  const navigate = useNavigate()
 
   const settings = {
     slidesToShow: 3,
