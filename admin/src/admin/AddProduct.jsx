@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Sidebar from "./components/Sidebar";
-import { Form, Link, useNavigate } from "react-router-dom";
-import { addProduct } from "./services/AddProductService";
-const AddProduct = ({ allproductList, message }) => {
+import { addProduct } from "./service/ProductService";
+const AddProduct = () => {
 
   const [form, setForm] = useState({
     productName: "",
@@ -23,12 +22,14 @@ const AddProduct = ({ allproductList, message }) => {
     graphicCard: ""
   });
 
+  const [message, setMessage] = useState(""); // State để lưu thông báo
+
   const handleSubmit = async (e) => {
     e.preventDefault(); // Ngăn chặn form submit mặc định
     const credential = {
       productName: form.productName,
-      price: form.productPrice,
-      quantity: form.productQuantity,
+      price: form.price,
+      quantity: form.quantity,
       category: form.category,
       brand: form.brand,
       image1: form.image1,
@@ -50,6 +51,8 @@ const AddProduct = ({ allproductList, message }) => {
       if (response.status === 200) {
         // Nếu thành công, hiển thị thông báo hoặc thực hiện các hành động khác
         console.log("Product added successfully!");
+        // Nếu thành công, hiển thị thông báo hoặc thực hiện các hành động khác
+        setMessage("Successful");
       }
     } catch (error) {
       // Xử lý lỗi nếu có
@@ -100,7 +103,7 @@ const AddProduct = ({ allproductList, message }) => {
                     </div>
                   </div>
                   <div className="row mb-3">
-                    <label className="col-sm-2 col-form-label">Quantiy</label>
+                    <label className="col-sm-2 col-form-label">Quantity</label>
                     <div className="col-sm-10">
                       <input type="number" className="form-control" name="quantity" value={form.quantity} onChange={onChangeInput}/>
                     </div>

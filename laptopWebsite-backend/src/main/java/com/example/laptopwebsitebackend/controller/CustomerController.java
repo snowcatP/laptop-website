@@ -34,10 +34,6 @@ public class CustomerController {
     @GetMapping
     public ResponseEntity<List<Customer>> getAllCustomers(){
 
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
-
         List<Customer> allCustomers = customerService.getAllCustomers();
 
         return new ResponseEntity<>(allCustomers, HttpStatus.OK);

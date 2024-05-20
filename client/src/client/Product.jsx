@@ -86,7 +86,7 @@ const Product = () => {
     }
     getProduct()
     getComment()
-  }, [id])
+  }, [id, comments, product])
 
 
     const [activeTab, setActiveTab] = useState("tab1");

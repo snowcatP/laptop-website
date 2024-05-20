@@ -77,4 +77,10 @@ public class WarrantyController {
         warrantyService.deleteWarranty(id);
     }
 
+    @GetMapping("/customer/{id}")
+    public ResponseEntity<List<Warranty>> get_List_Warranty_By_Customer_Id(@PathVariable("id") Long customer_Id) {
+        List<Warranty> warrantyList = warrantyService.findWarrantyByCustomerId(customer_Id);
+        return new ResponseEntity<>(warrantyList, HttpStatus.OK);
+    }
+
 }

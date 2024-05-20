@@ -34,12 +34,17 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
 
     List<Product> findProductsByCategoryAndPriceBetween(String category, Double minPrice, Double maxPrice);
 
+//    @Query("SELECT p FROM Product p WHERE LOWER(p.productName) LIKE %:keyword% OR LOWER(p.brand) LIKE %:keyword% OR LOWER(p.category) LIKE %:keyword%" +
+//            " OR LOWER(p.configuration.graphicCard) LIKE %:keyword%" +
+//            " OR LOWER(p.configuration.processor) LIKE %:keyword%" +
+//            " OR p.configuration.ram = CAST(:keyword AS int)" +
+//            " OR p.configuration.memory = CAST(:keyword AS int)" +
+//            " OR p.configuration.screen = CAST(:keyword AS double)")
+//    List<Product> searchByKeyword(@Param("keyword") String keyword);
+
     @Query("SELECT p FROM Product p WHERE LOWER(p.productName) LIKE %:keyword% OR LOWER(p.brand) LIKE %:keyword% OR LOWER(p.category) LIKE %:keyword%" +
             " OR LOWER(p.configuration.graphicCard) LIKE %:keyword%" +
-            " OR LOWER(p.configuration.processor) LIKE %:keyword%" +
-            " OR p.configuration.ram = CAST(:keyword AS int)" +
-            " OR p.configuration.memory = CAST(:keyword AS int)" +
-            " OR p.configuration.screen = CAST(:keyword AS double)")
+            " OR LOWER(p.configuration.processor) LIKE %:keyword%" )
     List<Product> searchByKeyword(@Param("keyword") String keyword);
 
 }

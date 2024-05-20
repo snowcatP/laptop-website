@@ -2,9 +2,9 @@ import React from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Sidebar from "./components/Sidebar";
-import { Link } from "react-router-dom";
-import { getListWarrantys } from "./services/ListWarrantyService";
+import { getListWarrantys } from "./service/WarrantyService";
 import { useState, useEffect } from "react";
+
 const ListWarranty = ({ allwarrantyList, message }) => {
 
   const [warrantys, setWarrantys] = useState([])
@@ -22,7 +22,7 @@ const ListWarranty = ({ allwarrantyList, message }) => {
     }
 
     getAllProducts()
-  }, [])
+  }, [warrantys])
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);

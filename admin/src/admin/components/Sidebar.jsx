@@ -1,13 +1,15 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link} from "react-router-dom";
+
 const Sidebar = () => {
+
   return (
     <>
       {/* ======= Sidebar ======= */}
       <aside id="sidebar" className="sidebar">
         <ul className="sidebar-nav" id="sidebar-nav">
           <li className="nav-item">
-            <Link className="nav-link " to="index.html">
+            <Link className="nav-link " to="/">
               <i className="bi bi-grid" />
               <span>Dashboard</span>
             </Link>
@@ -123,7 +125,7 @@ const Sidebar = () => {
               data-bs-parent="#sidebar-nav"
             >
               <li>
-                <Link to="charts-chartjs.html">
+                <Link to="/list-customer">
                   <i className="bi bi-circle" />
                   <span>List Customer</span>
                 </Link>
@@ -159,40 +161,12 @@ const Sidebar = () => {
           {/* End Icons Nav */}
           <li className="nav-heading">Pages</li>
           <li className="nav-item">
-            <Link className="nav-link collapsed" to="users-profile.html">
+            <Link className="nav-link collapsed" to="/admin/profile">
               <i className="bi bi-person" />
               <span>Profile</span>
             </Link>
           </li>
           {/* End Profile Page Nav */}
-          <li className="nav-item">
-            <Link className="nav-link collapsed" to="pages-faq.html">
-              <i className="bi bi-question-circle" />
-              <span>F.A.Q</span>
-            </Link>
-          </li>
-          {/* End F.A.Q Page Nav */}
-          <li className="nav-item">
-            <Link className="nav-link collapsed" to="pages-contact.html">
-              <i className="bi bi-envelope" />
-              <span>Contact</span>
-            </Link>
-          </li>
-          {/* End Contact Page Nav */}
-          <li className="nav-item">
-            <Link className="nav-link collapsed" to="pages-register.html">
-              <i className="bi bi-card-list" />
-              <span>Register</span>
-            </Link>
-          </li>
-          {/* End Register Page Nav */}
-          <li className="nav-item">
-            <Link className="nav-link collapsed" to="pages-login.html">
-              <i className="bi bi-box-arrow-in-right" />
-              <span>Login</span>
-            </Link>
-          </li>
-          {/* End Login Page Nav */}
           <li className="nav-item">
             <Link className="nav-link collapsed" to="pages-error-404.html">
               <i className="bi bi-dash-circle" />
@@ -200,13 +174,6 @@ const Sidebar = () => {
             </Link>
           </li>
           {/* End Error 404 Page Nav */}
-          <li className="nav-item">
-            <Link className="nav-link collapsed" to="pages-blank.html">
-              <i className="bi bi-file-earmark" />
-              <span>Blank</span>
-            </Link>
-          </li>
-          {/* End Blank Page Nav */}
         </ul>
       </aside>
       {/* End Sidebar*/}

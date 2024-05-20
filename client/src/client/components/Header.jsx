@@ -8,39 +8,12 @@ import { getCartById } from "../service/Cart";
 import { jwtDecode } from "jwt-decode";
 const Header = () => {
   const {user, setUser,isLogged,setIsLogged } = useAuth();
-  // const [user,setUser] = useState(null);
   const [carts, setCarts] = useState([]);
-  // const [isLogged, setIsLogged] = useState(false);
   const [cartId, setCartId] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
 
-
-  // useEffect(() => {
-  //   const token = localStorage.getItem("token");
-  //   const decoded_token = jwtDecode(token);
-  //   const current = new Date();
-
-  //   if (decoded_token.exp * 1000 > current.getTime()) {
-  //     const checkIsValid = async () => {
-  //       const response = await checkValidToken({
-  //         token: token,
-  //       });
-
-  //       if (response.data["valid"] === true) {
-  //         const userProfile = async () => {
-  //           const headers = { Authorization: `Bearer ${token}` };
-  //           const response = await customerProfile(headers);
-  //           setCartId(response.data.customerId);
-  //           setUser(response.data);
-  //           setIsLogged(true);
-  //         };
-  //         userProfile();
-  //       }
-  //     };
-  //     checkIsValid();
-  //   }
-  // }, [user, isLogged]);
-
+  const navigate = useNavigate()
+  
   const token = localStorage.getItem("token");
   const header = {
     Authorization: "Bearer " + token,
@@ -70,13 +43,14 @@ const Header = () => {
 
     const logout = async () => {
       const response = await customerLogout(token)
-
-      if (response.status === 200) {
-        setUser(null)
-        setIsLogged(false)
-
-        Navigate("/")
+      if (response.status === 200){
         toast.success("Logout success!")
+        
+        setTimeout(() => {
+          setUser(null)
+          setIsLogged(false)
+          navigate("/")
+        }, 2000)
       }
     }
 
@@ -94,6 +68,18 @@ const Header = () => {
   useEffect(() => {
     handleTotalPrice();
   }, [carts]);
+
+  const [keyword, setKeyword] = useState('');
+
+  const handleInputChange = (event) => {
+    setKeyword(event.target.value);
+  };
+
+  const handleSearchClick = (event) => {
+    event.preventDefault(); // Ngăn chặn hành vi mặc định của form
+    onSearch(keyword);
+  };
+  
 
   return (
     <div>
@@ -155,12 +141,16 @@ const Header = () => {
                 <div className="header-search">
                   <form>
                     <select className="input-select">
-                      <option value={0}>All Categories</option>
-                      <option value={1}>Category 01</option>
-                      <option value={1}>Category 02</option>
+                      <option value={0}>All</option>
                     </select>
-                    <input className="input" placeholder="Search here" />
-                    <button className="search-btn">Search</button>
+                    <input
+                      type="text"
+                      className="input"
+                      placeholder="Search here"
+                      value={keyword}
+                      onChange={handleInputChange}
+                    />
+                    <button type="button" className="search-btn" onClick={handleSearchClick}>Search</button>
                   </form>
                 </div>
               </div>

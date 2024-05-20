@@ -64,6 +64,13 @@ public class ProductController {
         return new ResponseEntity<>(allProducts, HttpStatus.OK);
     }
 
+    @GetMapping("/store")
+    public ResponseEntity<List<Product>> getProductsByPage(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "9") int size) {
+        List<Product> allProducts = productService.getProductsByPage(page, size);
+        return new ResponseEntity<>(allProducts, HttpStatus.OK);
+    }
+
+
     @GetMapping("/top5price")
     public ResponseEntity<List<Product>> get_Top_5_Products_By_Price(){
         List<Product> allProducts = productService.get_Top_5_Highest_Priced_Products();

@@ -2,12 +2,10 @@ import React from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Sidebar from "./components/Sidebar";
-import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useParams } from "react-router-dom";
-import { getProductById } from "./services/DetailProductService";
-import { editProductById } from "./services/EditProductService";
+import { getProductById } from "./service/ProductService";
+import { editProductById } from "./service/ProductService";
 const EditProduct = ({ allproductList, message }) => {
   
   const { id } = useParams(); // Lấy id từ địa chỉ URL

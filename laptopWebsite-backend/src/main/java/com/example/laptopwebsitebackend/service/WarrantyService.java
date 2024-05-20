@@ -1,6 +1,8 @@
 package com.example.laptopwebsitebackend.service;
 
+import com.example.laptopwebsitebackend.dto.request.CustomerRequest;
 import com.example.laptopwebsitebackend.entity.Configuration;
+import com.example.laptopwebsitebackend.entity.Customer;
 import com.example.laptopwebsitebackend.entity.Warranty;
 import com.example.laptopwebsitebackend.repository.WarrantyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,9 @@ public class WarrantyService {
 
     @Autowired
     private WarrantyRepository warrantyRepository;
+
+    @Autowired
+    private CustomerService customerService;
 
     public List<Warranty> getListAllWarranty(){
 
@@ -63,4 +68,9 @@ public class WarrantyService {
 
         return warranty;
     }
+
+    public List<Warranty> findWarrantyByCustomerId (Long customer_id){
+        return warrantyRepository.findWarrantiesByCustomer_CustomerId(customer_id);
+    }
+
 }
