@@ -35,7 +35,6 @@ export const AuthContextProvider = (props) => {
 
               setUser(response.data);
               setIsLogged(true);
-
             };
             userProfile();
           }

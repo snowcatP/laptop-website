@@ -1,6 +1,7 @@
 package com.example.laptopwebsitebackend.service;
 
 import com.example.laptopwebsitebackend.entity.CartDetails;
+import com.example.laptopwebsitebackend.entity.Product;
 import com.example.laptopwebsitebackend.repository.CartDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ public class CartDetailService {
     }
 
     public CartDetails addItemToCart(CartDetails cartDetails) {
+
         return cartDetailsRepository.save(cartDetails);
     }
 
@@ -29,7 +31,9 @@ public class CartDetailService {
             return "Delete item successfully";
         }
 
+
     }
+
 
     public CartDetails findById(Long cartDetailsId) {
         return cartDetailsRepository.findById(cartDetailsId).get();

@@ -3,18 +3,25 @@ import Navigation from "./components/Navigation";
 import Header from "./components/Header";
 import Letter from "./components/Letter";
 import Footer from "./components/Footer";
-import { Link } from "react-router-dom";
+
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState,useEffect } from "react";
 import { getListProducts } from "./service/StoreService";
+import { addToCart } from "./service/ProductService";
+import { useAuth } from "./context/AuthContext";
+import { toast } from "react-toastify";
 import { searchProducts } from "./service/SearchProduct";
 import { getProducts } from "./service/ProductService";
-import axios from "axios";
 import Slider from "rc-slider";
 import 'rc-slider/assets/index.css';
 import Button from 'react-bootstrap/Button';
-const Store = () => {
 
+const Store = () => {
+  const {user} = useAuth()
+  const [quantity, setQuantity] = useState(1);
   const [products, setProducts] = useState([]);
+  const navigate = useNavigate();
+
   const [filterProducts, setFilterProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [searchParams, setSearchParams] = useState({});
@@ -23,7 +30,7 @@ const Store = () => {
   const [sortType, setSortType] = useState(null); // Thêm state để lưu trữ loại sắp xếp
   const [priceProducts, setPriceProducts] = useState([]);
   // Thêm state để lưu trữ số lượng sản phẩm mỗi trang
-const [itemsPerPage, setItemsPerPage] = useState(9);
+  const [itemsPerPage, setItemsPerPage] = useState(9);
 
 
     
@@ -47,6 +54,7 @@ const [itemsPerPage, setItemsPerPage] = useState(9);
       const getAllProducts = async () => {
         try {
           const response = await getProducts();
+
   
           setFilterProducts(response.data);
         } catch (error) {
@@ -68,7 +76,36 @@ const [itemsPerPage, setItemsPerPage] = useState(9);
       }
   };
 
+  
+  useEffect(() => {
+    getListProduct()
+  },[])
+  
+  const handleAddToCart = (id) =>{
+    
+    const cartId = user.customerId;
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`
+    }
+    
+    const addProductToCart = async () => {
+      try {
+        const response = await addToCart(cartId, id, quantity, headers)
 
+        if (response.status === 200) {
+          toast.success("Add to cart successfully")
+
+          setTimeout(() => {  
+            navigate("/user/cart")
+          }, 2000)
+        }
+      } catch(error) {
+        toast.error("Add to cart failed")
+      }
+    }
+    addProductToCart();
+  }
+    
   const filterProductsList = () => {
     let filtered = filterProducts;
 
@@ -81,9 +118,9 @@ const [itemsPerPage, setItemsPerPage] = useState(9);
     }
 
 
-    setProducts(filtered);
-    setCurrentPage(0);
-  };
+      setProducts(filtered);
+      setCurrentPage(0);
+    };
 
   const handleCategoryClick = (category) => {
     setSearchParams({ ...searchParams, category });
@@ -165,8 +202,6 @@ const handlePriceInputChange = (min, max) => {
   const newPriceProducts = changePriceProduct.filter(product => product.price >= min && product.price <= max);
   setProducts(newPriceProducts);
 };
-
-
 
   return (
     <>
@@ -351,13 +386,14 @@ const handlePriceInputChange = (min, max) => {
                             <h3 className="product-name">
                              {product?.productName}
                             </h3>
+                            
                             <h4 className="product-price">
                               {product?.price}{" "}
                               <del className="product-old-price">{product?.price * 1.3}</del>
                             </h4>
                           </div>
                           <div className="add-to-cart">
-                            <button className="add-to-cart-btn">
+                            <button className="add-to-cart-btn" onClick={()=> handleAddToCart(product.productId)}>
                               <i className="fa fa-shopping-cart" /> add to cart
                             </button>
                           </div>
