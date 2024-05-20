@@ -1,15 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {useAuth} from '../context/AuthContext'
 import { customerLogout } from "../service/ClientService";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { getCartById } from "../service/Cart";
 
 const Header = ({ onSearch }) => {
   const {user, setUser, isLogged, setIsLogged} = useAuth()
   const navigate = useNavigate()
 
+  const [carts, setCarts] = useState([]);
+  const [cartId, setCartId] = useState(null);
+  const [totalPrice, setTotalPrice] = useState(0);
 
+
+
+  const token = localStorage.getItem("token");
+  const header = {
+    Authorization: "Bearer " + token,
+  };
+
+  useEffect(() => {
+    const getCart = async () => {
+      try {
+        setCartId(user.customerId);
+        const response = await getCartById(cartId, header);
+        setCarts(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getCart();
+  }, [cartId, carts]);
+
+  useEffect(() => {
+    console.log(carts)
+  }, []);
   const handleLogout = () => {
     const getToken = localStorage.getItem("token")
 
@@ -44,6 +71,17 @@ const Header = ({ onSearch }) => {
     onSearch(keyword);
   };
   
+  const handleTotalPrice = () => {
+    let totalPrice = 0;
+    carts.forEach((cart) => {
+      totalPrice += parseFloat(cart.price);
+    });
+    setTotalPrice(totalPrice);
+  };
+
+  useEffect(() => {
+    handleTotalPrice();
+  }, [carts]);
   
 
   return (
@@ -136,95 +174,90 @@ const Header = ({ onSearch }) => {
                     >
                       <i className="fa fa-shopping-cart" />
                       <span>Your Cart</span>
-                      <div className="qty">3</div>
+                      <div className="qty">{carts.length}</div>
                     </Link>
-                    <div className="cart-dropdown">
-                      <div className="cart-list">
-                        <div className="product-widget">
-                          <div className="product-img">
-                            <img src="../assets/img/product01.png" alt="" />
+                    {carts.map((cart, index) => {
+                      return (
+                        <div className="cart-dropdown">
+                          <div className="cart-list">
+                            <div className="product-widget">
+                              <tr key={index}>
+                              <div className="product-img">
+                                <img src={cart.product.image1} alt="" />
+                              </div>
+                              <div className="product-body">
+                                <h3 className="product-name">
+                                  <Link to="#">{cart.product.name}</Link>
+                                </h3>
+                                <h4 className="product-price">
+                                  <span className="qty">{cart.quantity}x</span>
+                                  {Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(cart.product.price)}
+                                </h4>
+                              </div>
+                              <button className="delete">
+                                <i className="fa fa-close" />
+                              </button>
+                              <div className="cart-summary">
+                                <small>{carts.length} Item(s) selected</small>
+                                <h5>SUBTOTAL: {Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(totalPrice)}</h5>
+                              </div>
+                              <div className="cart-btns">
+                              <Link to="/user/cart">View Cart</Link>
+
+                              <Link to="/checkout" state={{ carts: carts, totalPrice: totalPrice ,user: user }}>
+                                Checkout <i className="fa fa-arrow-circle-right" />
+                              </Link>
+                            </div>
+                            </tr>
+                            </div>
                           </div>
-                          <div className="product-body">
-                            <h3 className="product-name">
-                              <Link to="#">product name goes here</Link>
-                            </h3>
-                            <h4 className="product-price">
-                              <span className="qty">1x</span>$980.00
-                            </h4>
-                          </div>
-                          <button className="delete">
-                            <i className="fa fa-close" />
-                          </button>
                         </div>
-                        <div className="product-widget">
-                          <div className="product-img">
-                            <img src="../assets/img/product02.png" alt="" />
-                          </div>
-                          <div className="product-body">
-                            <h3 className="product-name">
-                              <Link to="#">product name goes here</Link>
-                            </h3>
-                            <h4 className="product-price">
-                              <span className="qty">3x</span>$980.00
-                            </h4>
-                          </div>
-                          <button className="delete">
-                            <i className="fa fa-close" />
-                          </button>
-                        </div>
-                      </div>
-                      <div className="cart-summary">
-                        <small>3 Item(s) selected</small>
-                        <h5>SUBTOTAL: $2940.00</h5>
-                      </div>
-                      <div className="cart-btns">
-                        <Link to="/user/cart">View Cart</Link>
-                        <Link to="/checkout">
-                          Checkout <i className="fa fa-arrow-circle-right" />
-                        </Link>
-                      </div>
-                    </div>
+
+                      )
+                    })}
+                    
+
                   </div>
 
-                  
-                    <div className="dropdown" > 
-                      <Link
-                        to='#'
-                        className="dropdown-toggle"
-                        data-toggle="dropdown"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="true"
-                        id="dropdownMenuButton1"
-                      >
-                        <i className="fa fa-user" />
-                        <span>Account</span>
-                      
-                      </Link>
-                      <div className="dropdown">
-                        <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                          <li><Link className="dropdown-item" to="/user/profile">My profile</Link></li>
-                          <li><Link className="dropdown-item" to="/user/cart">Cart</Link></li>
-                          <li><Link className="dropdown-item" onClick={handleLogout} >Logout</Link></li>
 
-                        </ul>
-                      </div>
+                  <div className="dropdown" >
+                    <Link
+                      to='#'
+                      className="dropdown-toggle"
+                      data-toggle="dropdown"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="true"
+                      id="dropdownMenuButton1"
+                    >
+                      <i className="fa fa-user" />
+                      <span>Account</span>
+
+                    </Link>
+                    <div className="dropdown">
+                      <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><Link className="dropdown-item" to="/user/profile">My profile</Link></li>
+                        <li><Link className="dropdown-item" to="/user/cart">Cart</Link></li>
+                        <li><Link className="dropdown-item" onClick={handleLogout} >Logout</Link></li>
+
+                      </ul>
                     </div>
-                  </>
-                  :
-                  <>
-                    <div>
-                      <Link to="/auth/register">
-                        <i className="fa fa-user"/>
-                        <span>Register</span>
-                      </Link>
-                    </div>
-                    <div>
-                      <Link to="/auth/login">
-                        <i className="fa fa-user" />
-                        <span>Login</span>
-                      </Link>
-                    </div>
-                  </>
+                  </div>
+                </>
+                :
+                <>
+                  <div>
+                    <Link to="/auth/register">
+                      <i className="fa fa-user" />
+                      <span>Register</span>
+                    </Link>
+                  </div>
+                  <div>
+                    <Link to="/auth/login">
+                      <i className="fa fa-user" />
+                      <span>Login</span>
+                    </Link>
+                  </div>
+                </>
                   }
                   {/* /Account */}
                   

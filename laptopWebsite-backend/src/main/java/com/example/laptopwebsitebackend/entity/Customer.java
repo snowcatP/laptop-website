@@ -1,5 +1,6 @@
 package com.example.laptopwebsitebackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -31,23 +32,27 @@ public class Customer{
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cart_id")
+    @JsonBackReference
     private Cart cart;
 
     @OneToOne
     @JoinColumn(name = "account_id")
+    @JsonBackReference
     private Account account;
 
     @OneToMany(
             mappedBy = "customer",
             cascade = CascadeType.ALL
     )
+    @JsonBackReference
     private List<Bill> bills;
 
 
 
-//    @OneToMany(
-//            mappedBy = "customer",
-//            cascade = CascadeType.ALL
-//    )
-//    private List<Warranty> warranties;
+    @OneToMany(
+            mappedBy = "customer",
+            cascade = CascadeType.ALL
+    )
+    @JsonBackReference
+    private List<Warranty> warranties;
 }
