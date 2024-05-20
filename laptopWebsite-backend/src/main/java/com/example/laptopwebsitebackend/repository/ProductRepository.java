@@ -42,4 +42,6 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
             " OR p.configuration.screen = CAST(:keyword AS double)")
     List<Product> searchByKeyword(@Param("keyword") String keyword);
 
+    @Query("SELECT p FROM Product p WHERE p.discount.discountId = :discountId")
+    List<Product> getProductsByDiscountId(@Param("discountId") Long id);
 }

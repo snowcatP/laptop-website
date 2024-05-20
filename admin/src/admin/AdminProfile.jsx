@@ -1,12 +1,91 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {useAuth} from "./context/AuthContext";
-
+import { changeProfile, changePassword } from "./service/StaffService";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Footer from './components/Footer'
 const AdminProfile = () => {
-
   const {admin} = useAuth();
+  const [errorMessage, setErrorMessage] = useState('')
+  const navigate = useNavigate()
+  const [form, setForm] = useState({
+    firstName: admin.firstName || '',
+    lastName: admin.lastName || '',
+    address: admin.address || '',
+    phone: admin.phone || ''
+  })
+
+  const [passwordForm, setPasswordForm] = useState({
+    oldPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  })
+
+  const onChangeProfile = (e) => {
+    setForm({...form, [e.target.name]: e.target.value})
+  }
+
+  const onChangePassword = (e) => {
+    setPasswordForm({...passwordForm, [e.target.name]: e.target.value})
+  }
+
+  const handleChangeProfileSubmit = (e) => {
+    e.preventDefault()
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    }
+
+    const profileRequest = form
+
+    const changeStaffProfile = async () => {
+      try {
+        const response = await changeProfile(profileRequest, headers)
+
+        if(response.status === 200) {
+          toast.success("Update profile success!")
+          setTimeout(() => {
+            navigate("/admin/profile")
+          }, 1900)
+        } 
+      } catch (error) {
+        toast.error("Fail to update profile!")
+      }
+    }
+    changeStaffProfile()
+  }
+
+  const handleChangePasswordSubmit = (e) => {
+    e.preventDefault()
+    if(passwordForm["oldPassword"] === "" || passwordForm["newPassword"] === "" || passwordForm["confirmPassword"] === "") {
+      setErrorMessage("Fields must not be null or empty")
+      return;
+    }
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    }
+
+    const passwordRequest = passwordForm
+
+    const changeStaffPassword = async () => {
+      try {
+        const response = await changePassword(passwordRequest, headers)
+
+        if (response.status === 200) {
+          toast.success("Change password success!")
+
+          setTimeout(() => {
+            navigate("/admin/profile")
+          }, 1900)
+        }
+      } catch (error) {
+        toast.error("Fail to change password!")
+      }
+    }
+    changeStaffPassword()
+  }
 
   const profile = {...admin}
   return (
@@ -20,7 +99,7 @@ const AdminProfile = () => {
           <nav>
             <ol className="breadcrumb">
               <li className="breadcrumb-item">
-                <a href="index.html">Home</a>
+                <a href="/">Home</a>
               </li>
               <li className="breadcrumb-item">Users</li>
               <li className="breadcrumb-item active">Profile</li>
@@ -134,13 +213,21 @@ const AdminProfile = () => {
                           {profile.email}
                         </div>
                       </div>
+                      <div className="row">
+                        <div className="col-lg-3 col-md-4 label">Salary</div>
+                        <div className="col-lg-9 col-md-8">
+                          {profile.salary} VND
+                        </div>
+                      </div>
                     </div>
                     <div
                       className="tab-pane fade profile-edit pt-3"
                       id="profile-edit"
                     >
                       {/* Profile Edit Form */}
-                      <form>
+                      <form
+                        onSubmit={handleChangeProfileSubmit}
+                      >
                         <div className="row mb-3">
                           <label
                             htmlFor="fullName"
@@ -154,7 +241,8 @@ const AdminProfile = () => {
                               type="text"
                               className="form-control"
                               id="firstName"
-                              value= {`${profile.firstName}`}
+                              defaultValue= {`${profile.firstName}`}
+                              onChange={onChangeProfile}
                             />
                           </div>
                         </div>
@@ -171,77 +259,8 @@ const AdminProfile = () => {
                               type="text"
                               className="form-control"
                               id="lastName"
-                              value= {`${profile.lastName}`}
-                            />
-                          </div>
-                        </div>
-                        <div className="row mb-3">
-                          <label
-                            htmlFor="about"
-                            className="col-md-4 col-lg-3 col-form-label"
-                          >
-                            About
-                          </label>
-                          <div className="col-md-8 col-lg-9">
-                            <textarea
-                              name="about"
-                              className="form-control"
-                              id="about"
-                              style={{ height: 100 }}
-                              defaultValue={
-                                "Sunt est soluta temporibus accusantium neque nam maiores cumque temporibus. Tempora libero non est unde veniam est qui dolor. Ut sunt iure rerum quae quisquam autem eveniet perspiciatis odit. Fuga sequi sed ea saepe at unde."
-                              }
-                            />
-                          </div>
-                        </div>
-                        <div className="row mb-3">
-                          <label
-                            htmlFor="Job"
-                            className="col-md-4 col-lg-3 col-form-label"
-                          >
-                            Role
-                          </label>
-                          <div className="col-md-8 col-lg-9">
-                            <input
-                              name="job"
-                              type="text"
-                              className="form-control"
-                              id="Job"
-                              value={profile.role.roleName}
-                            />
-                          </div>
-                        </div>
-                        <div className="row mb-3">
-                          <label
-                            htmlFor="Address"
-                            className="col-md-4 col-lg-3 col-form-label"
-                          >
-                            Address
-                          </label>
-                          <div className="col-md-8 col-lg-9">
-                            <input
-                              name="address"
-                              type="text"
-                              className="form-control"
-                              id="address"
-                              value={profile.address}
-                            />
-                          </div>
-                        </div>
-                        <div className="row mb-3">
-                          <label
-                            htmlFor="Phone"
-                            className="col-md-4 col-lg-3 col-form-label"
-                          >
-                            Phone
-                          </label>
-                          <div className="col-md-8 col-lg-9">
-                            <input
-                              name="phone"
-                              type="text"
-                              className="form-control"
-                              id="phone"
-                              value={profile.phone}
+                              defaultValue= {`${profile.lastName}`}
+                              onChange={onChangeProfile}
                             />
                           </div>
                         </div>
@@ -259,9 +278,65 @@ const AdminProfile = () => {
                               className="form-control"
                               id="email"
                               value={profile.email}
+                              disabled
                             />
                           </div>
                         </div>
+                        <div className="row mb-3">
+                          <label
+                            htmlFor="Job"
+                            className="col-md-4 col-lg-3 col-form-label"
+                          >
+                            Role
+                          </label>
+                          <div className="col-md-8 col-lg-9">
+                            <input
+                              name="job"
+                              type="text"
+                              className="form-control"
+                              id="Job"
+                              value={profile.role.roleName}
+                              disabled
+                            />
+                          </div>
+                        </div>
+                        <div className="row mb-3">
+                          <label
+                            htmlFor="Address"
+                            className="col-md-4 col-lg-3 col-form-label"
+                          >
+                            Address
+                          </label>
+                          <div className="col-md-8 col-lg-9">
+                            <input
+                              name="address"
+                              type="text"
+                              className="form-control"
+                              id="address"
+                              defaultValue={profile.address}
+                              onChange={onChangeProfile}
+                            />
+                          </div>
+                        </div>
+                        <div className="row mb-3">
+                          <label
+                            htmlFor="Phone"
+                            className="col-md-4 col-lg-3 col-form-label"
+                          >
+                            Phone
+                          </label>
+                          <div className="col-md-8 col-lg-9">
+                            <input
+                              name="phone"
+                              type="text"
+                              className="form-control"
+                              id="phone"
+                              defaultValue={profile.phone}
+                              onChange={onChangeProfile}
+                            />
+                          </div>
+                        </div>
+                        
                         <div className="text-center">
                           <button type="submit" className="btn btn-primary">
                             Save Changes
@@ -274,21 +349,27 @@ const AdminProfile = () => {
                       className="tab-pane fade pt-3"
                       id="profile-change-password"
                     >
+                      <div>
+                        <h4 style={{color: "red"}}>{errorMessage}</h4>
+                      </div>
                       {/* Change Password Form */}
-                      <form>
+                      <form
+                        onSubmit={handleChangePasswordSubmit}
+                      >
                         <div className="row mb-3">
                           <label
-                            htmlFor="currentPassword"
+                            htmlFor="oldPassword"
                             className="col-md-4 col-lg-3 col-form-label"
                           >
-                            Current Password
+                            Old Password
                           </label>
                           <div className="col-md-8 col-lg-9">
                             <input
-                              name="password"
+                              name="oldPassword"
                               type="password"
                               className="form-control"
-                              id="currentPassword"
+                              id="oldPassword"
+                              onChange={onChangePassword}
                             />
                           </div>
                         </div>
@@ -301,26 +382,28 @@ const AdminProfile = () => {
                           </label>
                           <div className="col-md-8 col-lg-9">
                             <input
-                              name="newpassword"
+                              name="newPassword"
                               type="password"
                               className="form-control"
                               id="newPassword"
+                              onChange={onChangePassword}
                             />
                           </div>
                         </div>
                         <div className="row mb-3">
                           <label
-                            htmlFor="renewPassword"
+                            htmlFor="confirmPassword"
                             className="col-md-4 col-lg-3 col-form-label"
                           >
-                            Re-enter New Password
+                            Confirm New Password
                           </label>
                           <div className="col-md-8 col-lg-9">
                             <input
-                              name="renewpassword"
+                              name="confirmPassword"
                               type="password"
                               className="form-control"
-                              id="renewPassword"
+                              id="confirmPassword"
+                              onChange={onChangePassword}
                             />
                           </div>
                         </div>
@@ -341,6 +424,19 @@ const AdminProfile = () => {
         </section>
       </main>
       {/* End #main */}
+      <ToastContainer
+          position="top-right"
+          autoClose={2000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
+        <Footer />
     </>
   );
 };

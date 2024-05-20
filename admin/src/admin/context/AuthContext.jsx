@@ -1,7 +1,4 @@
-import React, { createContext } from "react";
-import { useEffect } from "react";
-import { useState } from "react";
-import { useContext } from "react";
+import React, { createContext, useEffect, useState, useContext} from "react";
 import {jwtDecode} from 'jwt-decode'
 import { checkValidToken, adminProfile } from "../service/AdminService";
 
@@ -26,7 +23,7 @@ export const AuthContextProvider = (props) => {
             if(decoded_token.exp * 1000 > current.getTime()){
                 const checkIsValid = async () => {
                     const response = await checkValidToken({
-                        "token": token
+                        token: token
                     });
     
                     if(response.data["valid"] === true) {

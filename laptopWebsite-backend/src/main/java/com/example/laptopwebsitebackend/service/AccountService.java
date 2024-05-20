@@ -9,6 +9,8 @@ import com.example.laptopwebsitebackend.repository.PermissionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -21,6 +23,8 @@ public class AccountService {
 
     @Autowired
     private PermissionService permissionService;
+
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
     public Account createNewAccount(Account newAccount, String permission) {
         Permission userPermission = permissionService.findByPermissionName(permission);
@@ -36,5 +40,11 @@ public class AccountService {
     public Account findByUsername(String username) {
         return accountRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Wrong username or password"));
+    }
+
+    public void resetPassword(Account account, String newPassword) {
+        account.setPassword(passwordEncoder.encode(newPassword));
+
+        accountRepository.save(account);
     }
 }

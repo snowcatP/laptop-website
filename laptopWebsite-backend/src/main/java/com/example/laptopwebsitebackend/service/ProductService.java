@@ -134,9 +134,6 @@ public class ProductService {
         return productRepository.findAll(pageable).getContent();
     }
 
-
-
-
     public List<Product> searchProducts(String keyword,String category, String brand, Double minPrice, Double maxPrice) {
 
         if (keyword!=null){

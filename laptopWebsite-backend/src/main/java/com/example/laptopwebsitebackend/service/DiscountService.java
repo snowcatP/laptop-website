@@ -4,6 +4,7 @@ import com.example.laptopwebsitebackend.entity.Configuration;
 import com.example.laptopwebsitebackend.entity.Discount;
 import com.example.laptopwebsitebackend.entity.Product;
 import com.example.laptopwebsitebackend.repository.DiscountRepository;
+import com.example.laptopwebsitebackend.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,9 @@ public class DiscountService {
 
     @Autowired
     private DiscountRepository discountRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     public List<Discount> getListAllDiscounts(){
         return discountRepository.findAll();
@@ -65,5 +69,9 @@ public class DiscountService {
                 .orElseThrow(() -> new RuntimeException("Discount is not exist with given id: " + discount_id));
 
         return discount;
+    }
+
+    public List<Product> getProductsByDiscountId(Long id) {
+        return productRepository.getProductsByDiscountId(id);
     }
 }

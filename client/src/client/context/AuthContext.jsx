@@ -44,7 +44,7 @@ export const AuthContextProvider = (props) => {
     }
   }, [user, isLogged]);
 
-  const value = {
+  const values = {
     user,
     setUser,
     isLogged,
@@ -52,6 +52,6 @@ export const AuthContextProvider = (props) => {
   };
 
   return (
-    <AuthContext.Provider value={value}>{props.children}</AuthContext.Provider>
+    <AuthContext.Provider value={values}>{props.children}</AuthContext.Provider>
   );
 };

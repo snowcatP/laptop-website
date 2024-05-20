@@ -10,6 +10,7 @@ import ForgotPassword from "./client/ForgotPassword";
 import UserRoutes from "./client/UserRoutes";
 import Error404 from "./client/Error404";
 import ProtectedRoute from "./client/util/ProtectedRoute";
+import ResetPassword from "./client/ResetPassword";
 
 function App() {
   return (
@@ -19,11 +20,12 @@ function App() {
 
         <Route path="/auth/login" element={<Login />}></Route>
         <Route path="/auth/register" element={<Register />}></Route>
-        <Route path="/forgot-password" element={<ForgotPassword />}></Route>
 
         <Route path="/store" element={<Store />}></Route>
         <Route path="/product/:id" element={<Product />}></Route>
 
+        <Route path="/forgot-password" element={<ForgotPassword />}></Route>
+        <Route path="/reset-password/:token" element={<ResetPassword />}></Route>
         {/*
           Protected endpoints
         */}

@@ -1,13 +1,10 @@
 package com.example.laptopwebsitebackend.service;
 
 import com.example.laptopwebsitebackend.entity.Comment;
-import com.example.laptopwebsitebackend.entity.Warranty;
 import com.example.laptopwebsitebackend.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,13 +19,11 @@ public class CommentService {
         return commentRepository.findAll();
     }
 
-    public Comment addNewComment(Comment comment){
-
+    public void addNewComment(Comment comment){
         if(comment.getContent() == null) {
             throw new IllegalArgumentException("There is no commented content");
         }
-
-        return commentRepository.save(comment);
+        commentRepository.save(comment);
     }
 
     public void deleteComment(Long comment_id){

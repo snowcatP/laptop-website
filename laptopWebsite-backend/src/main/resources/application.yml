@@ -12,6 +12,20 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
+  mail:
+    host: smtp.gmail.com
+    port: 25
+    username: ok.byethibye2@gmail.com
+    password: uwikbacvdxedubkm
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 jwt:
   signerKey: "bR/S8KVi0SkB02p/4tlq81tEhbZGTJ8aNmlOEHZE2+Yb5uhVlPzmRFrY1AOSXnz/"
+
+api:
+  endpoint: "http://localhost:3000"

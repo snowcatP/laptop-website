@@ -85,7 +85,7 @@ const Sidebar = () => {
               to="#"
             >
               <i className="bi bi-layout-text-window-reverse" />
-              <span>Discount</span>
+              <span>Discount Management</span>
               <i className="bi bi-chevron-down ms-auto" />
             </Link>
             <ul
@@ -94,13 +94,13 @@ const Sidebar = () => {
               data-bs-parent="#sidebar-nav"
             >
               <li>
-                <Link to="/admin/list-discount">
+                <Link to="/list-discount">
                   <i className="bi bi-circle" />
                   <span>List Discounts</span>
                 </Link>
               </li>
               <li>
-                <Link to="/admin/add-discount">
+                <Link to="/add-discount">
                   <i className="bi bi-circle" />
                   <span>Add Discount</span>
                 </Link>
@@ -125,7 +125,7 @@ const Sidebar = () => {
               data-bs-parent="#sidebar-nav"
             >
               <li>
-                <Link to="charts-chartjs.html">
+                <Link to="/list-customers">
                   <i className="bi bi-circle" />
                   <span>List Customer</span>
                 </Link>

@@ -1,8 +1,12 @@
 package com.example.laptopwebsitebackend.controller;
 
 import com.example.laptopwebsitebackend.dto.request.DiscountRequest;
+import com.example.laptopwebsitebackend.dto.request.EditDiscountRequest;
 import com.example.laptopwebsitebackend.entity.Discount;
+import com.example.laptopwebsitebackend.entity.Product;
+import com.example.laptopwebsitebackend.repository.ProductRepository;
 import com.example.laptopwebsitebackend.service.DiscountService;
+import com.example.laptopwebsitebackend.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,22 +17,36 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/discount")
+@CrossOrigin
 public class DiscountController {
 
     @Autowired
     private DiscountService discountService;
 
-    @PostMapping("/add")
-    public ResponseEntity<Discount> create_New_Discount(@Valid @RequestBody DiscountRequest discountRequest){
+    @Autowired
+    private ProductService productService;
 
+    @Autowired
+    private ProductRepository productRepository;
+
+    @PostMapping("/add")
+    public ResponseEntity<DiscountRequest> create_New_Discount(@Valid @RequestBody DiscountRequest discountRequest){
+
+        List<Long> productStrings = discountRequest.getProducts();
         Discount discount = new Discount();
         discount.setDiscountValue(discountRequest.getDiscountValue());
         discount.setStartDate(discountRequest.getStartDate());
         discount.setEndDate(discountRequest.getEndDate());
 
-        discountService.addNewDiscount(discount);
+        Discount newDiscount = discountService.addNewDiscount(discount);
 
-        return new ResponseEntity<>(discount, HttpStatus.OK  );
+        for (Long productString : productStrings) {
+            Product product = productService.findProductByID(productString);
+            product.setDiscount(newDiscount);
+            productRepository.save(product);
+        }
+
+        return new ResponseEntity<>(discountRequest, HttpStatus.OK  );
     }
 
     @GetMapping
@@ -46,19 +64,30 @@ public class DiscountController {
     }
 
     @PutMapping(value = "/edit/{id}")
-    public void update_Discount( @PathVariable(name = "id") Long id,@RequestBody DiscountRequest discountRequest) {
-
+    public void update_Discount( @PathVariable(name = "id") Long id,@RequestBody EditDiscountRequest request) {
         Discount discount = new Discount();
-        discount.setDiscountValue(discountRequest.getDiscountValue());
-        discount.setStartDate(discountRequest.getStartDate());
-        discount.setEndDate(discountRequest.getEndDate());
+        discount.setDiscountValue(request.getDiscountValue());
+        discount.setStartDate(request.getStartDate());
+        discount.setEndDate(request.getEndDate());
 
         discountService.updateDiscount(discount,id);
+
+        List<Long> productStrings = request.getProducts();
+        for (Long productString : productStrings) {
+            Product product = productService.findProductByID(productString);
+            product.setDiscount(null);
+            productRepository.save(product);
+        }
 
     }
 
     @DeleteMapping("/delete/{id}")
     public void delete_Discount(@PathVariable("id") Long id) {
         discountService.deleteDiscount(id);
+    }
+
+    @GetMapping("/get-products/{id}")
+    public ResponseEntity<List<Product>> getProductsByDiscountId(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(discountService.getProductsByDiscountId(id));
     }
 }

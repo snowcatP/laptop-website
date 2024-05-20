@@ -6,6 +6,9 @@ import Footer from './components/Footer'
 import { Link } from 'react-router-dom'
 import { Form } from 'react-bootstrap'
 import FormInput from './components/FormInput'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { forgotPassword } from './service/ForgotPasswordService'
 
 const ForgotPassword = () => {
 
@@ -16,11 +19,11 @@ const ForgotPassword = () => {
 
   const input = {
     id: 1,
-    name: "Username",
+    name: "username",
     type: "email",
     label: "Username",
     placeholder: "Username",
-    errorMessage: "Username shoule be in email type",
+    errorMessage: "Username shoule be in email format",
     required: true,
     focused: false
   }
@@ -28,6 +31,27 @@ const ForgotPassword = () => {
   const onChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
+
+  const handleSubmitForgotPassword = (e) => {
+    e.preventDefault()
+
+    const email = e.target.username.value
+
+
+    const forgotPassw = async () => {
+      
+      try {
+        const response = await forgotPassword(email)
+
+        if (response.status === 200) {
+          toast.success("Send to your email success, please check email to change password!")
+        }
+      } catch (error) {
+          toast.error("Can't send mail to your email!")
+      }
+    }
+    forgotPassw()
+  }
 
   return (
     <>
@@ -43,7 +67,10 @@ const ForgotPassword = () => {
             {/* Order Details */}
             <div className="col-md-3"></div>
             <div className="col-md-6 order-details">
-              <Form method="post" action="/events">
+
+              <Form 
+                onSubmit={handleSubmitForgotPassword}
+              >
                 <div className="section-title text-center">
                   <h2 className="title">Password reset</h2>
                 </div>
@@ -74,7 +101,7 @@ const ForgotPassword = () => {
                   className="primary-btn order-submit"
                   style={{ display: "block", margin: "auto", marginTop:'3em'}}
                 >
-                  Sign in
+                  Send to email
                 </button>
               </Form>
             </div>
@@ -89,6 +116,19 @@ const ForgotPassword = () => {
 
       <Letter/>
       <Footer/>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      
+      />
     </>
   )
 }

@@ -12,10 +12,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DiscountRequest {
-
-    private List<Long> products;
-
+public class EditDiscountRequest {
     private int discountValue;
 
     @Temporal(TemporalType.DATE)
@@ -23,4 +20,6 @@ public class DiscountRequest {
 
     @Temporal(TemporalType.DATE)
     private Date startDate;
+
+    private List<Long> products;
 }

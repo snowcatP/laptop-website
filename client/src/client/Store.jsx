@@ -6,7 +6,7 @@ import Footer from "./components/Footer";
 import { Link } from "react-router-dom";
 import { useState,useEffect } from "react";
 import { getListProducts } from "./service/StoreService";
-
+import axios from "axios";
 const Store = () => {
 
   const [products, setProducts] = useState([]);
