@@ -3,16 +3,22 @@ import Navigation from "./components/Navigation";
 import Header from "./components/Header";
 import Letter from "./components/Letter";
 import Footer from "./components/Footer";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState,useEffect } from "react";
 import { getListProducts } from "./service/StoreService";
 import { searchProducts } from "./service/SearchProduct";
-import { getProducts } from "./service/ProductService";
+import { addToCart, getProducts } from "./service/ProductService";
 import axios from "axios";
 import Slider from "rc-slider";
 import 'rc-slider/assets/index.css';
 import Button from 'react-bootstrap/Button';
+import { useAuth } from "./context/AuthContext";
+import { toast } from "react-toastify";
 const Store = () => {
+
+  const {user} = useAuth()
+  const [quantity, setQuantity] = useState(1);
+  const navigate = useNavigate();
 
   const [products, setProducts] = useState([]);
   const [filterProducts, setFilterProducts] = useState([]);
@@ -166,6 +172,30 @@ const handlePriceInputChange = (min, max) => {
   setProducts(newPriceProducts);
 };
 
+const handleAddToCart = (id) =>{
+
+  const cartId = user.customerId;
+  const headers = {
+    Authorization: `Bearer ${localStorage.getItem("token")}`
+  }
+
+  const addProductToCart = async () => {
+    try {
+      const response = await addToCart(cartId, id, quantity, headers)
+
+      if (response.status === 200) {
+        toast.success("Add to cart successfully")
+
+        setTimeout(() => {  
+          navigate("/user/cart")
+        }, 2000)
+      }
+    } catch(error) {
+      toast.error("Add to cart failed")
+    }
+  }
+  addProductToCart();
+}
 
 
   return (
@@ -357,7 +387,7 @@ const handlePriceInputChange = (min, max) => {
                             </h4>
                           </div>
                           <div className="add-to-cart">
-                            <button className="add-to-cart-btn">
+                            <button className="add-to-cart-btn" onClick={()=> handleAddToCart(product.productId)}>
                               <i className="fa fa-shopping-cart" /> add to cart
                             </button>
                           </div>
