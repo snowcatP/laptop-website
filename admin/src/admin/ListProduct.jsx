@@ -7,6 +7,8 @@ import { getListProducts } from "./service/ProductService";
 import { Link } from "react-router-dom";
 import Modal from 'react-bootstrap/Modal'
 import Button from "react-bootstrap/Button";
+import { deleteProductById } from "./service/DeleteProduct";
+
 const ListProduct = ({ allproductList, message }) => {
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null)
@@ -50,25 +52,33 @@ const ListProduct = ({ allproductList, message }) => {
     setSelectedProduct(product)
   }
 
-  useEffect(() => {
-    const getAllProducts = async () => {
-      try {
-        const response = await getListProducts();
+    useEffect(() => {
+      const getAllProducts = async () => {
+        try {
+          const response = await getListProducts();
+          setProducts(response.data);
+          // console.log(products);
+        } catch (error) {
+          console.log(error);
+        }
+      };
 
-        setProducts(response.data);
+      getAllProducts();
+    }, [products]);
+
+    const handleDelete = async (id) => {
+      try {
+        const response = await deleteProductById(id);
+        if (response.status === 200) {
+          setMessage("Delete Successful");
+          setProducts(products.filter(product => product.productId !== id));
+        }
       } catch (error) {
-        console.log(error);
+        console.log("Error deleting product:", error);
       }
     };
 
-    getAllProducts();
-  }, [products]);
-
-  return (
-    <>
-      <Header />
-      <Sidebar />
-
+    return (
       <>
         <main id="main" className="main">
           <div className="pagetitle">
@@ -288,19 +298,19 @@ const ListProduct = ({ allproductList, message }) => {
                         </Link>
                       </li>
                     </nav>
+                    </div>
                   </div>
+                  <div className="col-lg-1"></div>
                 </div>
-                <div className="col-lg-1"></div>
               </div>
-            </div>
-          </section>
-        </main>
-        {/* End #main */}
+            </section>
+          </main>
+          {/* End #main */}
+        </>
+
+        <Footer />
       </>
+    );
+  };
 
-      <Footer />
-    </>
-  );
-};
-
-export default ListProduct;
+  export default ListProduct;

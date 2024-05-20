@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Header from "./components/Header";
 import Navigation from "./components/Navigation";
 import Letter from "./components/Letter";
@@ -11,16 +11,17 @@ import { addNewComment, getListComment } from "./service/CommentService";
 import { useAuth } from "./context/AuthContext";
 import {ToastContainer,  toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { addToCart } from "./service/ProductService";
 
 const Product = () => {
 
   const {user, isLogged} = useAuth()
   const navigate = useNavigate()
-
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);
   let sliderRef1 = useRef(null);
   let sliderRef2 = useRef(null);
+  const navigate = useNavigate()
 
   const settings = {
     slidesToShow: 3,
@@ -146,6 +147,33 @@ const Product = () => {
   }
 
 
+    const handleAddToCart = (e) => {
+      e.preventDefault();
+
+      const cartId = user.customerId;
+
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+
+      const addProductToCart = async () => {
+        try {
+          const response = await addToCart(cartId, id, quantity, headers)
+
+          if (response.status === 200) {
+            toast.success("Add to cart successfully")
+
+            setTimeout(() => {  
+              navigate("/user/cart")
+            }, 2000)
+          }
+        } catch(error) {
+          toast.error("Add to cart failed")
+        }
+      }
+      addProductToCart()
+    }
+
   return (
     <>
       <Header />
@@ -225,7 +253,7 @@ const Product = () => {
                         </span>
                       </div>
                     </div>
-                    <button className="add-to-cart-btn">
+                    <button className="add-to-cart-btn" onClick={handleAddToCart}>
                       <i className="fa fa-shopping-cart" /> add to cart
                     </button>
                   </div>

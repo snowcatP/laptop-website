@@ -14,6 +14,7 @@ import ProtectedRoute from "./admin/util/ProtectedRoute";
 import ListDiscount from "./admin/ListDiscount";
 import AddDiscount from "./admin/AddDiscount";
 import EditDiscount from "./admin/EditDiscount";
+import ListCustomer from "./admin/ListCustomer";
 
 function App() {
   return (
@@ -94,13 +95,21 @@ function App() {
               <AddDiscount />
             </ProtectedRoute>
         }
-        
         />
         <Route
           path="/edit-discount/:id"
           element={
             <ProtectedRoute>
               <EditDiscount />
+            </ProtectedRoute>
+          }
+        />
+            
+        <Route
+          path="/list-customer"
+          element={
+            <ProtectedRoute>
+              <ListCustomer />
             </ProtectedRoute>
           }
         />

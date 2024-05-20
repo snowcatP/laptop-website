@@ -125,7 +125,7 @@ const Sidebar = () => {
               data-bs-parent="#sidebar-nav"
             >
               <li>
-                <Link to="/list-customers">
+                <Link to="/list-customer">
                   <i className="bi bi-circle" />
                   <span>List Customer</span>
                 </Link>

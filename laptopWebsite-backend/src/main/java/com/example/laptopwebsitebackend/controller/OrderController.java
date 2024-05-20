@@ -3,17 +3,18 @@ package com.example.laptopwebsitebackend.controller;
 
 import com.example.laptopwebsitebackend.entity.*;
 import com.example.laptopwebsitebackend.service.*;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.text.NumberFormat;
-import java.time.LocalDate;
+import com.example.laptopwebsitebackend.dto.request.OrderRequest;
 import java.util.*;
 
 @RestController
 @RequestMapping("/order")
+@CrossOrigin(origins = "http://localhost:3000")
+
 public class OrderController {
     @Autowired
     private OrderDetailsService orderDetailsService;
@@ -22,8 +23,9 @@ public class OrderController {
     @Autowired
     private CustomerService customerService;
     @Autowired
-    private ProductService productService;
-
+    private PaymentService paymentService;
+    @Autowired
+    private CartDetailService cartDetailService;
 
     @GetMapping()
     public ResponseEntity<List<Order>> getAllOrders(){
@@ -40,46 +42,30 @@ public class OrderController {
         return new ResponseEntity<>(orderService.getOrderByCustomer(customerId), HttpStatus.OK);
     }
 
-//    @GetMapping("/order-details/{orderId}")
-//    public ResponseEntity<List<OrderDetails>> getAllOrderDetails(@PathVariable("orderId") Long orderId){
-//        return new ResponseEntity<>(orderDetailsService.findOrderDetailsByOrderId(orderId), HttpStatus.OK);
-//    }
-
-    @PostMapping("/add-product-to-order/{customerId}/{productId}/{quantity}")
-    public ResponseEntity<Order> addProductToOrder(@PathVariable("customerId")Long customerId,@PathVariable("productId")Long productId,@PathVariable("quantity")int quantity ){
-        Product product = productService.findProductByID(productId);
+    @PostMapping("/checkout")
+    public ResponseEntity<Order> addProductToOrder(@Valid @RequestBody OrderRequest orderRequest){
         OrderDetails orderDetails = new OrderDetails();
-        Customer customer = customerService.findCustomerById(customerId);
-        //Calculate the total price of this item
-        int discountValue = (product.getDiscount()!=null) ? product.getDiscount().getDiscountValue() : 0;
-        double costPrice = product.getPrice();
-        Locale localeVN = new Locale("vi", "VN");
-        NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
-        Double totalPrice = costPrice*quantity;
-        String totalPriceStr = currencyVN.format(totalPrice-(totalPrice*discountValue/100));
 
-        orderDetails.setTotalPrice(totalPriceStr);
-        orderDetails.setProduct(product);
+        Payment paymentMethod = paymentService.findPaymentByID(orderRequest.getPaymentId());
+        List<CartDetails> cartDetailsList = new ArrayList<>();
+        for(Long cartDetailId: orderRequest.getLstCartDetailsId()){
+            CartDetails cartDetails = cartDetailService.findById(cartDetailId);
+            cartDetailsList.add(cartDetails);
+            cartDetailService.deleteById(cartDetailId);
 
-        //Update the availibility quantity of this product
-        product.setQuantity(product.getQuantity()-quantity);
-        orderDetails.setQuantity(quantity);
+        }
 
-        orderDetailsService.updateOrderDetails(orderDetails);
 
-        Order order = new Order();
-        order.setCustomer(customer);
-        order.setTotalPrice(totalPriceStr);
-        List<OrderDetails> orderDetailsList = new ArrayList<>();
-        orderDetailsList.add(orderDetails);
-        order.setOrderDetails(orderDetailsList);
+        Customer customer = customerService.findCustomerById(orderRequest.getCustomerId());
+        customer.setPhone(orderRequest.getPhone());
+        customer.setEmail(orderRequest.getEmail());
 
-        return new ResponseEntity<>(orderService.addOrder(order),HttpStatus.OK);
+        return new ResponseEntity<>(orderService.createOrder(customer,cartDetailsList,paymentMethod),HttpStatus.OK);
     }
 
     @PostMapping("/edit-order-details/{orderDetailsId}/{new_quantity}")
     public ResponseEntity<OrderDetails> editOrderDetails(@PathVariable("orderDetailsId") Long orderDetailsId,
-                                               @PathVariable("quatity") int new_quantity){
+                                                         @PathVariable("quatity") int new_quantity){
         OrderDetails orderDetails = orderDetailsService.findById(orderDetailsId);
         Product product = orderDetails.getProduct();
 
@@ -89,11 +75,9 @@ public class OrderController {
         //Update the total price of this item
         int discountValue = (product.getDiscount()!=null) ? product.getDiscount().getDiscountValue() : 0;
         double costPrice = product.getPrice();
-        Locale localeVN = new Locale("vi", "VN");
-        NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
-        Double totalPrice = costPrice*new_quantity;
-        String totalPriceStr = currencyVN.format(totalPrice-(totalPrice*discountValue/100));
-        orderDetails.setTotalPrice(totalPriceStr);
+        Double Price = costPrice*new_quantity;
+        Double totalPrice = Price-(Price*discountValue/100);
+        orderDetails.setTotalPrice(totalPrice);
 
         //Update the availibility quantity of this product
         product.setQuantity(product.getQuantity()-(new_quantity-quantity));
@@ -104,16 +88,17 @@ public class OrderController {
 
     }
 
-    @PostMapping("/delete-order/{orderDetailsId}")
-    public ResponseEntity<String> deleteItemtoCart(@PathVariable("orderDetailsId") Long orderDetailsId){
-        OrderDetails orderDetails = orderDetailsService.findById(orderDetailsId);
-        Product product = orderDetails.getProduct();
+    @PostMapping("/delete-order/{orderId}")
+    public ResponseEntity<String> deleteOrder(@PathVariable("orderId") Long orderId){
+        Order order = orderService.findOrderById(orderId);
+        for(OrderDetails orderDetails: order.getOrderDetails()){
+            Product product = orderDetails.getProduct();
+            //Update the availibility quantity of this product
+            int quantity = orderDetails.getQuantity();
+            product.setQuantity(product.getQuantity()+quantity);
+        }
 
-        //Update the availibility quantity of this product
-        int quantity = orderDetails.getQuantity();
-        product.setQuantity(product.getQuantity()+quantity);
-
-        return ResponseEntity.ok(orderDetailsService.deleteById(orderDetailsId));
+        return ResponseEntity.ok(orderService.deleteById(orderId));
     }
 
 
