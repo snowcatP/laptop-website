@@ -47,7 +47,9 @@ public class WebSecurityConfig{
             "/discount",
             "/discount/**",
             "/warranty",
-            "/warranty/**"
+            "/warranty/**",
+            "/user",
+            "/user/**"
 
     };
 
@@ -66,12 +68,16 @@ public class WebSecurityConfig{
                         .requestMatchers(HttpMethod.GET, "/product").permitAll()
                         .requestMatchers(HttpMethod.GET, "/product/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/product/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/product/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/discount").permitAll()
                         .requestMatchers(HttpMethod.GET, "/discount/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/warranty").permitAll()
                         .requestMatchers(HttpMethod.GET, "/warranty/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/warranty/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/comment").permitAll()
                         .requestMatchers(HttpMethod.GET, "/comment/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/user").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/user/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/user/**").hasRole("USER")
                         .requestMatchers(HttpMethod.GET, "/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated());

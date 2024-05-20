@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {useAuth} from '../context/AuthContext'
 import { customerLogout } from "../service/ClientService";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const Header = () => {
+const Header = ({ onSearch }) => {
   const {user, setUser, isLogged, setIsLogged} = useAuth()
   const navigate = useNavigate()
 
@@ -31,6 +31,20 @@ const Header = () => {
 
     logout()
   }
+
+
+  const [keyword, setKeyword] = useState('');
+
+  const handleInputChange = (event) => {
+    setKeyword(event.target.value);
+  };
+
+  const handleSearchClick = (event) => {
+    event.preventDefault(); // Ngăn chặn hành vi mặc định của form
+    onSearch(keyword);
+  };
+  
+  
 
   return (
      <div>
@@ -94,8 +108,14 @@ const Header = () => {
                     <select className="input-select">
                       <option value={0}>All</option>
                     </select>
-                    <input className="input" placeholder="Search here" />
-                    <button className="search-btn">Search</button>
+                    <input
+                      type="text"
+                      className="input"
+                      placeholder="Search here"
+                      value={keyword}
+                      onChange={handleInputChange}
+                    />
+                    <button type="button" className="search-btn" onClick={handleSearchClick}>Search</button>
                   </form>
                 </div>
               </div>

@@ -77,7 +77,6 @@ const Product = () => {
         const response = await getListComment(id)
 
         setComments(response.data)
-        console.log(comments)
       } catch(error) {console.log(error)}
         
     }

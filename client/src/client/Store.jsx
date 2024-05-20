@@ -6,101 +6,171 @@ import Footer from "./components/Footer";
 import { Link } from "react-router-dom";
 import { useState,useEffect } from "react";
 import { getListProducts } from "./service/StoreService";
-
+import { searchProducts } from "./service/SearchProduct";
+import { getProducts } from "./service/ProductService";
+import axios from "axios";
+import Slider from "rc-slider";
+import 'rc-slider/assets/index.css';
+import Button from 'react-bootstrap/Button';
 const Store = () => {
 
   const [products, setProducts] = useState([]);
+  const [filterProducts, setFilterProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [searchParams, setSearchParams] = useState({});
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  // useEffect(() => {
-  
-  //   const getListProduct = async () => {
-  //     try {
-  //       const response = await getListProducts()
+  const [priceMin, setPriceMin] = useState(0);
+  const [priceMax, setPriceMax] = useState(3000);
+  const [sortType, setSortType] = useState(null); // Thêm state để lưu trữ loại sắp xếp
+  const [priceProducts, setPriceProducts] = useState([]);
+  // Thêm state để lưu trữ số lượng sản phẩm mỗi trang
+const [itemsPerPage, setItemsPerPage] = useState(9);
 
-  //       setProducts(response.data)
-  //     } catch(error) {console.log(error)}
-        
-  //   }
-
-  //   getListProduct()
-  // },[])
 
     
     useEffect(() => {
       fetchProductsByPage(0);
     }, []);
 
+    
     const fetchProductsByPage = async (page) => {
         try {
             const response = await getListProducts(page)
             setProducts(response.data);
             setCurrentPage(page);
+            console.log(response.data);
         } catch (error) {
             console.error('Error fetching products:', error);
         }
     };
 
-    const fetchSearchResults = async () => {
+    useEffect(() => {
+      const getAllProducts = async () => {
+        try {
+          const response = await getProducts();
+  
+          setFilterProducts(response.data);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+  
+      getAllProducts();
+    }, [filterProducts]);
+
+    const fetchSearchResults = async (params = searchParams) => {
       try {
-          const response = await axios.get("http://localhost:8080/product/search", {
-              params: searchParams
-          });
-          setProducts(response.data);
+          const response = await searchProducts(params)
+          setProducts(response);
+          setFilterProducts(response);
           setCurrentPage(0);
       } catch (error) {
           console.error('Error fetching search results:', error);
       }
   };
 
-//   const handleCategoryClick = (category) => {
-//     setSearchParams({ ...searchParams, category });
-//     fetchSearchResults();
-// };
 
-// Hàm xử lý khi chọn hoặc bỏ tích chọn Category
-const handleCategoryClick = (category) => {
-  // Kiểm tra xem category đã được chọn hay chưa
-  const isCategorySelected = searchParams.category === category;
+  const filterProductsList = () => {
+    let filtered = filterProducts;
 
-  // Nếu category đã được chọn, bỏ tích chọn
-  if (isCategorySelected) {
-      setSearchParams({ ...searchParams, category: null });
-  } 
-  // Nếu chưa được chọn, chọn category
-  else {
-      setSearchParams({ ...searchParams, category });
-  }
+    if (searchParams.category) {
+      filtered = filtered.filter(product => product.category === searchParams.category);
+    }
 
-  // Gọi hàm fetchSearchResults để cập nhật kết quả tìm kiếm
-  fetchSearchResults();
-};
+    if (searchParams.brand) {
+      filtered = filtered.filter(product => product.brand === searchParams.brand);
+    }
 
 
+    setProducts(filtered);
+    setCurrentPage(0);
+  };
 
-const handleBrandClick = (brand) => {
+  const handleCategoryClick = (category) => {
+    setSearchParams({ ...searchParams, category });
+    filterProductsList();
+  };
+
+  const handleBrandClick = (brand) => {
     setSearchParams({ ...searchParams, brand });
-    fetchSearchResults();
+    filterProductsList();
+  };
+
+
+// Function to reset all filters and fetch original list of products
+const resetFilters = () => {
+  // Reset search parameters
+  setSearchParams({});
+  // Reset price range
+  setPriceMin(0);
+  setPriceMax(3000);
+
+  // Uncheck all category checkboxes
+  const categoryCheckboxes = document.querySelectorAll('input[name="category"]');
+  categoryCheckboxes.forEach((checkbox) => {
+    checkbox.checked = false;
+  });
+
+  // Uncheck all brand checkboxes
+  const brandCheckboxes = document.querySelectorAll('input[name="brand"]');
+  brandCheckboxes.forEach((checkbox) => {
+    checkbox.checked = false;
+  });
+  // Fetch original list of products
+  fetchProductsByPage(0);
+  setProducts(filterProducts);
+  setCurrentPage(0);
 };
 
-// Hàm xử lý khi bỏ tích chọn Category
-const handleCategoryUnchecked = () => {
-  setSearchParams({ ...searchParams, category: null });
-  fetchProductsByPage(currentPage);
+const handleSearch = (keyword) => {
+  if(keyword){
+    console.log(keyword)
+  } else {
+    console.log("null")
+  }
+  setSearchParams({ ...searchParams, keyword });
+  fetchSearchResults({ ...searchParams, keyword });
 };
 
-// Hàm xử lý khi bỏ tích chọn Brand
-const handleBrandUnchecked = () => {
-  setSearchParams({ ...searchParams, brand: null });
-  fetchProductsByPage(currentPage);
+// Hàm sắp xếp danh sách sản phẩm dựa trên loại sắp xếp
+const sortProducts = (type) => {
+  const sortedProducts = [...products];
+  if (type === 'increase') {
+    sortedProducts.sort((a, b) => a.price - b.price);
+  } else if (type === 'decrease') {
+    sortedProducts.sort((a, b) => b.price - a.price);
+  }
+  setProducts(sortedProducts);
 };
 
-    
+// Hàm xử lý khi người dùng chọn loại sắp xếp
+const handleSortChange = (event) => {
+  const type = event.target.value;
+  setSortType(type); // Lưu loại sắp xếp mới vào state
+  sortProducts(type); // Sắp xếp danh sách sản phẩm
+};
+
+const handlePriceChange = (values) => {
+  const [min, max] = values;
+  setPriceMin(min);
+  setPriceMax(max);
+  const changePriceProduct = filterProducts;
+  const newPriceProducts = changePriceProduct.filter(product => product.price >= min && product.price <= max);
+  setProducts(newPriceProducts);
+};
+
+const handlePriceInputChange = (min, max) => {
+  setPriceMin(min);
+  setPriceMax(max);
+  const changePriceProduct = filterProducts;
+  const newPriceProducts = changePriceProduct.filter(product => product.price >= min && product.price <= max);
+  setProducts(newPriceProducts);
+};
+
+
 
   return (
     <>
-      <Header />
+      <Header onSearch={handleSearch}/>
       <Navigation />
       <>
         {/* SECTION */}
@@ -111,11 +181,13 @@ const handleBrandUnchecked = () => {
             <div className="row">
               {/* ASIDE */}
               <div id="aside" className="col-md-3">
+                {/* Button to clear all filters */}
+              <Button variant="danger" onClick={resetFilters}>Clear All Filters</Button>{' '}
                 {/* aside Widget */}
                 <div className="aside">
                   <h3 className="aside-title">Categories</h3>
                   <div className="checkbox-filter">
-                    <div className="input-checkbox" onClick={() => handleCategoryClick('Office')}>
+                    <div className="input-checkbox" onClick={() => handleCategoryClick('Office')} >
                       <input type="checkbox" id="category-1"  name="category" value="Office" />
                       <label htmlFor="category-1">
                         <span />
@@ -138,16 +210,32 @@ const handleBrandUnchecked = () => {
                   <h3 className="aside-title">Price</h3>
                   <div className="price-filter">
                     <div id="price-slider" />
+                    <Slider
+                      range
+                      min={0}
+                      max={3000}
+                      defaultValue={[priceMin, priceMax]}
+                      onChange={handlePriceChange}
+                      step={100}
+                    />
                     <div className="input-number price-min">
-                      <input id="price-min" type="number" />
-                      <span className="qty-up">+</span>
-                      <span className="qty-down">-</span>
+                      <input 
+                      id="price-min" 
+                      type="number" 
+                      value={priceMin}
+                      onChange={(e) => handlePriceInputChange(parseInt(e.target.value), priceMax)}/>
+                      <span className="qty-up" onClick={() => handlePriceInputChange(priceMin+1)}>+</span>
+                      <span className="qty-down" onClick={() => handlePriceInputChange(priceMin-1)}>-</span>
                     </div>
                     <span>-</span>
                     <div className="input-number price-max">
-                      <input id="price-max" type="number" />
-                      <span className="qty-up">+</span>
-                      <span className="qty-down">-</span>
+                      <input 
+                      id="price-max" 
+                      type="number"
+                      value={priceMax}
+                      onChange={(e) => handlePriceInputChange(priceMin,parseInt(e.target.value))} />
+                      <span className="qty-up" onClick={() => handlePriceInputChange(priceMax+1)}>+</span>
+                      <span className="qty-down" onClick={() => handlePriceInputChange(priceMax-1)}>-</span>
                     </div>
                   </div>
                 </div>
@@ -157,42 +245,42 @@ const handleBrandUnchecked = () => {
                   <h3 className="aside-title">Brand</h3>
                   <div className="checkbox-filter">
                     <div className="input-checkbox" onClick={() => handleBrandClick('ASUS')}>
-                      <input type="checkbox" id="brand-1" />
+                      <input type="checkbox" id="brand-1" name="brand" value="ASUS" />
                       <label htmlFor="brand-1">
                         <span />
                         ASUS
                       </label>
                     </div>
-                    <div className="input-checkbox">
-                      <input type="checkbox" id="brand-2" />
+                    <div className="input-checkbox" onClick={() => handleBrandClick('DELL')}>
+                      <input type="checkbox" id="brand-2" name="brand" value="DELL" />
                       <label htmlFor="brand-2">
                         <span />
                         DELL
                       </label>
                     </div>
-                    <div className="input-checkbox">
-                      <input type="checkbox" id="brand-3" />
+                    <div className="input-checkbox" onClick={() => handleBrandClick('MSI')}>
+                      <input type="checkbox" id="brand-3" name="brand" value="MSI"/>
                       <label htmlFor="brand-3">
                         <span />
                         MSI
                       </label>
                     </div>
-                    <div className="input-checkbox">
-                      <input type="checkbox" id="brand-4" />
+                    <div className="input-checkbox" onClick={() => handleBrandClick('ACER')}>
+                      <input type="checkbox" id="brand-4" name="brand" value="ACER"/>
                       <label htmlFor="brand-4">
                         <span />
                         ACER
                       </label>
                     </div>
-                    <div className="input-checkbox">
-                      <input type="checkbox" id="brand-5" />
+                    <div className="input-checkbox" onClick={() => handleBrandClick('HP')}>
+                      <input type="checkbox" id="brand-5" name="brand" value="HP" />
                       <label htmlFor="brand-5">
                         <span />
                         HP
                       </label>
                     </div>
-                    <div className="input-checkbox">
-                      <input type="checkbox" id="brand-6" />
+                    <div className="input-checkbox" onClick={() => handleBrandClick('LENOVO')}>
+                      <input type="checkbox" id="brand-6" name="brand" value="LENOVO"/>
                       <label htmlFor="brand-6">
                         <span />
                         LENOVO
@@ -217,35 +305,7 @@ const handleBrandUnchecked = () => {
                         $980.00 <del className="product-old-price">$990.00</del>
                       </h4>
                     </div>
-                  </div>
-                  <div className="product-widget">
-                    <div className="product-img">
-                      <img src="./assets/img/product02.png" alt="" />
-                    </div>
-                    <div className="product-body">
-                      <p className="product-category">Category</p>
-                      <h3 className="product-name">
-                        <Link to="#">product name goes here</Link>
-                      </h3>
-                      <h4 className="product-price">
-                        $980.00 <del className="product-old-price">$990.00</del>
-                      </h4>
-                    </div>
-                  </div>
-                  <div className="product-widget">
-                    <div className="product-img">
-                      <img src="./assets/img/product03.png" alt="" />
-                    </div>
-                    <div className="product-body">
-                      <p className="product-category">Category</p>
-                      <h3 className="product-name">
-                        <Link to="#">product name goes here</Link>
-                      </h3>
-                      <h4 className="product-price">
-                        $980.00 <del className="product-old-price">$990.00</del>
-                      </h4>
-                    </div>
-                  </div>
+                  </div>             
                 </div>
                 {/* /aside Widget */}
               </div>
@@ -257,28 +317,17 @@ const handleBrandUnchecked = () => {
                   <div className="store-sort">
                     <label>
                       Sort By:
-                      <select className="input-select">
-                        <option value={0}>Prices gradually increase</option>
-                        <option value={1}>prices gradually decrease</option>
+                      <select className="input-select" onChange={handleSortChange}>
+                        <option value="">Select</option>
+                        <option value="increase">Prices gradually increase</option>
+                        <option value="decrease">Prices gradually decrease</option>
                       </select>
                     </label>
-                    {/* <label>
-                      Show:
-                      <select className="input-select">
-                        <option value={0}>20</option>
-                        <option value={1}>50</option>
-                      </select>
-                    </label> */}
                   </div>
                   <ul className="store-grid">
                     <li className="active">
                       <i className="fa fa-th" />
                     </li>
-                    {/* <li>
-                      <Link to="#">
-                        <i className="fa fa-th-list" />
-                      </Link>
-                    </li> */}
                   </ul>
                 </div>
                 {/* /store top filter */}
@@ -287,7 +336,7 @@ const handleBrandUnchecked = () => {
                   {/* product */}
                   
                   {products?.map((product, index) => (
-                    <Link to={`/product/${product?.productId}`}>
+                    <Link to={`/product/${product?.productId}`} key={index}>
                     <div className="col-md-4 col-xs-6">
                           <div className="product" key={index}>
                           <div className="product-img">
@@ -322,7 +371,7 @@ const handleBrandUnchecked = () => {
                 </div>
                 {/* /store products */}
                 {/* store bottom filter */}
-                    <div className="store-filter clearfix">
+                <div className="store-filter clearfix">
                         {/* Show current page */}
                         <span className="store-qty">Page {currentPage + 1}</span>
                         {/* Pagination links */}
