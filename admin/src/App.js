@@ -11,6 +11,7 @@ import EditProduct from "./admin/EditProduct";
 import ListWarranty from "./admin/ListWarranty";
 import AddWarranty from "./admin/AddWarranty";
 import ProtectedRoute from "./admin/util/ProtectedRoute";
+import ListCustomer from "./admin/ListCustomer";
 
 function App() {
   return (
@@ -74,7 +75,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-
+        <Route
+          path="/list-customer"
+          element={
+            <ProtectedRoute>
+              <ListCustomer />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/*" element={<Error404 />} />
       </Routes>
     </BrowserRouter>
