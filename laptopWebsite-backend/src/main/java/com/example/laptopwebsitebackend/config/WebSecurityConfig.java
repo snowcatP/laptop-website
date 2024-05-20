@@ -79,8 +79,6 @@ public class WebSecurityConfig{
                         .requestMatchers(HttpMethod.GET, "/user").permitAll()
                         .requestMatchers(HttpMethod.GET, "/user/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/user/**").hasRole("USER")
-                        .requestMatchers(HttpMethod.POST, "/cart/**").hasRole("USER")
-                        .requestMatchers(HttpMethod.POST, "/order/**").hasRole("USER")
                         .requestMatchers(HttpMethod.GET, "/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated());
 

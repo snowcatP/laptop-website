@@ -1,6 +1,5 @@
 package com.example.laptopwebsitebackend.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,15 +17,11 @@ public class OrderDetails {
 
     private int quantity;
 
-    private Double totalPrice;
+    private String totalPrice;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "order_id")
-    @JsonBackReference
-    private Order order;
 
 }
