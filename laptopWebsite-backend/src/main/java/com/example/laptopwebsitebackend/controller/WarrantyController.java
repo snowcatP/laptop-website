@@ -4,6 +4,7 @@ import com.example.laptopwebsitebackend.dto.request.DiscountRequest;
 import com.example.laptopwebsitebackend.dto.request.ProductRequest;
 import com.example.laptopwebsitebackend.dto.request.WarrantyRequest;
 import com.example.laptopwebsitebackend.entity.Discount;
+import com.example.laptopwebsitebackend.entity.Product;
 import com.example.laptopwebsitebackend.entity.Warranty;
 import com.example.laptopwebsitebackend.service.CustomerService;
 import com.example.laptopwebsitebackend.service.DiscountService;
@@ -43,6 +44,7 @@ public class WarrantyController {
 
         warrantyService.addNewWarranty(warranty);
         return new ResponseEntity<>(warranty, HttpStatus.OK  );
+
     }
 
     @GetMapping

@@ -9,7 +9,7 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { deleteProductById } from "./service/DeleteProduct";
 
-const ListProduct = ({ allproductList, message }) => {
+const ListProduct = () => {
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [search, setSearch] = useState("");
@@ -53,11 +53,13 @@ const ListProduct = ({ allproductList, message }) => {
   };
 
   useEffect(() => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
     const getAllProducts = async () => {
       try {
-        const response = await getListProducts();
+        const response = await getListProducts(headers);
         setProducts(response.data);
-        // console.log(products);
       } catch (error) {
         console.log(error);
       }
@@ -67,8 +69,11 @@ const ListProduct = ({ allproductList, message }) => {
   }, [products]);
 
   const handleDelete = async (id) => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
     try {
-      const response = await deleteProductById(id);
+      const response = await deleteProductById(id,headers);
       if (response.status === 200) {
         setProducts(products.filter((product) => product.productId !== id));
       }
@@ -189,6 +194,7 @@ const ListProduct = ({ allproductList, message }) => {
                                 className="form-control"
                                 name="productName"
                                 value={selectedProduct.productName}
+                                readOnly
                               />
                             </div>
                           </div>
@@ -202,6 +208,7 @@ const ListProduct = ({ allproductList, message }) => {
                                 className="form-control"
                                 name="price"
                                 value={selectedProduct.price}
+                                readOnly
                               />
                             </div>
                           </div>
@@ -215,6 +222,7 @@ const ListProduct = ({ allproductList, message }) => {
                                 className="form-control"
                                 name="quantity"
                                 value={selectedProduct.quantity}
+                                readOnly
                               />
                             </div>
                           </div>
@@ -228,6 +236,21 @@ const ListProduct = ({ allproductList, message }) => {
                                 className="form-control"
                                 name="category"
                                 value={selectedProduct.category}
+                                readOnly
+                              />
+                            </div>
+                          </div>
+                          <div className="row mb-3">
+                            <label className="col-sm-2 col-form-label">
+                              Brand
+                            </label>
+                            <div className="col-sm-10">
+                              <input
+                                type="text"
+                                className="form-control"
+                                name="category"
+                                value={selectedProduct.brand}
+                                readOnly
                               />
                             </div>
                           </div>

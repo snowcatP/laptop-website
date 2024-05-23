@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 
 @Data
@@ -17,6 +18,8 @@ import java.util.Date;
 @NoArgsConstructor
 
 public class WarrantyRequest {
+
+    private List<Long> orders;
 
     private Date dateExpired;
 

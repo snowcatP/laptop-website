@@ -15,7 +15,10 @@ import ListDiscount from "./admin/ListDiscount";
 import AddDiscount from "./admin/AddDiscount";
 import EditDiscount from "./admin/EditDiscount";
 import ListCustomer from "./admin/ListCustomer";
+
 import ListOrder from "./admin/ListOrder";
+
+
 
 function App() {
   return (
@@ -76,6 +79,14 @@ function App() {
           element={
             <ProtectedRoute>
               <AddWarranty />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/edit-warranty/:id"
+          element={
+            <ProtectedRoute>
+              < EditWarranty/>
             </ProtectedRoute>
           }
         />

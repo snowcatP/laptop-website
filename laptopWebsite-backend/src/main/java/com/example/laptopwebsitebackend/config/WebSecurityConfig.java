@@ -70,12 +70,12 @@ public class WebSecurityConfig{
                         .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINT).permitAll()
                         .requestMatchers(HttpMethod.GET, "/product").permitAll()
                         .requestMatchers(HttpMethod.GET, "/product/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/product/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/product/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/product/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/product/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/discount").permitAll()
                         .requestMatchers(HttpMethod.GET, "/discount/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/warranty").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/warranty/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/warranty").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/warranty/**").hasRole("USER")
                         .requestMatchers(HttpMethod.POST, "/warranty/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/comment").permitAll()
                         .requestMatchers(HttpMethod.GET, "/comment/**").permitAll()
@@ -85,6 +85,9 @@ public class WebSecurityConfig{
                         .requestMatchers(HttpMethod.POST, "/order/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/cart/**").hasRole("USER")
                         .requestMatchers(HttpMethod.GET, "/admin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/order/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/warranty/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/warranty/**").hasRole("ADMIN")
                         .anyRequest().authenticated());
 
 
