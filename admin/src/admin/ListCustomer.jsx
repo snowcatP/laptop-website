@@ -11,9 +11,7 @@ const ListCustomer = ({ allCustomerList, message }) => {
     const getAllCustomers = async () => {
       try {
         const response = await getListCustomers();
-
         setUsers(response.data);
-        console.log(users);
       } catch (error) {
         console.log(error);
       }
@@ -72,22 +70,7 @@ const ListCustomer = ({ allCustomerList, message }) => {
                             <td>{user.email}</td>
                             <td>{user.phone}</td>
                             <td>{user.address}</td>
-                            {/* <td>
-                              <a
-                                className="btn btn-outline-dark btn-sm"
-                                href={`modify_user?action=modify&email=${user.email}`}
-                              >
-                                Sửa
-                              </a>
-                            </td>
-                            <td>
-                              <a
-                                className="btn btn-outline-dark btn-sm"
-                                href={`modify_user?action=delete&email=${user.email}`}
-                              >
-                                Xoá
-                              </a>
-                            </td> */}
+                            
                           </tr>
                         ))}
                       </tbody>

@@ -6,16 +6,33 @@ import Letter from "./components/Letter";
 import Footer from "./components/Footer";
 import { toast } from "react-toastify";
 import { checkout } from "./service/Order";
+import { useAuth } from "./context/AuthContext";
+import { getCartById } from "./service/Cart";
 
 function Checkout(props){
+  const {user, setUser, isLogged, setIsLogged} = useAuth()
+  const [carts, setCarts] = useState([]);
+  const [cartId, setCartId] = useState(null);
+  const [totalPrice, setTotalPrice] = useState(0);
   const location = useLocation();
-  const { carts,totalPrice,user  } = location.state || {};
+  // const { carts,totalPrice,user  } = location.state || {};
   const token = localStorage.getItem("token");
   const header = {
     ContentType: 'application/json',
     Authorization: "Bearer " + token,
   };
-  
+  useEffect(() => {
+    const getCart = async () => {
+      try {
+        setCartId(user.customerId);
+        const response = await getCartById(cartId, header);
+        setCarts(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getCart();
+  }, [cartId, carts]);
   const [form, setForm] = useState({
     customerId:user.customerId,
     firstName:user.firstName,
@@ -26,10 +43,23 @@ function Checkout(props){
     paymentId:"",
     lstCartDetailsId:""
   });
+  const handleTotalPrice = () => {
+    let totalPrice = 0;
+    carts.forEach((cart) => {
+      totalPrice += parseFloat(cart.price);
+    });
+    setTotalPrice(totalPrice);
+  };
+
+  useEffect(() => {
+    handleTotalPrice();
+  }, [carts]);
   
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
+    console.log(form.address);
+
     e.preventDefault();
     const credential = {
       customerId:user.customerId,
@@ -44,6 +74,7 @@ function Checkout(props){
     try {
       const response = await checkout(credential,header);
       if (response.status === 200) {
+        console.table(response.data);
         toast.success("Order successfully!");
         navigate("/user/orders");
       }
@@ -55,7 +86,7 @@ function Checkout(props){
   
   const onChangeInput = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-    
+    console.log(form.address);
   };
   
   useEffect (() => {

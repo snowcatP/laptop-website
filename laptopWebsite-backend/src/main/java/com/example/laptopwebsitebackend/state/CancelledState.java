@@ -10,6 +10,7 @@ public class CancelledState implements OrderState{
 
     @Override
     public void prev(Order order) {
+        order.setState(new PendingState());
 
     }
 

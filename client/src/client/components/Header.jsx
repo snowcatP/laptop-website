@@ -25,18 +25,16 @@ const Header = ({ onSearch }) => {
     const getCart = async () => {
       try {
         setCartId(user.customerId);
-        const response = await getCartById(cartId, header);
+        const response = await getCartById(user.customerId, header);
         setCarts(response.data);
       } catch (error) {
         console.log(error);
       }
     };
     getCart();
-  }, [cartId, carts]);
+  }, [carts]);
 
-  useEffect(() => {
-    console.log(carts)
-  }, []);
+
   const handleLogout = () => {
     const getToken = localStorage.getItem("token")
 
@@ -176,7 +174,8 @@ const Header = ({ onSearch }) => {
                       <span>Your Cart</span>
                       <div className="qty">{carts.length}</div>
                     </Link>
-                    {carts.map((cart, index) => {
+                    {carts &&
+                    carts.map((cart, index) => {
                       return (
                         <div className="cart-dropdown">
                           <div className="cart-list">
