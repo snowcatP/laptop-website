@@ -2,6 +2,7 @@ package com.example.laptopwebsitebackend.config;
 
 import com.example.laptopwebsitebackend.dto.request.IntrospectRequest;
 import com.example.laptopwebsitebackend.service.AuthenticationService;
+import com.example.laptopwebsitebackend.util.PasswordEncoderSingleton;
 import com.nimbusds.jose.JOSEException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -71,7 +72,6 @@ public class WebSecurityConfig{
                         .requestMatchers(HttpMethod.GET, "/product").permitAll()
                         .requestMatchers(HttpMethod.GET, "/product/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/product/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/product/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/discount").permitAll()
                         .requestMatchers(HttpMethod.GET, "/discount/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/warranty").permitAll()
@@ -80,10 +80,13 @@ public class WebSecurityConfig{
                         .requestMatchers(HttpMethod.GET, "/comment").permitAll()
                         .requestMatchers(HttpMethod.GET, "/comment/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/user").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/user/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/user/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/user/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/product/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/cart/**").hasRole("USER")
                         .requestMatchers(HttpMethod.POST, "/order/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/admin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated());
 
@@ -119,9 +122,5 @@ public class WebSecurityConfig{
                 .build();
     }
 
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(10);
-    }
 }
 

@@ -104,7 +104,7 @@ const ListDiscount = () => {
                     <table id="dataTable" className="table table-hover">
                       <thead>
                         <tr>
-                          <th scope="col">ID</th>
+                          <th scope="col">No</th>
                           <th scope="col">Discount value</th>
                           <th scope="col">Date start</th>
                           <th scope="col">Date end</th>
@@ -116,9 +116,9 @@ const ListDiscount = () => {
                       </thead>
                       <tbody>
                         {records &&
-                          records.map((discount) => (
-                            <tr>
-                              <th>{discount.discountId}</th>
+                          records.map((discount, n) => (
+                            <tr key={discount.discountId}>
+                              <td>{n}</td>
                               <td>{discount.discountValue}%</td>
                               <td>{discount.startDate}</td>
                               <td>{discount.endDate}</td>

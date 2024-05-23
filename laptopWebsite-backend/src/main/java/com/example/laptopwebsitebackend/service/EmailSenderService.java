@@ -1,6 +1,7 @@
 package com.example.laptopwebsitebackend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -11,9 +12,12 @@ public class EmailSenderService {
     @Autowired
     private JavaMailSender mailSender;
 
+    @Value("${email.sender}")
+    private String sender;
+
     public void sendEmail(String to, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("ok.byethibye2@gmail.com");
+        message.setFrom(sender);
         message.setTo(to);
         message.setSubject(subject);
         message.setText(body);

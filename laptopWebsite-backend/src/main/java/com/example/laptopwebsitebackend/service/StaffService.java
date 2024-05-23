@@ -5,10 +5,13 @@ import com.example.laptopwebsitebackend.entity.Account;
 import com.example.laptopwebsitebackend.entity.Staff;
 import com.example.laptopwebsitebackend.repository.AccountRepository;
 import com.example.laptopwebsitebackend.repository.StaffRepository;
+import com.example.laptopwebsitebackend.util.PasswordEncoderSingleton;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class StaffService {
@@ -17,8 +20,8 @@ public class StaffService {
     @Autowired
     private AccountRepository accountRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private static final PasswordEncoder passwordEncoder = PasswordEncoderSingleton.getEncoder();
+
     public Staff getMyProfile() {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
@@ -57,5 +60,18 @@ public class StaffService {
             return true;
         }
         return false;
+    }
+
+    public List<Staff> getAllStaff() {
+        return staffRepository.findAll();
+    }
+
+    public Boolean deleteStaff(Long id) {
+        Staff deletedStaff = staffRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User is not exist"));
+
+        accountRepository.deleteById(deletedStaff.getAccount().getAccountId());
+        staffRepository.delete(deletedStaff);
+        return true;
     }
 }

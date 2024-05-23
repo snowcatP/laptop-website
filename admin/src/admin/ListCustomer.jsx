@@ -40,27 +40,14 @@ const ListCustomer = ({ allCustomerList, message }) => {
               <div className="card">
                 <div className="card-body">
                   <h5 className="card-title">List Customer</h5>
-
-                  {users.length === 0 && (
-                    <button
-                      className="btn btn-primary col-2"
-                      style={{ marginBottom: '2em' }}
-                    //   onClick={fetchUsers}
-                    >
-                      Lấy dữ liệu
-                    </button>
-                  )}
-
-                  {message && <p style={{ color: 'red' }}>{message}</p>}
-
                   <form action="get_users_data" method="get">
-                    <table id="myTable" className="table table-striped">
+                    <table id="myTable" className="table table-hover">
                       <thead>
                         <tr>
-                          <th><b>Họ và tên</b></th>
+                          <th>Name</th>
                           <th>Email</th>
-                          <th>Số điện thoại</th>
-                          <th>Địa chỉ</th>
+                          <th>Phone</th>
+                          <th>Address</th>
                           {/* <th></th>
                           <th></th> */}
                         </tr>
@@ -72,22 +59,6 @@ const ListCustomer = ({ allCustomerList, message }) => {
                             <td>{user.email}</td>
                             <td>{user.phone}</td>
                             <td>{user.address}</td>
-                            {/* <td>
-                              <a
-                                className="btn btn-outline-dark btn-sm"
-                                href={`modify_user?action=modify&email=${user.email}`}
-                              >
-                                Sửa
-                              </a>
-                            </td>
-                            <td>
-                              <a
-                                className="btn btn-outline-dark btn-sm"
-                                href={`modify_user?action=delete&email=${user.email}`}
-                              >
-                                Xoá
-                              </a>
-                            </td> */}
                           </tr>
                         ))}
                       </tbody>
