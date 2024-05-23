@@ -1,13 +1,36 @@
 import React, { useEffect, useState } from "react";
 import Header from "./components/Header";
-import Footer from "./components/Footer";
 import Sidebar from "./components/Sidebar";
-import { addWarranty, getOrderByIdCustomer } from "./service/WarrantyService";
-import { getListCustomers } from "./service/CustomerService";
+import Footer from "./components/Footer";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button"
-import { Link } from "react-router-dom";
-const AddWarranty = () => {
+import { editWarrantyById
+    , getOrderByIdCustomer, getWarrantyById} from "./service/WarrantyService";
+import { getListCustomers } from "./service/CustomerService";
+const EditWarranty = () => {
+  const { id } = useParams();
+  const [warranty, setWarranty] = useState(null);
+
+  const navigate = useNavigate()
+  useEffect(() => {
+    const getProduct = async () => {
+      try {
+        const response = await getWarrantyById(id);
+
+        setWarranty(response.data);
+
+        console.log(warranty)
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getProduct();
+  }, [id]);
+
   const [message, setMessage] = useState("");
   const [form, setForm] = useState({
     productCode: "",
@@ -16,15 +39,24 @@ const AddWarranty = () => {
     customer_id: "",
     product_id: "",
   });
-  const [customers, setCustomers] = useState([]);
-  const [selectedCustomer, setSelectedCustomer] = useState("");
-  const [selectedOrder, setSelectedOrders] = useState([]);
-  const [orders, setProductOrders] = useState([]);
-  const [selectedProduct, setSelectedProduct] = useState("");
+
+  useEffect(() => {
+    if (warranty) {
+      setForm({
+        productCode: warranty.productCode || "",
+        dateStart: warranty.dateStart ? warranty.dateStart.split('T')[0] : "",
+        dateExpired: warranty.dateExpired ? warranty.dateExpired.split('T')[0] : "",
+        customer_id: warranty.customer_id || "",
+        product_id: warranty.product_id || "",
+      });
+      setSelectedCustomer(`${warranty.customer.firstName} ${warranty.customer.lastName}`);
+      setSelectedProduct(warranty.product.productName);
+    }
+  }, [warranty]);
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Ngăn chặn form submit mặc định
-    const credential = {
+    const request = {
       productCode: form.productCode,
       dateStart: form.dateStart,
       dateExpired: form.dateExpired,
@@ -33,23 +65,37 @@ const AddWarranty = () => {
     };
 
     try {
-      // Gọi hàm addWarranty từ WarrantyService để thêm bảo hành
-      const response = await addWarranty(credential,header);
-
-      // Xử lý kết quả từ API
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          };
+      const response = await editWarrantyById(id, request, headers);
       if (response.status === 200) {
-        // Nếu thành công, hiển thị thông báo hoặc thực hiện các hành động khác
-        setMessage("Added successfully!");
+        toast.success("Update success!")
+
+        setTimeout(() => {
+          navigate("/list-warranty")
+        }, 2000)
       }
     } catch (error) {
-      // Xử lý lỗi nếu có
-      console.error("Error adding warranty:", error);
+      toast.error("Fail to update!")
+
+      setTimeout(() => {
+        navigate("/list-warranty")
+      }, 2000)
     }
   };
 
   const onChangeInput = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
+
+  const [customers, setCustomers] = useState([]);
+  const [selectedCustomer, setSelectedCustomer] = useState("");
+  const [selectedOrder, setSelectedOrders] = useState([]);
+  const [orders, setProductOrders] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState("");
+
+
 
   useEffect(() => {
     const getAllCustomers = async () => {
@@ -87,7 +133,6 @@ const AddWarranty = () => {
       const response = await getOrderByIdCustomer(customerId,header);
       setProductOrders(response.data);
       setShowModal(true)
-      console.log(orders)
     } catch (error) {
       console.error("Error fetching orders:", error);
     }
@@ -124,13 +169,16 @@ const AddWarranty = () => {
   const firstPage = () => setCurrentPage(1);
   const lastPage = () => setCurrentPage(numbers[numbers.length - 1]);
   const changePage = (n) => setCurrentPage(n);
+  
+
   return (
     <>
       <Header />
       <Sidebar />
       <main id="main" className="main">
         <div className="pagetitle">
-          <h1>Manage Warranty</h1>
+          <h1>Edit Warranty</h1>
+          <Link className='btn btn-outline-primary mt-2' to={"/list-warranty"}>Back</Link>
         </div>
         <section className="section">
           <div className="row">
@@ -139,7 +187,7 @@ const AddWarranty = () => {
                 <div className="col-lg-6">
                   <div className="card">
                     <div className="card-body">
-                      <h5 className="card-title">Add warranty</h5>
+                      <h5 className="card-title">Edit warranty</h5>
                       {message && (
                         <h5>
                           <span style={{ color: 'green' }}>{message}</span>
@@ -176,7 +224,7 @@ const AddWarranty = () => {
                         </div>
                       </div>
                       <div className="row mb-3">
-                        <label className="col-sm-2 col-form-label">Add</label>
+                        <label className="col-sm-2 col-form-label">Edit</label>
                         <div className="col-sm-10">
                           <button type="submit" className="btn btn-primary">OK</button>
                         </div>
@@ -352,4 +400,4 @@ const AddWarranty = () => {
   );
 };
 
-export default AddWarranty;
+export default EditWarranty;

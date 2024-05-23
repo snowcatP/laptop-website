@@ -190,7 +190,7 @@ const UserCart = () => {
                                                     <img src={`${product.image1}`} className="d-block ui-w-40 ui-bordered mr-4" alt="" style={{ height: "100px" }} />
                                                   </div>
                                                   <div className="media-body">
-                                                    <a href={`view_detail?pid=${product.productId}`} className="d-block text-dark">
+                                                    <a href={`/product/${product?.productId}`} className="d-block text-dark">
                                                       {product.productName}
                                                     </a>
                                                     <br />
@@ -205,7 +205,7 @@ const UserCart = () => {
                                               </div>
                                             </td>
                                             <td className="text-center font-weight-semibold align-middle p-4">
-                                              {Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(product.price)} 
+                                              {Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(product.price * (1-((product.discount?.discountValue ?? 0) / 100)))} 
                                             </td>
                                             <td className="align-midle p-4 align-middle">
                                               {/* Update */}

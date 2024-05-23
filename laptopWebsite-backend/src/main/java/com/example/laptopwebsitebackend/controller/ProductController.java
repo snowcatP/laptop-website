@@ -131,5 +131,9 @@ public class ProductController {
         return new ResponseEntity<>(foundProducts, HttpStatus.OK);
     }
 
-
+    @GetMapping("/count")
+    public ResponseEntity<Long> countAllProducts() {
+        long productCount = productService.countAllProducts();
+        return new ResponseEntity<>(productCount, HttpStatus.OK);
+    }
 }

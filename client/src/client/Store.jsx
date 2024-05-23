@@ -24,8 +24,8 @@ const Store = () => {
   const [filterProducts, setFilterProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [searchParams, setSearchParams] = useState({});
-  const [priceMin, setPriceMin] = useState(0);
-  const [priceMax, setPriceMax] = useState(3000);
+  const [priceMin, setPriceMin] = useState(10000000);
+  const [priceMax, setPriceMax] = useState(40000000);
   const [sortType, setSortType] = useState(null); // Thêm state để lưu trữ loại sắp xếp
   const [priceProducts, setPriceProducts] = useState([]);
   // Thêm state để lưu trữ số lượng sản phẩm mỗi trang
@@ -107,8 +107,8 @@ const resetFilters = () => {
   // Reset search parameters
   setSearchParams({});
   // Reset price range
-  setPriceMin(0);
-  setPriceMax(3000);
+  setPriceMin(10000000);
+  setPriceMax(40000000);
 
   // Uncheck all category checkboxes
   const categoryCheckboxes = document.querySelectorAll('input[name="category"]');
@@ -141,9 +141,9 @@ const handleSearch = (keyword) => {
 const sortProducts = (type) => {
   const sortedProducts = [...products];
   if (type === 'increase') {
-    sortedProducts.sort((a, b) => a.price - b.price);
+    sortedProducts.sort((a, b) => a.price * (1-((a.discount?.discountValue ?? 0) / 100)) - b.price * (1-((b.discount?.discountValue ?? 0) / 100)));
   } else if (type === 'decrease') {
-    sortedProducts.sort((a, b) => b.price - a.price);
+    sortedProducts.sort((a, b) => b.price * (1-((b.discount?.discountValue ?? 0) / 100)) - a.price * (1-((a.discount?.discountValue ?? 0) / 100)));
   }
   setProducts(sortedProducts);
 };
@@ -160,7 +160,7 @@ const handlePriceChange = (values) => {
   setPriceMin(min);
   setPriceMax(max);
   const changePriceProduct = filterProducts;
-  const newPriceProducts = changePriceProduct.filter(product => product.price >= min && product.price <= max);
+  const newPriceProducts = changePriceProduct.filter(product => product.price * (1-((product.discount?.discountValue ?? 0) / 100)) >= min && product.price * (1-((product.discount?.discountValue ?? 0) / 100)) <= max);
   setProducts(newPriceProducts);
 };
 
@@ -168,7 +168,7 @@ const handlePriceInputChange = (min, max) => {
   setPriceMin(min);
   setPriceMax(max);
   const changePriceProduct = filterProducts;
-  const newPriceProducts = changePriceProduct.filter(product => product.price >= min && product.price <= max);
+  const newPriceProducts = changePriceProduct.filter(product => product.price * (1-((product.discount?.discountValue ?? 0) / 100)) >= min && product.price * (1-((product.discount?.discountValue ?? 0) / 100)) <= max);
   setProducts(newPriceProducts);
 };
 
@@ -242,11 +242,11 @@ const handleAddToCart = (id) =>{
                     <div id="price-slider" />
                     <Slider
                       range
-                      min={0}
-                      max={3000}
+                      min={10000000}
+                      max={40000000}
                       defaultValue={[priceMin, priceMax]}
                       onChange={handlePriceChange}
-                      step={100}
+                      step={2500000}
                     />
                     <div className="input-number price-min">
                       <input 
@@ -372,7 +372,7 @@ const handleAddToCart = (id) =>{
                           <div className="product-img">
                             <img src={product?.image1} alt="" />
                             <div className="product-label">
-                              <span className="sale">-30%</span>
+                              <span className="sale">{product.discount?.discountValue}%</span>
                               <span className="new">NEW</span>
                             </div>
                           </div>
@@ -382,8 +382,8 @@ const handleAddToCart = (id) =>{
                              {product?.productName}
                             </h3>
                             <h4 className="product-price">
-                              {product?.price}{" "}
-                              <del className="product-old-price">{product?.price * 1.3}</del>
+                              {product.price * (1-((product.discount?.discountValue ?? 0) / 100))} VND
+                              <del className="product-old-price">{product?.price}</del>
                             </h4>
                           </div>
                           <div className="add-to-cart">
