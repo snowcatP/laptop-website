@@ -1,4 +1,4 @@
-import React , {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Header from "./components/Header";
 import Navigation from "./components/Navigation";
@@ -9,13 +9,13 @@ import { checkout } from "./service/Order";
 import { useAuth } from "./context/AuthContext";
 import { getCartById } from "./service/Cart";
 
-function Checkout(props){
-  const {user, setUser, isLogged, setIsLogged} = useAuth()
+function Checkout(props) {
+  const { user, setUser, isLogged, setIsLogged } = useAuth()
   const [carts, setCarts] = useState([]);
   const [cartId, setCartId] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
   const location = useLocation();
-  // const { carts,totalPrice,user  } = location.state || {};
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const token = localStorage.getItem("token");
   const header = {
     ContentType: 'application/json',
@@ -34,14 +34,14 @@ function Checkout(props){
     getCart();
   }, [cartId, carts]);
   const [form, setForm] = useState({
-    customerId:user.customerId,
-    firstName:user.firstName,
-    lastName:user.lastName,
-    email:user.email,
-    phone:user.phone,
-    address:user.address,
-    paymentId:"",
-    lstCartDetailsId:""
+    customerId: user.customerId,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    phone: user.phone,
+    address: user.address,
+    paymentId: "",
+    lstCartDetailsId: ""
   });
   const handleTotalPrice = () => {
     let totalPrice = 0;
@@ -54,55 +54,60 @@ function Checkout(props){
   useEffect(() => {
     handleTotalPrice();
   }, [carts]);
-  
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    console.log(form.address);
 
-    e.preventDefault();
-    const credential = {
-      customerId:user.customerId,
-      firstName:form.firstName,
-      lastName:form.lastName,
-      email:form.email,
-      phone:form.phone,
-      address:form.address,
-      paymentId:form.paymentId,
-      lstCartDetailsId:form.lstCartDetailsId
-    }
-    try {
-      const response = await checkout(credential,header);
-      if (response.status === 200) {
-        console.table(response.data);
-        toast.success("Order successfully!");
-        navigate("/user/orders");
+    if (termsAccepted) {
+      
+      const credential = {
+        customerId: user.customerId,
+        firstName: form.firstName,
+        lastName: form.lastName,
+        email: form.email,
+        phone: form.phone,
+        address: form.address,
+        paymentId: form.paymentId,
+        lstCartDetailsId: form.lstCartDetailsId
+      }
+      try {
+        const response = await checkout(credential, header);
+        if (response.status === 200) {
+          console.table(response.data);
+          toast.success("Order successfully!");
+          navigate("/user/orders");
+        }
+      }
+      catch (error) {
+        toast.error(error.response.data.message);
       }
     }
-    catch (error) {
-      toast.error(error.response.data.message);
-    }
+    e.preventDefault();
   };
-  
+
   const onChangeInput = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     console.log(form.address);
   };
-  
-  useEffect (() => {
+
+  useEffect(() => {
     const cartDetailsIds = carts.map(cart => cart.cartDetailsId);
     setForm((prevForm) => ({
       ...prevForm,
       lstCartDetailsId: cartDetailsIds
     }));
   }, [carts]);
+  const handleCheckBoxChange = () => {
+    setTermsAccepted(!termsAccepted)
+  }
 
   return (
     <>
       <Header />
-      
+
       <Navigation />
-      
+
       <>
         {/* SECTION */}
         <div className="section">
@@ -125,7 +130,7 @@ function Checkout(props){
                       value={form.firstName}
                       onChange={onChangeInput}
                     />
-                    
+
                   </div>
                   <div className="form-group">
                     <input
@@ -173,7 +178,7 @@ function Checkout(props){
                       <label htmlFor="create-account">
                         <span />
                         Create Account?
-                        
+
                       </label>
                       <div className="caption">
                         <input
@@ -193,74 +198,13 @@ function Checkout(props){
                     <h3 className="title">Shiping address</h3>
                   </div>
                   <div className="input-checkbox">
-                    <input type="checkbox" id="shiping-address"  />
+                    <input type="checkbox" id="shiping-address" />
                     <label htmlFor="shiping-address">
                       <span />
                       Ship to a diffrent address?
                     </label>
 
-                    {/* <div className="caption">
-                      <div className="form-group">
-                        <input
-                          className="input"
-                          type="text"
-                          name="firstName"
-                          placeholder="First Name"
-                          value={form2.firstName}
-                          onChange={onChangeInput2}
-                        />
-                      </div>
-                      <div className="form-group">
-                        <input
-                          className="input"
-                          type="text"
-                          name="lastName"
-                          placeholder="Last Name"
-                          value={form2.lastName}
-                          onChange={onChangeInput2}
-                        />
-                      </div>
-                      <div className="form-group">
-                        <input
-                          className="input"
-                          type="email"
-                          name="email"
-                          placeholder="Email"
-                          value={form2.email}
-                          onChange={onChangeInput2}
-                        />
-                      </div>
-                      <div className="form-group">
-                        <input
-                          className="input"
-                          type="text"
-                          name="address"
-                          placeholder="Address"
-                          value={form2.address}
-                          onChange={onChangeInput2}
-                        />
-                      </div>
-                     
-                     
-                      <div className="form-group">
-                        <input
-                          className="input"
-                          type="text"
-                          name="zip-code"
-                          placeholder="ZIP Code"
-                        />
-                      </div>
-                      <div className="form-group">
-                        <input
-                          className="input"
-                          type="tel"
-                          name="phone"
-                          placeholder="Telephone"
-                          value={form2.phone}
-                          onChange={onChangeInput2}
-                        />
-                      </div>
-                    </div> */}
+
                   </div>
                 </div>
                 {/* /Shiping Details */}
@@ -279,8 +223,8 @@ function Checkout(props){
                 <div className="section-title text-center">
                   <h3 className="title">Your Order</h3>
                 </div>
-                
-                    <div className="order-summary">
+
+                <div className="order-summary">
                   <div className="order-col">
                     <div>
                       <strong>PRODUCT</strong>
@@ -289,17 +233,17 @@ function Checkout(props){
                       <strong>TOTAL</strong>
                     </div>
                   </div>
-                  {carts ? carts.map((cart, index)=> {
-                    return( 
-                    <div className="order-products">
-                    <div className="order-col">
-                      <div>{cart.quantity}x</div>
-                      <div>{cart.product.productName}</div>
-                      <div>{Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(cart.product.price)}</div>
-                    </div>
-                  </div>);
-                 
-                  }):null }
+                  {carts ? carts.map((cart, index) => {
+                    return (
+                      <div className="order-products">
+                        <div className="order-col">
+                          <div>{cart.quantity}x</div>
+                          <div>{cart.product.productName}</div>
+                          <div>{Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(cart.product.price)}</div>
+                        </div>
+                      </div>);
+
+                  }) : null}
 
                   <div className="order-col">
                     <div>Shiping</div>
@@ -317,18 +261,18 @@ function Checkout(props){
                   </div>
                 </div>
 
-                  
-                
+
+
                 <div className="payment-method">
                   <div className="input-radio">
-                  <input type="radio" name="paymentId" id="payment-1" value={1} onChange={onChangeInput}/>
+                    <input type="radio" name="paymentId" id="payment-1" value={1} onChange={onChangeInput} />
                     <label htmlFor="payment-1">
                       <span />
                       Cash on Delivery (COD)
                     </label>
                   </div>
                   <div className="input-radio">
-                  <input type="radio" name="paymentId" id="payment-2" value={2} onChange={onChangeInput}/>
+                    <input type="radio" name="paymentId" id="payment-2" value={2} onChange={onChangeInput} />
                     <label htmlFor="payment-2">
                       <span />
                       PayPal
@@ -336,15 +280,16 @@ function Checkout(props){
                   </div>
                 </div>
                 <div className="input-checkbox">
-                  <input type="checkbox" id="terms" />
+                  <input type="checkbox" id="terms" checked={termsAccepted} onChange={ handleCheckBoxChange} />
                   <label htmlFor="terms">
                     <span />
                     I've read and accept the{" "}
                     <Link to="#">terms &amp; conditions</Link>
+                    {!termsAccepted && <p id="warning" style={{ color: 'red' }}>Bạn phải tích vào nút xác nhận các điều khoản</p>}
                   </label>
                 </div>
-                <Link to="/user/bills" className="primary-btn order-submit" state={{totalPrice: totalPrice}} onClick={handleSubmit}>
-                {/* <Link to="/user/bills" className="primary-btn order-submit" > */}
+                <Link to="/user/bills" className="primary-btn order-submit" state={{ totalPrice: totalPrice }} onClick={handleSubmit}>
+                  {/* <Link to="/user/bills" className="primary-btn order-submit" > */}
                   Place order
                 </Link>
               </div>

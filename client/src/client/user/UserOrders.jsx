@@ -36,7 +36,7 @@ const UserOrders = () => {
   }, [orders]);
   const getColor = (stateType) => {
     switch (stateType) {
-      case 'PENDING':
+      case 'CANCELLED':
         return { color: 'red', fontSize: '1.2em' };
       case 'CONFIRMED':
         return { color: 'blue', fontSize: '1.2em' };
@@ -105,7 +105,6 @@ const UserOrders = () => {
                                         Status
                                       </th>
                                       <th className="text-center py-3 px-4" style={{ width: "20px" }}>
-                                        Cancel
                                       </th>
 
                                     </tr>
@@ -168,7 +167,7 @@ const UserOrders = () => {
                                           <td className="text-center align-middle px-0 align-middle">
                                             {/* Delete */}
                                             <button className="shop-tooltip float-none text-center" onClick={(e) => { hanldeCancelOrder(e, order.orderId) }}>
-                                              Delete
+                                              Cancel
                                             </button>
                                           </td>
                                         </tr> 

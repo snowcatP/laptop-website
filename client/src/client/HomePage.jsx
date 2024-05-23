@@ -173,7 +173,7 @@ const HomePage = () => {
                                 {product.productName}
                               </h3>
                               <h4 className="product-price">
-                                {product.price} VND
+                              {Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(product?.price)}{" "}
                                 <del className="product-old-price">
                                   {product.price * 1.3} VND
                                 </del>
@@ -318,9 +318,9 @@ const HomePage = () => {
                                 {topproduct.productName}
                               </h3>
                               <h4 className="product-price">
-                                {topproduct.price} VND
+                              {Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(topproduct?.price)}{" "}
                                 <del className="product-old-price">
-                                  {topproduct.price * 1.3} VND
+                                {Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(topproduct?.price * 1.3)}
                                 </del>
                               </h4>
                               <div className="product-rating">

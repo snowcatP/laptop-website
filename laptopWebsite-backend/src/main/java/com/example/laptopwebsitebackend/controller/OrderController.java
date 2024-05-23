@@ -99,8 +99,12 @@ public class OrderController {
     public ResponseEntity<Order> cancelOrder(@PathVariable("orderId") Long orderId){
         Order order = orderService.findOrderById(orderId);
         if (order.getStateType()== OrderStateType.PENDING){
+            List<OrderDetails> orderDetailsList = order.getOrderDetails();
+            for(OrderDetails orderDetails: orderDetailsList){
+                Product product = orderDetails.getProduct();
+                product.setQuantity(product.getQuantity()+orderDetails.getQuantity());
+            }
             order.setState(new CancelledState());
-            System.out.println(order.getStateType());
             return new ResponseEntity<>(orderService.updateOrder(order),HttpStatus.OK);
         }
         return new ResponseEntity<>(orderService.updateOrder(order),HttpStatus.EXPECTATION_FAILED);
