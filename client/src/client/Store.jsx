@@ -382,8 +382,8 @@ const handleAddToCart = (id) =>{
                              {product?.productName}
                             </h3>
                             <h4 className="product-price">
-                              {product?.price}{" "}
-                              <del className="product-old-price">{product?.price * 1.3}</del>
+                            {Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(product?.price)}{" "}
+                              <del className="product-old-price">{Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(product?.price* 1.3)}</del>
                             </h4>
                           </div>
                           <div className="add-to-cart">
