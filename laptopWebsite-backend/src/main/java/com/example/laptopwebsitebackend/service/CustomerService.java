@@ -92,4 +92,8 @@ public class CustomerService {
         accountRepository.save(account);
         return "Change password success";
     }
+
+    public long countAllCustomers() {
+        return customerRepository.count();
+    }
 }

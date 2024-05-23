@@ -2,11 +2,21 @@ import React from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Sidebar from "./components/Sidebar";
-import { getListWarrantys } from "./service/WarrantyService";
+import { deleteWarrantyById, getListWarrantys } from "./service/WarrantyService";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
-const ListWarranty = ({ allwarrantyList, message }) => {
+const ListWarranty = () => {
   const [warrantys, setWarrantys] = useState([]);
+  const [message, setMessage] = useState(""); 
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 10;
+  const lastIndex = recordsPerPage * currentPage;
+  const firstIndex = lastIndex - recordsPerPage;
+  const npages = Math.ceil(warrantys.length / recordsPerPage);
+  const numbers = [...Array(npages + 1).keys()].slice(1);
+
 
   useEffect(() => {
     const getAllProducts = async () => {
@@ -14,7 +24,6 @@ const ListWarranty = ({ allwarrantyList, message }) => {
         const response = await getListWarrantys();
 
         setWarrantys(response.data);
-        console.log(warrantys);
       } catch (error) {
         console.log(error);
       }
@@ -36,6 +45,42 @@ const ListWarranty = ({ allwarrantyList, message }) => {
     return `${year}-${month}-${day}`;
   };
 
+  const nextPage = () => {
+    if (currentPage !== lastIndex) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const prevPage = () => {
+    if (currentPage !== firstIndex) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const firstPage = () => setCurrentPage(1);
+  const lastPage = () => setCurrentPage(numbers[numbers.length - 1]);
+  const changePage = (n) => setCurrentPage(n);
+
+
+  const token = localStorage.getItem("token");
+  const header = {
+    Authorization: "Bearer " + token,
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await deleteWarrantyById(id,header);
+      if (response.status === 200) {
+        setWarrantys(warrantys.filter((warranty) => warranty.warrantyId !== id));
+        setMessage("Deleted Successfully !")
+      }
+    } catch (error) {
+      console.log("Error deleting warranty:", error);
+      setMessage("Delete Failed !")
+    }
+  };
+
+
   return (
     <>
       <Header />
@@ -49,8 +94,7 @@ const ListWarranty = ({ allwarrantyList, message }) => {
           {/* End Page Title */}
           <section className="section">
             <div className="row">
-              <div className="col-lg-1"></div>
-              <div className="col-lg-18">
+              <div className="col-lg-12">
                 <div className="card">
                   <div className="card-body">
                     <h5 className="card-title">Warranty list</h5>
@@ -61,17 +105,17 @@ const ListWarranty = ({ allwarrantyList, message }) => {
                     )}
 
                     {/* Table with stripped rows */}
-                    <table id="myTable" className="table table-striped">
+                    <table id="dataTable" className="table table-hover">
                       <thead>
                         <tr>
-                          <th>ID</th>
-                          <th>Customer</th>
-                          <th>Laptop</th>
-                          <th>Code</th>
-                          <th>Start date</th>
-                          <th>End date</th>
-                          <th>Edit</th>
-                          <th>Delete</th>
+                          <th scope="col">ID</th>
+                          <th scope="col">Customer</th>
+                          <th scope="col">Laptop</th>
+                          <th scope="col">Code</th>
+                          <th scope="col">Start date</th>
+                          <th scope="col">End date</th>
+                          <th scope="col">Edit</th>
+                          <th scope="col">Delete</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -84,26 +128,87 @@ const ListWarranty = ({ allwarrantyList, message }) => {
                             <td>{formatDate(warranty.dateStart)}</td>
                             <td>{formatDate(warranty.dateExpired)}</td>
                             <td>
-                              <a
-                                href={`/edit-warranty/${warranty.warrantyId}`}
-                                className="btn btn-outline-dark btn-sm"
-                              >
-                                Edit
-                              </a>
+                              <Link
+                                  to={`/edit-warranty/${warranty.warrantyId}`}
+                                  className="btn btn-outline-primary btn-sm"
+                                >
+                                  Edit
+                                </Link>
                             </td>
                             <td>
-                              <a
-                                href={`/warranty/delete/${warranty.productId}`}
-                                className="btn btn-outline-dark btn-sm"
+                              {/* <Link
+                                  to={`/warranty/delete/${warranty.productId}`}
+                                  className="btn btn-outline-danger btn-sm"
+                              >
+                                  Delete
+                              </Link> */}
+
+                              <button
+                                onClick={() => handleDelete(warranty.warrantyId)}
+                                className="btn btn-outline-danger btn-sm"
                               >
                                 Delete
-                              </a>
+                              </button>
                             </td>
                           </tr>
                         ))}
                       </tbody>
                     </table>
                     {/* End Table with stripped rows */}
+                    <nav className="pagination justify-content-end">
+                      <li className="page-item">
+                        <Link
+                          href="/#"
+                          className="page-link"
+                          onClick={firstPage}
+                        >
+                          &laquo;
+                        </Link>
+                      </li>
+                      <li className="page-item">
+                        <Link
+                          href="/#"
+                          className="page-link"
+                          onClick={prevPage}
+                        >
+                          &lsaquo;
+                        </Link>
+                      </li>
+                      {numbers.map((n, i) => (
+                        <li
+                          className={`page-item ${
+                            n === currentPage ? "active" : ""
+                          }`}
+                          key={i}
+                        >
+                          <Link
+                            href="/#"
+                            className="page-link"
+                            onClick={() => changePage(n)}
+                          >
+                            {n}
+                          </Link>
+                        </li>
+                      ))}
+                      <li className="page-item">
+                        <Link
+                          href="/#"
+                          className="page-link"
+                          onClick={nextPage}
+                        >
+                          &rsaquo;
+                        </Link>
+                      </li>
+                      <li className="page-item">
+                        <Link
+                          href="/#"
+                          className="page-link"
+                          onClick={lastPage}
+                        >
+                          &raquo;
+                        </Link>
+                      </li>
+                    </nav>
                   </div>
                 </div>
                 <div className="col-lg-1"></div>

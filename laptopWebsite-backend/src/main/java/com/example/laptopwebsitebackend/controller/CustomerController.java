@@ -73,4 +73,10 @@ public class CustomerController {
         return ResponseEntity.ok(
                 customerService.changeCustomerPassword(request.getOldPassword(), request.getNewPassword()));
     }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> countAllCustomers() {
+        long customerCount = customerService.countAllCustomers();
+        return new ResponseEntity<>(customerCount, HttpStatus.OK);
+    }
 }

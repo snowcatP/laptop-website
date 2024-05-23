@@ -175,6 +175,10 @@ public class ProductService {
             return productRepository.findAll();
     }
 
+    public long countAllProducts() {
+        return productRepository.count();
+    }
+
 
 
 }

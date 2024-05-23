@@ -44,8 +44,11 @@ const AddProduct = () => {
     };
 
     try {
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      };
       // Gọi hàm addProduct từ ProductService để thêm sản phẩm
-      const response = await addProduct(credential);
+      const response = await addProduct(credential,headers);
 
       // Xử lý kết quả từ API
       if (response.status === 200) {
@@ -120,7 +123,14 @@ const AddProduct = () => {
                   <div className="row mb-3">
                     <label className="col-sm-2 col-form-label">Brand</label>
                     <div className="col-sm-10">
-                      <input type="text" className="form-control" name="brand" value={form.brand} onChange={onChangeInput}/>
+                      <select className="form-select" aria-label="Default select example" name="brand" value={form.brand} onChange={onChangeInput}>
+                            <option value="ASUS" selected>ASUS</option>
+                            <option value="DELL">DELL</option>
+                            <option value="MSI" selected>MSI</option>
+                            <option value="ACER">ACER</option>
+                            <option value="HP" selected>HP</option>
+                            <option value="LENOVO">LENOVO</option>
+                        </select>
                     </div>
                   </div>
                   <div className="row mb-3">

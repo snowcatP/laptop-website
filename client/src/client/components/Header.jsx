@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {useAuth} from '../context/AuthContext'
+import { useAuth } from "../context/AuthContext";
 import { customerLogout } from "../service/ClientService";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { getCartById } from "../service/Cart";
 
 const Header = ({ onSearch }) => {
-  const {user, setUser, isLogged, setIsLogged} = useAuth()
-  const navigate = useNavigate()
+  const { user, setUser, isLogged, setIsLogged } = useAuth();
+  const navigate = useNavigate();
 
   const [carts, setCarts] = useState([]);
   const [cartId, setCartId] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
-
-
 
   const token = localStorage.getItem("token");
   const header = {
@@ -35,32 +33,31 @@ const Header = ({ onSearch }) => {
   }, [cartId, carts]);
 
   useEffect(() => {
-    console.log(carts)
+    console.log(carts);
   }, []);
   const handleLogout = () => {
-    const getToken = localStorage.getItem("token")
+    const getToken = localStorage.getItem("token");
 
-    const token = {"token" : getToken}
+    const token = { token: getToken };
 
     const logout = async () => {
-      const response = await customerLogout(token)
+      const response = await customerLogout(token);
 
-      if (response.status === 200){
-        toast.success("Logout success!")
-        
+      if (response.status === 200) {
+        toast.success("Logout success!");
+
         setTimeout(() => {
-          setUser(null)
-          setIsLogged(false)
-          navigate("/")
-        }, 2000)
+          setUser(null);
+          setIsLogged(false);
+          navigate("/");
+        }, 2000);
       }
-    }
+    };
 
-    logout()
-  }
+    logout();
+  };
 
-
-  const [keyword, setKeyword] = useState('');
+  const [keyword, setKeyword] = useState("");
 
   const handleInputChange = (event) => {
     setKeyword(event.target.value);
@@ -70,7 +67,7 @@ const Header = ({ onSearch }) => {
     event.preventDefault(); // Ngăn chặn hành vi mặc định của form
     onSearch(keyword);
   };
-  
+
   const handleTotalPrice = () => {
     let totalPrice = 0;
     carts.forEach((cart) => {
@@ -82,47 +79,46 @@ const Header = ({ onSearch }) => {
   useEffect(() => {
     handleTotalPrice();
   }, [carts]);
-  
 
   return (
-     <div>
-    {/* HEADER */}
-      
+    <div>
+      {/* HEADER */}
+
       <header>
-        
         {/* TOP HEADER */}
 
-        {isLogged ? 
-        <div id="top-header">
-          <div className="container">
-            <ul className="header-links pull-left">
-              <li>
-                <Link to="#">
-                  <i className="fa fa-phone" /> {user.phone}
-                </Link>
-              </li>
-              <li>
-                <Link to="#">
-                  <i className="fa fa-envelope-o" /> {user.email}
-                </Link>
-              </li>
-              <li>
-                <Link to="#">
-                  <i className="fa fa-map-marker" /> {user.address}
-                </Link>
-              </li>
-            </ul>
-            <ul className="header-links pull-right">
-              <li>
-                <Link to="/user/profile">
-                  <i className="fa fa-user-o" /> My Account
-                </Link>
-              </li>
-            </ul>
+        {isLogged ? (
+          <div id="top-header">
+            <div className="container">
+              <ul className="header-links pull-left">
+                <li>
+                  <Link to="#">
+                    <i className="fa fa-phone" /> {user.phone}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="#">
+                    <i className="fa fa-envelope-o" /> {user.email}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="#">
+                    <i className="fa fa-map-marker" /> {user.address}
+                  </Link>
+                </li>
+              </ul>
+              <ul className="header-links pull-right">
+                <li>
+                  <Link to="/user/profile">
+                    <i className="fa fa-user-o" /> My Account
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
-        </div>
-        : <></>
-        }
+        ) : (
+          <></>
+        )}
         {/* /TOP HEADER */}
         {/* MAIN HEADER */}
         <div id="header">
@@ -153,7 +149,13 @@ const Header = ({ onSearch }) => {
                       value={keyword}
                       onChange={handleInputChange}
                     />
-                    <button type="button" className="search-btn" onClick={handleSearchClick}>Search</button>
+                    <button
+                      type="button"
+                      className="search-btn"
+                      onClick={handleSearchClick}
+                    >
+                      Search
+                    </button>
                   </form>
                 </div>
               </div>
@@ -163,104 +165,139 @@ const Header = ({ onSearch }) => {
                 <div className="header-ctn">
                   {/* Cart */}
 
-                  {isLogged ?
-                  <>
-                  <div className="dropdown">
-                    <Link
-                      to='#'
-                      className="dropdown-toggle"
-                      data-toggle="dropdown"
-                      aria-expanded="true"
-                    >
-                      <i className="fa fa-shopping-cart" />
-                      <span>Your Cart</span>
-                      <div className="qty">{carts.length}</div>
-                    </Link>
-                    {carts.map((cart, index) => {
-                      return (
-                        <div className="cart-dropdown">
-                          <div className="cart-list">
-                            <div className="product-widget">
-                              <tr key={index}>
-                              <div className="product-img">
-                                <img src={cart.product.image1} alt="" />
-                              </div>
-                              <div className="product-body">
-                                <h3 className="product-name">
-                                  <Link to="#">{cart.product.name}</Link>
-                                </h3>
-                                <h4 className="product-price">
-                                  <span className="qty">{cart.quantity}x</span>
-                                  {Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(cart.product.price)}
-                                </h4>
-                              </div>
-                              <button className="delete">
-                                <i className="fa fa-close" />
-                              </button>
-                              <div className="cart-summary">
-                                <small>{carts.length} Item(s) selected</small>
-                                <h5>SUBTOTAL: {Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(totalPrice)}</h5>
-                              </div>
-                              <div className="cart-btns">
-                              <Link to="/user/cart">View Cart</Link>
+                  {isLogged ? (
+                    <>
+                      <div className="dropdown">
+                        <Link
+                          to="#"
+                          className="dropdown-toggle"
+                          data-toggle="dropdown"
+                          aria-expanded="true"
+                        >
+                          <i className="fa fa-shopping-cart" />
+                          <span>Your Cart</span>
+                          <div className="qty">{carts.length}</div>
+                        </Link>
+                        {carts.map((cart, index) => {
+                          return (
+                            <div className="cart-dropdown">
+                              <div className="cart-list">
+                                <div className="product-widget">
+                                  <tr key={index}>
+                                    <div className="product-img">
+                                      <img src={cart.product.image1} alt="" />
+                                    </div>
+                                    <div className="product-body">
+                                      <h3 className="product-name">
+                                        <Link to="#">{cart.product.name}</Link>
+                                      </h3>
+                                      <h4 className="product-price">
+                                        <span className="qty">
+                                          {cart.quantity}x
+                                        </span>
+                                        {Intl.NumberFormat("vi-VN", {
+                                          style: "currency",
+                                          currency: "VND",
+                                        }).format(cart.product.price)}
+                                      </h4>
+                                    </div>
+                                    <button className="delete">
+                                      <i className="fa fa-close" />
+                                    </button>
+                                    <div className="cart-summary">
+                                      <small>
+                                        {carts.length} Item(s) selected
+                                      </small>
+                                      <h5>
+                                        SUBTOTAL:{" "}
+                                        {Intl.NumberFormat("vi-VN", {
+                                          style: "currency",
+                                          currency: "VND",
+                                        }).format(totalPrice)}
+                                      </h5>
+                                    </div>
+                                    <div className="cart-btns">
+                                      <Link to="/user/cart">View Cart</Link>
 
-                              <Link to="/checkout" state={{ carts: carts, totalPrice: totalPrice ,user: user }}>
-                                Checkout <i className="fa fa-arrow-circle-right" />
+                                      <Link
+                                        to="/checkout"
+                                        state={{
+                                          carts: carts,
+                                          totalPrice: totalPrice,
+                                          user: user,
+                                        }}
+                                      >
+                                        Checkout{" "}
+                                        <i className="fa fa-arrow-circle-right" />
+                                      </Link>
+                                    </div>
+                                  </tr>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      <div className="dropdown">
+                        <Link
+                          to="#"
+                          className="dropdown-toggle"
+                          data-toggle="dropdown"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="true"
+                          id="dropdownMenuButton1"
+                        >
+                          <i className="fa fa-user" />
+                          <span>Account</span>
+                        </Link>
+                        <div className="dropdown">
+                          <ul
+                            className="dropdown-menu"
+                            aria-labelledby="dropdownMenuButton1"
+                          >
+                            <li>
+                              <Link
+                                className="dropdown-item"
+                                to="/user/profile"
+                              >
+                                My profile
                               </Link>
-                            </div>
-                            </tr>
-                            </div>
-                          </div>
+                            </li>
+                            <li>
+                              <Link className="dropdown-item" to="/user/cart">
+                                Cart
+                              </Link>
+                            </li>
+                            <li>
+                              <Link
+                                className="dropdown-item"
+                                onClick={handleLogout}
+                              >
+                                Logout
+                              </Link>
+                            </li>
+                          </ul>
                         </div>
-
-                      )
-                    })}
-                    
-
-                  </div>
-
-
-                  <div className="dropdown" >
-                    <Link
-                      to='#'
-                      className="dropdown-toggle"
-                      data-toggle="dropdown"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="true"
-                      id="dropdownMenuButton1"
-                    >
-                      <i className="fa fa-user" />
-                      <span>Account</span>
-
-                    </Link>
-                    <div className="dropdown">
-                      <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><Link className="dropdown-item" to="/user/profile">My profile</Link></li>
-                        <li><Link className="dropdown-item" to="/user/cart">Cart</Link></li>
-                        <li><Link className="dropdown-item" onClick={handleLogout} >Logout</Link></li>
-
-                      </ul>
-                    </div>
-                  </div>
-                </>
-                :
-                <>
-                  <div>
-                    <Link to="/auth/register">
-                      <i className="fa fa-user" />
-                      <span>Register</span>
-                    </Link>
-                  </div>
-                  <div>
-                    <Link to="/auth/login">
-                      <i className="fa fa-user" />
-                      <span>Login</span>
-                    </Link>
-                  </div>
-                </>
-                  }
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div>
+                        <Link to="/auth/register">
+                          <i className="fa fa-user" />
+                          <span>Register</span>
+                        </Link>
+                      </div>
+                      <div>
+                        <Link to="/auth/login">
+                          <i className="fa fa-user" />
+                          <span>Login</span>
+                        </Link>
+                      </div>
+                    </>
+                  )}
                   {/* /Account */}
-                  
                 </div>
               </div>
               {/* /ACCOUNT */}
@@ -284,7 +321,6 @@ const Header = ({ onSearch }) => {
         draggable
         pauseOnHover
         theme="light"
-       
       />
     </div>
   );

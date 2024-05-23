@@ -5,24 +5,25 @@ import Sidebar from "../components/Sidebar";
 import Letter from '../components/Letter';
 import Footer from '../components/Footer';
 import {getListWarrantiesByIdUser} from '../service/WarrantyService';
+import { customerProfile } from '../service/ClientService';
+import { useAuth } from '../context/AuthContext';
+
 
 const UserWarranties = () => {
+  const {user} = useAuth();
   const [warranties, setWarranties] = useState([]);
 
+  const token = localStorage.getItem("token");
+  const header = {
+     Authorization: `Bearer ${token}`
+  };
   useEffect(() => {
     const getAllWarranties = async () => {
       try {
-        // Lấy thông tin người dùng từ localStorage
-        const savedUser = localStorage.getItem("user");
-        const user = savedUser ? JSON.parse(savedUser) : null;
-        console.log(user)
-
-        if (user && user.customerId) {
           // Gọi API với customerId
-          const response = await getListWarrantiesByIdUser(user.customerId);
+          const response = await getListWarrantiesByIdUser(user.customerId,header);
           setWarranties(response.data);
-          console.log(response.data);
-        }
+        
       } catch (error) {
         console.log(error);
       }
