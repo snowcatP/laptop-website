@@ -13,13 +13,13 @@ import java.util.List;
 public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
+
     @Autowired
     private OrderDetailsRepository orderDetailsRepository;
-    public List<Order> getAllOrders() {
 
+    public List<Order> getAllOrders() {
         return orderRepository.findAll();
     }
-
 
     public Order getOrder(Long orderId) {
         return orderRepository.findById(orderId).get();

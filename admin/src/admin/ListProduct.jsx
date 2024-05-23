@@ -3,11 +3,10 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Sidebar from "./components/Sidebar";
 import { useEffect, useState } from "react";
-import { getListProducts } from "./service/ProductService";
+import { getListProducts, deleteProductById } from "./service/ProductService";
 import { Link } from "react-router-dom";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
-import { deleteProductById } from "./service/DeleteProduct";
 
 const ListProduct = () => {
   const [products, setProducts] = useState([]);
@@ -98,10 +97,8 @@ const ListProduct = () => {
               <div className="card">
                 <div className="card-body">
                   <h5 className="card-title">List of products</h5>
-                  <div className="d-flex flex-row-reverse mb-2">
-                    <button className="btn btn-primary">
-                      <i class="bi bi-search"></i>
-                    </button>
+                  <div className="d-flex justify-content-between">
+                  <Link className="btn btn-outline-primary" to="/add-product">Add new</Link>
                     <input
                       type="text"
                       className="form-control w-25"
@@ -114,7 +111,7 @@ const ListProduct = () => {
                   <table id="myTable" className="table table-hover">
                     <thead>
                       <tr>
-                        <th scope="col">ID</th>
+                        <th scope="col">No</th>
                         <th scope="col">Name</th>
                         <th scope="col">Image</th>
                         <th scope="col">Price</th>

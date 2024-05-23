@@ -6,6 +6,7 @@ import com.example.laptopwebsitebackend.entity.Cart;
 import com.example.laptopwebsitebackend.entity.Customer;
 import com.example.laptopwebsitebackend.service.AccountService;
 import com.example.laptopwebsitebackend.service.CustomerService;
+import com.example.laptopwebsitebackend.util.PasswordEncoderSingleton;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,8 +26,7 @@ public class RegistrationController {
     @Autowired
     private CustomerService customerService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private static final PasswordEncoder passwordEncoder = PasswordEncoderSingleton.getEncoder();
 
     @PostMapping("/register")
     public ResponseEntity<?> customerRegister(@RequestBody @Valid RegistrationRequest registrationRequest) {

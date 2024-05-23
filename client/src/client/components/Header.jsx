@@ -64,7 +64,7 @@ const Header = ({ onSearch }) => {
   };
 
   const handleSearchClick = (event) => {
-    event.preventDefault(); // Ngăn chặn hành vi mặc định của form
+    event.preventDefault();
     onSearch(keyword);
   };
 
@@ -161,7 +161,7 @@ const Header = ({ onSearch }) => {
               </div>
               {/* /SEARCH BAR */}
               {/* ACCOUNT */}
-              <div className="col-md-3 clearfix">
+              <div className="col-md clearfix">
                 <div className="header-ctn">
                   {/* Cart */}
 
@@ -178,11 +178,12 @@ const Header = ({ onSearch }) => {
                           <span>Your Cart</span>
                           <div className="qty">{carts.length}</div>
                         </Link>
-                        {carts.map((cart, index) => {
-                          return (
-                            <div className="cart-dropdown">
-                              <div className="cart-list">
-                                <div className="product-widget">
+                        <div className="cart-dropdown">
+                          <div className="cart-list">
+                            <div className="product-widget">
+                          { carts &&
+                          carts.map((cart, index) => {
+                            return (
                                   <tr key={index}>
                                     <div className="product-img">
                                       <img src={cart.product.image1} alt="" />
@@ -216,7 +217,7 @@ const Header = ({ onSearch }) => {
                                         }).format(totalPrice)}
                                       </h5>
                                     </div>
-                                    <div className="cart-btns">
+                                    <div className="cart-btns my-1">
                                       <Link to="/user/cart">View Cart</Link>
 
                                       <Link
@@ -227,16 +228,15 @@ const Header = ({ onSearch }) => {
                                           user: user,
                                         }}
                                       >
-                                        Checkout{" "}
-                                        <i className="fa fa-arrow-circle-right" />
+                                        Checkout
                                       </Link>
                                     </div>
                                   </tr>
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        })}
+                            );
+                          })}
+                          </div>
+                          </div>
+                        </div>
                       </div>
 
                       <div className="dropdown">
