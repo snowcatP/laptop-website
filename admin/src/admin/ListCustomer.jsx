@@ -15,10 +15,10 @@ const ListCustomer = ({ allCustomerList, message }) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       };
       try {
+
         const response = await getListCustomers(headers);
 
         setUsers(response.data);
-        console.log(users);
       } catch (error) {
         console.log(error);
       }
@@ -91,6 +91,8 @@ const ListCustomer = ({ allCustomerList, message }) => {
                         </tr>
                       </thead>
                       <tbody>
+
+=======
                         {users
                         .filter((user) =>
                           search.toLocaleLowerCase() === ""
@@ -121,6 +123,7 @@ const ListCustomer = ({ allCustomerList, message }) => {
                                 Xoá
                               </a>
                             </td> */}
+
                           </tr>
                         ))}
                       </tbody>

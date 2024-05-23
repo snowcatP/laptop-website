@@ -1,13 +1,10 @@
 package com.example.laptopwebsitebackend.entity;
 
-import com.example.laptopwebsitebackend.state.OrderState;
-import com.example.laptopwebsitebackend.state.OrderStateType;
-import com.example.laptopwebsitebackend.state.PendingState;
+import com.example.laptopwebsitebackend.state.*;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
@@ -45,7 +42,20 @@ public class Order {
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<OrderDetails> orderDetails;
-
+    @PostLoad
+    private void postLoad() {
+        this.state = getStateFromType(this.stateType);
+    }
+    private OrderState getStateFromType(OrderStateType stateType) {
+        switch (stateType) {
+            case PENDING: return new PendingState();
+            case CONFIRMED: return new ConfirmedState();
+            case SHIPPED: return new ShippedState();
+            case DELIVERED: return new DeliveredState();
+            case CANCELLED: return new CancelledState();
+            default: throw new IllegalArgumentException("Unknown state type");
+        }
+    }
     public Long getOrderId() {
         return orderId;
     }
@@ -122,5 +132,13 @@ public class Order {
     public Order() {
         this.state = new PendingState();
         this.stateType = OrderStateType.PENDING;
+    }
+    public void nextState() {
+        state.next(this);
+
+    }
+
+    public void previousState() {
+        state.prev(this);
     }
 }

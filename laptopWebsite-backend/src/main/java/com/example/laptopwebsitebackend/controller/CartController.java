@@ -57,7 +57,6 @@ public class CartController {
             cartDetails.setCart(cart);
 
             //Calculate the total price of this item
-
             cartDetails.setPrice(calculateTotalPrice(product, quantity));
 
             lstCartDetails.add(cartDetails);

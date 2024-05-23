@@ -23,18 +23,17 @@ const Header = ({ onSearch }) => {
     const getCart = async () => {
       try {
         setCartId(user.customerId);
-        const response = await getCartById(cartId, header);
+        const response = await getCartById(user.customerId, header);
         setCarts(response.data);
       } catch (error) {
         console.log(error);
       }
     };
     getCart();
-  }, [cartId, carts]);
+  }, [carts]);
 
-  useEffect(() => {
-    console.log(carts);
-  }, []);
+
+
   const handleLogout = () => {
     const getToken = localStorage.getItem("token");
 
@@ -165,74 +164,46 @@ const Header = ({ onSearch }) => {
                 <div className="header-ctn">
                   {/* Cart */}
 
-                  {isLogged ? (
-                    <>
-                      <div className="dropdown">
-                        <Link
-                          to="#"
-                          className="dropdown-toggle"
-                          data-toggle="dropdown"
-                          aria-expanded="true"
-                        >
-                          <i className="fa fa-shopping-cart" />
-                          <span>Your Cart</span>
-                          <div className="qty">{carts.length}</div>
-                        </Link>
-                        {carts.map((cart, index) => {
-                          return (
-                            <div className="cart-dropdown">
-                              <div className="cart-list">
-                                <div className="product-widget">
-                                  <tr key={index}>
-                                    <div className="product-img">
-                                      <img src={cart.product.image1} alt="" />
-                                    </div>
-                                    <div className="product-body">
-                                      <h3 className="product-name">
-                                        <Link to="#">{cart.product.name}</Link>
-                                      </h3>
-                                      <h4 className="product-price">
-                                        <span className="qty">
-                                          {cart.quantity}x
-                                        </span>
-                                        {Intl.NumberFormat("vi-VN", {
-                                          style: "currency",
-                                          currency: "VND",
-                                        }).format(cart.product.price)}
-                                      </h4>
-                                    </div>
-                                    <button className="delete">
-                                      <i className="fa fa-close" />
-                                    </button>
-                                    <div className="cart-summary">
-                                      <small>
-                                        {carts.length} Item(s) selected
-                                      </small>
-                                      <h5>
-                                        SUBTOTAL:{" "}
-                                        {Intl.NumberFormat("vi-VN", {
-                                          style: "currency",
-                                          currency: "VND",
-                                        }).format(totalPrice)}
-                                      </h5>
-                                    </div>
-                                    <div className="cart-btns">
-                                      <Link to="/user/cart">View Cart</Link>
 
-                                      <Link
-                                        to="/checkout"
-                                        state={{
-                                          carts: carts,
-                                          totalPrice: totalPrice,
-                                          user: user,
-                                        }}
-                                      >
-                                        Checkout{" "}
-                                        <i className="fa fa-arrow-circle-right" />
-                                      </Link>
-                                    </div>
-                                  </tr>
-                                </div>
+                  {isLogged ?
+                  <>
+                  <div className="dropdown">
+                    <Link
+                      to='#'
+                      className="dropdown-toggle"
+                      data-toggle="dropdown"
+                      aria-expanded="true"
+                    >
+                      <i className="fa fa-shopping-cart" />
+                      <span>Your Cart</span>
+                      <div className="qty">{carts.length}</div>
+                    </Link>
+                    {carts &&
+                    carts.map((cart, index) => {
+                      return (
+                        <div className="cart-dropdown">
+                          <div className="cart-list">
+                            <div className="product-widget">
+                              <tr key={index}>
+                              <div className="product-img">
+                                <img src={cart.product.image1} alt="" />
+                              </div>
+                              <div className="product-body">
+                                <h3 className="product-name">
+                                  <Link to="#">{cart.product.name}</Link>
+                                </h3>
+                                <h4 className="product-price">
+                                  <span className="qty">{cart.quantity}x</span>
+                                  {Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(cart.product.price)}
+                                </h4>
+                              </div>
+                              <button className="delete">
+                                <i className="fa fa-close" />
+                              </button>
+                              <div className="cart-summary">
+                                <small>{carts.length} Item(s) selected</small>
+                                <h5>SUBTOTAL: {Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(totalPrice)}</h5>
+
                               </div>
                             </div>
                           );

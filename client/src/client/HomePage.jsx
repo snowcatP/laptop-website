@@ -103,13 +103,10 @@ const HomePage = () => {
 
         if (response.status === 200) {
           toast.success("Add to cart successfully")
-
-          setTimeout(() => {  
-            navigate("/user/cart")
-          }, 2000)
         }
+
       } catch(error) {
-        toast.error("Add to cart failed")
+        console.log(error.response.data.message);
       }
     }
     addProductToCart();
