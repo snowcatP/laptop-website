@@ -151,7 +151,7 @@ const Sidebar = () => {
               data-bs-parent="#sidebar-nav"
             >
               <li>
-                <Link to="/list-order">
+                <Link to="icons-bootstrap.html">
                   <i className="bi bi-circle" />
                   <span>List Order</span>
                 </Link>

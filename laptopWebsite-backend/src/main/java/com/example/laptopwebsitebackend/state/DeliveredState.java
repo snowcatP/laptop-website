@@ -6,7 +6,6 @@ public class DeliveredState implements OrderState{
     @Override
     public void next(Order order) {
 
-
     }
 
     @Override

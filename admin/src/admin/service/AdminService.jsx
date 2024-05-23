@@ -2,8 +2,6 @@ import axios from 'axios'
 
 const URL = process.env.REACT_APP_API_ENDPOINT
 
-// const URL = "http://localhost:8080"
-
 export const adminLogin = (credential) => axios.post(URL + "/auth/admin-login", credential)
 
 export const checkValidToken = (token) => axios.post(URL + "/auth/introspect", token)

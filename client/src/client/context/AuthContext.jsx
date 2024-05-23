@@ -22,7 +22,6 @@ export const AuthContextProvider = (props) => {
       const current = new Date();
 
       if (decoded_token.exp * 1000 > current.getTime()) {
-        try {
         const checkIsValid = async () => {
           const response = await checkValidToken({
             token: token,
@@ -42,9 +41,6 @@ export const AuthContextProvider = (props) => {
           }
         };
         checkIsValid();
-        } catch (error) {
-          console.log(error);
-        }
       }
     }
   }, [user, isLogged]);
