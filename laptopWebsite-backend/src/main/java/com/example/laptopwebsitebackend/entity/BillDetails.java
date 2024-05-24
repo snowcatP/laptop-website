@@ -1,9 +1,7 @@
 package com.example.laptopwebsitebackend.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,4 +19,12 @@ public class BillDetails {
     private int quantity;
 
     private Double totalPrice;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "bill_id")
+    @JsonBackReference
+    private Bill bill;
 }

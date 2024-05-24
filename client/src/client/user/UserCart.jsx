@@ -4,17 +4,14 @@ import Navigation from "../components/Navigation";
 import Sidebar from "../components/Sidebar";
 import Letter from "../components/Letter";
 import Footer from "../components/Footer";
-import { jwtDecode } from "jwt-decode";
-import { checkValidToken, customerProfile } from "../service/ClientService";
 import { deleteItemToCart, editItemInCart, getCartById } from "../service/Cart";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const UserCart = () => {
-  const { user, setUser, isLogged, setIsLogged } = useAuth();
+  const { user } = useAuth();
   const [carts, setCarts] = useState([]);
-  const [cartId, setCartId] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
 
   const token = localStorage.getItem("token");
@@ -55,9 +52,9 @@ const UserCart = () => {
       if (newQuantity > 0 && newQuantity <= 10) {
         updatedCarts[cartIndex].quantity = newQuantity;
         setCarts(updatedCarts);
-        {handleEditSubmit(e,cartDetailsId,newQuantity,header)} 
+        handleEditSubmit(e,cartDetailsId,newQuantity,header)
       }else if(newQuantity <= 0){
-        {handleDeleteSubmit(e,cartDetailsId)}
+        handleDeleteSubmit(e,cartDetailsId)
       }else{
         toast.error("You can only buy maximum 10 products at a time!");
       }

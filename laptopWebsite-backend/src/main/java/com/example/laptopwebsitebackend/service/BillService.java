@@ -15,4 +15,12 @@ public class BillService {
     public List<Bill> getAllBills() {
        return billRepository.findAll();
     }
+
+    public Bill addBill(Bill bill) {
+        return billRepository.save(bill);
+    }
+
+    public List<Bill> getBillsDetailsByCustomerId(Long customerId) {
+        return billRepository.findByCustomerCustomerId(customerId);
+    }
 }

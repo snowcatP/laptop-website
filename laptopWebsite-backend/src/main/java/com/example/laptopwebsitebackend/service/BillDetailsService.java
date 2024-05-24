@@ -17,4 +17,11 @@ public class BillDetailsService {
     public BillDetails getBillsDetails(Long id) {
         return billDetailsRepository.findById(id).get();
     }
+
+
+    public BillDetails addBillDetails(BillDetails billDetails) {
+        return billDetailsRepository.save(billDetails);
+    }
+
+
 }
