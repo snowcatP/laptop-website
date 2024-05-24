@@ -2,7 +2,7 @@ import axios from "axios";
 
 const URL = process.env.REACT_APP_API_ENDPOINT
 
-export const getListWarrantys = () => axios.get(URL + "/warranty")
+export const getListWarrantys = (headers) => axios.get(URL + "/warranty",{ headers: headers })
 
 export const addWarranty = (credential,headers) => axios.post(URL + `/warranty/add`,credential,{ headers: headers })
 

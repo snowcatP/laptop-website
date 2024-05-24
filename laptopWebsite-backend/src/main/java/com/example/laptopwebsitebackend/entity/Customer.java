@@ -1,12 +1,15 @@
 package com.example.laptopwebsitebackend.entity;
 
+import com.example.laptopwebsitebackend.service.EmailSenderService;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -55,4 +58,5 @@ public class Customer{
     )
     @JsonBackReference
     private List<Warranty> warranties;
+
 }

@@ -17,11 +17,10 @@ const ListWarranty = () => {
   const npages = Math.ceil(warrantys.length / recordsPerPage);
   const numbers = [...Array(npages + 1).keys()].slice(1);
 
-
   useEffect(() => {
     const getAllProducts = async () => {
       try {
-        const response = await getListWarrantys();
+        const response = await getListWarrantys({Authorization: "Bearer " + localStorage.getItem("token")});
 
         setWarrantys(response.data);
       } catch (error) {
@@ -62,14 +61,11 @@ const ListWarranty = () => {
   const changePage = (n) => setCurrentPage(n);
 
 
-  const token = localStorage.getItem("token");
-  const header = {
-    Authorization: "Bearer " + token,
-  };
+  
 
   const handleDelete = async (id) => {
     try {
-      const response = await deleteWarrantyById(id,header);
+      const response = await deleteWarrantyById(id,{Authorization: "Bearer " + localStorage.getItem("token")});
       if (response.status === 200) {
         setWarrantys(warrantys.filter((warranty) => warranty.warrantyId !== id));
         setMessage("Deleted Successfully !")

@@ -43,31 +43,24 @@ const AddProduct = () => {
 
       const imageUrls = await Promise.all(uploadPromises);
 
-      setForm((prevForm) => ({
-        ...prevForm,
+      const updatedForm = {
+        ...form,
         image1: imageUrls[0],
         image2: imageUrls[1],
         image3: imageUrls[2],
         image4: imageUrls[3],
-      }));
+      };
       
 
-      console.log(form)
-      setTimeout(async () => {
-        console.log(form) 
+      setForm(updatedForm);
 
-        const response = await addProduct(form);
-        if (response.status === 200) {
-          // console.log(response.data)
-
-          toast.success("Add new product success")
-          
-          setTimeout(() => {
-            navigate("/list-product")
-          }, 2000)
-        }
-      }, 2000)
-
+      const response = await addProduct(updatedForm);
+      if (response.status === 200) {
+        toast.success("Add new product success");
+        setTimeout(() => {
+          navigate("/list-product");
+        }, 2000);
+      }
     } catch (error) {
       console.error("Error adding product:", error);
       toast.error("Fail to add new product");
