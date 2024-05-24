@@ -53,12 +53,11 @@ const AddProduct = () => {
 
         uploadPromises.push(uploadPromise);
       }
-
-      // Wait for all image uploads to complete
       await Promise.all(uploadPromises);
-
+      
       
       setTimeout(async () => {
+        console.log(form)
         const response = await addProduct(form);
   
         if (response.status === 200) {
