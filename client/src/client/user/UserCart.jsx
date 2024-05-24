@@ -9,71 +9,37 @@ import { checkValidToken, customerProfile } from "../service/ClientService";
 import { deleteItemToCart, editItemInCart, getCartById } from "../service/Cart";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const UserCart = () => {
-  const [user, setUser] = useState(null);
+  const { user, setUser, isLogged, setIsLogged } = useAuth();
   const [carts, setCarts] = useState([]);
-  const [isLogged, setIsLogged] = useState(false);
   const [cartId, setCartId] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
 
+  const token = localStorage.getItem("token");
+  const header = {
+    Authorization: "Bearer " + token,
+  };
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const decoded_token = jwtDecode(token);
-    const current = new Date();
-
-    if (decoded_token.exp * 1000 > current.getTime()) {
-      const checkIsValid = async () => {
-        const response = await checkValidToken({
-          token: token,
-        });
-
-        if (response.data["valid"] === true) {
-          const userProfile = async () => {
-            const headers = { Authorization: `Bearer ${token}` };
-            const response = await customerProfile(headers);
-            setCartId(response.data.customerId);
-            setUser(response.data);
-            setIsLogged(true);
-          };
-          userProfile();
-        }
-      };
-      checkIsValid();
-    }
-  }, [user, isLogged]);
-
-  
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const header = {
-      Authorization: "Bearer " + token,
-    };
+    
     const getCart = async () => {
       try {
-        const response = await getCartById(cartId, header);
+        const response = await getCartById(user.customerId, header);
         setCarts(response.data);
       } catch (error) {
         console.log(error);
       }
     };
     getCart();
-  }, [cartId,carts]);
+  }, [carts]);
 
-  function handleDeleteSubmit(e,cartDetailsId) {
+  function handleDeleteSubmit(e,cartDetailsId){
     e.preventDefault();
     const deleteToCart = async () => {
-      const token = localStorage.getItem("token");
-      const header = {
-        Authorization: "Bearer " + token,
-      };
       try {
         const deleteResponse = await deleteItemToCart(cartDetailsId, header);
         toast.success(deleteResponse.data);
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
       } catch (error) {
         console.log(error);
       }
@@ -82,11 +48,6 @@ const UserCart = () => {
   }
   
   const handleQuantityChange = (e,cartDetailsId, change) => {
-    e.preventDefault();
-    const token = localStorage.getItem("token");
-    const header = {
-      Authorization: "Bearer " + token,
-    };
     const cartIndex = carts.findIndex((cart) => cart.cartDetailsId === cartDetailsId);
     if (cartIndex !== -1) {
       const updatedCarts = [...carts];
@@ -94,9 +55,9 @@ const UserCart = () => {
       if (newQuantity > 0 && newQuantity <= 10) {
         updatedCarts[cartIndex].quantity = newQuantity;
         setCarts(updatedCarts);
-        handleEditSubmit(e,cartDetailsId, newQuantity, header);
+        {handleEditSubmit(e,cartDetailsId,newQuantity,header)} 
       }else if(newQuantity <= 0){
-        handleDeleteSubmit(e,cartDetailsId, header);
+        {handleDeleteSubmit(e,cartDetailsId)}
       }else{
         toast.error("You can only buy maximum 10 products at a time!");
       }
@@ -235,7 +196,7 @@ const UserCart = () => {
                                             </td>
                                             <td className="text-center align-middle px-0 align-middle">
                                               {/* Delete */}
-                                              <button className="shop-tooltip float-none text-center" type="button" onClick={() => handleDeleteSubmit(cart.cartDetailsId)}>
+                                              <button className="shop-tooltip float-none text-center" type="button" onClick={(e) => handleDeleteSubmit(e,cart.cartDetailsId)}>
                                                 Delete
                                               </button>
                                             </td>
