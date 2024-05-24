@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Sidebar from "./components/Sidebar";
-import { addWarranty, getOrderByIdCustomer } from "./service/WarrantyService";
+import { addWarranty, getOrderByIdCustomer, getProductDeliveredByIdCustomer } from "./service/WarrantyService";
 import { getListCustomers } from "./service/CustomerService";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button"
@@ -84,10 +84,9 @@ const AddWarranty = () => {
 
   const fetchOrdersByCustomer = async (customerId) => {
     try {
-      const response = await getOrderByIdCustomer(customerId,header);
+      const response = await getProductDeliveredByIdCustomer(customerId,header);
       setProductOrders(response.data);
       setShowModal(true)
-      console.log(orders)
     } catch (error) {
       console.error("Error fetching orders:", error);
     }

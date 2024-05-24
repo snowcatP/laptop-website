@@ -16,3 +16,5 @@ export const editWarrantyById = (id, request, headers) => axios.put(URL + `/warr
 
 export const getWarrantyById = (id, headers) => axios.get(URL + `/warranty/${id}`, {headers})
 
+export const getProductDeliveredByIdCustomer = (customerId, headers) => axios.get(URL + `/order/delivered-orders/${customerId}`,{ headers: headers })
+

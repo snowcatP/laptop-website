@@ -15,7 +15,6 @@ const ListOrder = ({ allCustomerList, message }) => {
       try {
         const response = await getAllOrders({Authorization: "Bearer " + token});
         setOrders(response.data);
-        console.log(orders)
       } catch (error) {
         console.log(error.response.data.message);
       }

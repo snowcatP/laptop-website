@@ -113,4 +113,8 @@ public class OrderService {
                 })
                 .collect(Collectors.toList());
     }
+
+    public List<Order> getDeliveredOrdersByCustomerId(Long customerId) {
+        return orderRepository.findDeliveredOrdersByCustomerId(customerId);
+    }
 }

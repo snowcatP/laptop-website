@@ -24,5 +24,6 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
 
     List<Order> findOrdersByStateType(OrderStateType stateType);
 
-
+    @Query("SELECT o FROM Order o WHERE o.customer.customerId = :customerId AND o.stateType = 'DELIVERED'")
+    List<Order> findDeliveredOrdersByCustomerId(Long customerId);
 }
