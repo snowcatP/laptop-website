@@ -17,6 +17,7 @@ const HomePage = () => {
   const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
 
+
   const settingsSlider = {
     slidesToShow: 4,
     slidesToScroll: 1,
@@ -102,10 +103,13 @@ const HomePage = () => {
 
         if (response.status === 200) {
           toast.success("Add to cart successfully")
-        }
 
+          setTimeout(() => {  
+            navigate("/user/cart")
+          }, 2000)
+        }
       } catch(error) {
-        console.log(error.response.data.message);
+        toast.error("Add to cart failed")
       }
     }
     addProductToCart();
@@ -161,7 +165,7 @@ const HomePage = () => {
                             <div className="product-img">
                               <img src={product.image1} alt="" />
                               <div className="product-label">
-                                <span className="sale">-30%</span>
+                                <span className="sale">{product.discount?.discountValue}%</span>
                                 <span className="new">NEW</span>
                               </div>
                             </div>
@@ -173,9 +177,11 @@ const HomePage = () => {
                                 {product.productName}
                               </h3>
                               <h4 className="product-price">
-                              {Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(product?.price)}{" "}
+
+                                {product.price * (1-((product.discount?.discountValue ?? 0) / 100))} VND
+
                                 <del className="product-old-price">
-                                  {product.price * 1.3} VND
+                                  {product.price} VND
                                 </del>
                               </h4>
                               <div className="product-rating">
@@ -229,7 +235,7 @@ const HomePage = () => {
                         <span>Days</span>
                       </div>
                     </li>
-                    <li>
+                    {/* <li>
                       <div>
                         <h3>10</h3>
                         <span>Hours</span>
@@ -246,7 +252,7 @@ const HomePage = () => {
                         <h3>60</h3>
                         <span>Secs</span>
                       </div>
-                    </li>
+                    </li> */}
                   </ul>
                   <h2 className="text-uppercase">hot deal this week</h2>
                   <p>New Collection Up to 50% OFF</p>
@@ -300,13 +306,14 @@ const HomePage = () => {
                       >
                         {/* product */}
                         {top5products?.map((topproduct) => (
+                          
                           <Link to={`/product/${topproduct?.productId}`}>
                           <div className="product"
                             key={topproduct.productId}>
                             <div className="product-img">
                               <img src={topproduct.image1} alt="" />
                               <div className="product-label">
-                                <span className="sale">-30%</span>
+                                <span className="sale">{topproduct.discount?.discountValue}%</span>
                                 <span className="new">NEW</span>
                               </div>
                             </div>
@@ -318,9 +325,10 @@ const HomePage = () => {
                                 {topproduct.productName}
                               </h3>
                               <h4 className="product-price">
-                              {Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(topproduct?.price)}{" "}
+
+                                {topproduct.price * (1-((topproduct.discount?.discountValue ?? 0) / 100))} VND
                                 <del className="product-old-price">
-                                {Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(topproduct?.price * 1.3)}
+                                  {topproduct.price} VND
                                 </del>
                               </h4>
                               <div className="product-rating">

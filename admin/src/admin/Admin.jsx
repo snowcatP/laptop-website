@@ -1,9 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Sidebar from "./components/Sidebar";
 import { Link } from "react-router-dom";
+import { getCountCustomers } from "./service/CustomerService";
 const Admin = () => {
+  const [countCustomers, setCountCustomers] = useState([]);
+
+  useEffect(() => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    const getAllCustomers = async () => {
+      try {
+        const response = await getCountCustomers(headers);
+
+        setCountCustomers(response.data);
+        console.log(countCustomers);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getAllCustomers();
+  }, [countCustomers]);
+
   return (
     <>
       <Header />
@@ -165,13 +186,13 @@ const Admin = () => {
                             <i className="bi bi-people" />
                           </div>
                           <div className="ps-3">
-                            <h6>1244</h6>
-                            <span className="text-danger small pt-1 fw-bold">
+                            <h6>{countCustomers}</h6>
+                            {/* <span className="text-danger small pt-1 fw-bold">
                               12%
                             </span>{" "}
                             <span className="text-muted small pt-2 ps-1">
                               decrease
-                            </span>
+                            </span> */}
                           </div>
                         </div>
                       </div>

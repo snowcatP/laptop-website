@@ -15,7 +15,9 @@ import ListDiscount from "./admin/ListDiscount";
 import AddDiscount from "./admin/AddDiscount";
 import EditDiscount from "./admin/EditDiscount";
 import ListCustomer from "./admin/ListCustomer";
-import ListOrder from "./admin/ListOrder";
+import EditWarranty from "./admin/EditWarranty";
+import ListEmployee from "./admin/ListEmployee";
+import AddEmployee from "./admin/AddEmployee";
 
 function App() {
   return (
@@ -79,6 +81,14 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/edit-warranty/:id"
+          element={
+            <ProtectedRoute>
+              < EditWarranty/>
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/list-discount"
@@ -114,14 +124,25 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
-          path="/list-order"
+          path="/list-employee"
           element={
             <ProtectedRoute>
-              <ListOrder />
+              <ListEmployee />
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/add-employee"
+          element={
+            <ProtectedRoute>
+              <AddEmployee />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/error404" element={<Error404 />} />
         <Route path="/*" element={<Error404 />} />
       </Routes>
     </BrowserRouter>

@@ -21,24 +21,27 @@ export const AuthContextProvider = (props) => {
             const current = new Date();
     
             if(decoded_token.exp * 1000 > current.getTime()){
-                const checkIsValid = async () => {
-                    const response = await checkValidToken({
-                        token: token
-                    });
-    
-                    if(response.data["valid"] === true) {
-                        const getAdminProfile = async () => {
-                            const headers = { Authorization: `Bearer ${token}` };
-    
-                            const response = await adminProfile(headers);
-    
-                            setAdmin(response.data)
-                            setIsLogged(true)
+                try {
+
+                    const checkIsValid = async () => {
+                        const response = await checkValidToken({
+                            token: token
+                        });
+                        
+                        if(response.data["valid"] === true) {
+                            const getAdminProfile = async () => {
+                                const headers = { Authorization: `Bearer ${token}` };
+                                
+                                const response = await adminProfile(headers);
+                                
+                                setAdmin(response.data)
+                                setIsLogged(true)
+                            }
+                            getAdminProfile()
                         }
-                        getAdminProfile()
                     }
-                }
-                checkIsValid()
+                    checkIsValid()
+                } catch (error) {console.log(error)}
             }
         }
         

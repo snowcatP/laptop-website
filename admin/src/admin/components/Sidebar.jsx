@@ -18,7 +18,7 @@ const Sidebar = () => {
           <li className="nav-item">
             <Link
               className="nav-link collapsed"
-              data-bs-target="#components-nav"
+              data-bs-target="#products-nav"
               data-bs-toggle="collapse"
               to="#"
             >
@@ -27,7 +27,7 @@ const Sidebar = () => {
               <i className="bi bi-chevron-down ms-auto" />
             </Link>
             <ul
-              id="components-nav"
+              id="products-nav"
               className="nav-content collapse "
               data-bs-parent="#sidebar-nav"
             >
@@ -49,7 +49,7 @@ const Sidebar = () => {
           <li className="nav-item">
             <Link
               className="nav-link collapsed"
-              data-bs-target="#forms-nav"
+              data-bs-target="#warranty-nav"
               data-bs-toggle="collapse"
               to="#"
             >
@@ -58,7 +58,7 @@ const Sidebar = () => {
               <i className="bi bi-chevron-down ms-auto" />
             </Link>
             <ul
-              id="forms-nav"
+              id="warranty-nav"
               className="nav-content collapse "
               data-bs-parent="#sidebar-nav"
             >
@@ -80,7 +80,7 @@ const Sidebar = () => {
           <li className="nav-item">
             <Link
               className="nav-link collapsed"
-              data-bs-target="#tables-nav"
+              data-bs-target="#discount-nav"
               data-bs-toggle="collapse"
               to="#"
             >
@@ -89,7 +89,7 @@ const Sidebar = () => {
               <i className="bi bi-chevron-down ms-auto" />
             </Link>
             <ul
-              id="tables-nav"
+              id="discount-nav"
               className="nav-content collapse "
               data-bs-parent="#sidebar-nav"
             >
@@ -111,7 +111,7 @@ const Sidebar = () => {
           <li className="nav-item">
             <Link
               className="nav-link collapsed"
-              data-bs-target="#charts-nav"
+              data-bs-target="#customers-nav"
               data-bs-toggle="collapse"
               to="#"
             >
@@ -120,7 +120,7 @@ const Sidebar = () => {
               <i className="bi bi-chevron-down ms-auto" />
             </Link>
             <ul
-              id="charts-nav"
+              id="customers-nav"
               className="nav-content collapse "
               data-bs-parent="#sidebar-nav"
             >
@@ -130,30 +130,33 @@ const Sidebar = () => {
                   <span>List Customer</span>
                 </Link>
               </li>
-              
             </ul>
           </li>
           {/* End Charts Nav */}
           <li className="nav-item">
             <Link
               className="nav-link collapsed"
-              data-bs-target="#icons-nav"
+              data-bs-target="#employees-nav"
               data-bs-toggle="collapse"
               to="#"
             >
               <i className="bi bi-gem" />
-              <span>Order Management</span>
+              <span>Employee Management</span>
               <i className="bi bi-chevron-down ms-auto" />
             </Link>
             <ul
-              id="icons-nav"
+              id="employees-nav"
               className="nav-content collapse "
               data-bs-parent="#sidebar-nav"
             >
               <li>
-                <Link to="/list-order">
+                <Link to="/list-employee">
                   <i className="bi bi-circle" />
-                  <span>List Order</span>
+                  <span>List Employees</span>
+                </Link>
+                <Link to="/add-employee">
+                  <i className="bi bi-circle" />
+                  <span>Add New Employee</span>
                 </Link>
               </li>
             </ul>
@@ -168,7 +171,7 @@ const Sidebar = () => {
           </li>
           {/* End Profile Page Nav */}
           <li className="nav-item">
-            <Link className="nav-link collapsed" to="pages-error-404.html">
+            <Link className="nav-link collapsed" to="/error404">
               <i className="bi bi-dash-circle" />
               <span>Error 404</span>
             </Link>

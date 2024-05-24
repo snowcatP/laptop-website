@@ -3,6 +3,7 @@ package com.example.laptopwebsitebackend.service;
 import com.example.laptopwebsitebackend.entity.*;
 import com.example.laptopwebsitebackend.repository.AccountRepository;
 import com.example.laptopwebsitebackend.repository.CustomerRepository;
+import com.example.laptopwebsitebackend.util.PasswordEncoderSingleton;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.NoResultException;
 import lombok.val;
@@ -28,8 +29,7 @@ public class CustomerService {
     @Autowired
     private AccountRepository accountRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private static final PasswordEncoder passwordEncoder = PasswordEncoderSingleton.getEncoder();
 
     public Customer createNewCustomer(Customer customer) {
         if (customerRepository.existsByEmail(customer.getEmail())){
@@ -91,5 +91,9 @@ public class CustomerService {
 
         accountRepository.save(account);
         return "Change password success";
+    }
+
+    public long countAllCustomers() {
+        return customerRepository.count();
     }
 }

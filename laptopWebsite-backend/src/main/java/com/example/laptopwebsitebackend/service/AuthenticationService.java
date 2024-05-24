@@ -13,6 +13,7 @@ import com.example.laptopwebsitebackend.repository.AccountRepository;
 import com.example.laptopwebsitebackend.repository.CustomerRepository;
 import com.example.laptopwebsitebackend.repository.InvalidatedTokenRepository;
 import com.example.laptopwebsitebackend.repository.StaffRepository;
+import com.example.laptopwebsitebackend.util.PasswordEncoderSingleton;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
@@ -32,6 +33,7 @@ import java.util.UUID;
 
 @Service
 public class AuthenticationService {
+    private static final PasswordEncoder passwordEncoder = PasswordEncoderSingleton.getEncoder();
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -43,7 +45,6 @@ public class AuthenticationService {
     @Value("${jwt.signerKey}")
     protected String SIGNER_KEY;
 
-    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
     @Autowired
     private AccountService accountService;

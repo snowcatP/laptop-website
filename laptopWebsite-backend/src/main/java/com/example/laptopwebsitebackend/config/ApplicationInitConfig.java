@@ -8,6 +8,7 @@ import com.example.laptopwebsitebackend.repository.AccountRepository;
 import com.example.laptopwebsitebackend.repository.PermissionRepository;
 import com.example.laptopwebsitebackend.repository.RoleRepository;
 import com.example.laptopwebsitebackend.repository.StaffRepository;
+import com.example.laptopwebsitebackend.util.PasswordEncoderSingleton;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
@@ -20,8 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Slf4j
 public class ApplicationInitConfig {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private static final PasswordEncoder passwordEncoder = PasswordEncoderSingleton.getEncoder();
 
     @Bean
     ApplicationRunner applicationRunner(AccountRepository accountRepository,
@@ -29,6 +29,28 @@ public class ApplicationInitConfig {
                                         RoleRepository roleRepository,
                                         PermissionRepository permissionRepository) {
         return args -> {
+            if (permissionRepository.findByPermissionName("ADMIN") == null) {
+                Permission permission = new Permission();
+                permission.setPermissionName("ADMIN");
+                permissionRepository.save(permission);
+            }
+            if (permissionRepository.findByPermissionName("USER") == null) {
+                Permission permission = new Permission();
+                permission.setPermissionName("STAFF");
+                permissionRepository.save(permission);
+            }
+
+            if (roleRepository.findByRoleName("MANAGER") == null) {
+                Role role = new Role();
+                role.setRoleName("MANAGER");
+                roleRepository.save(role);
+            }
+            if (roleRepository.findByRoleName("EMPLOYEE") == null) {
+                Role role = new Role();
+                role.setRoleName("EMPLOYEE");
+                roleRepository.save(role);
+            }
+
             if (accountRepository.findByUsername("admin@gmail.com").isEmpty()) {
 
                 Permission permission = permissionRepository.findByPermissionName("ADMIN");

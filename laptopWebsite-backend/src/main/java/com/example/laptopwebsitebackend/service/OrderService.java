@@ -4,7 +4,6 @@ import com.example.laptopwebsitebackend.entity.*;
 import com.example.laptopwebsitebackend.repository.OrderDetailsRepository;
 import com.example.laptopwebsitebackend.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,13 +13,13 @@ import java.util.List;
 public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
+
     @Autowired
     private OrderDetailsRepository orderDetailsRepository;
-    public List<Order> getAllOrders() {
 
+    public List<Order> getAllOrders() {
         return orderRepository.findAll();
     }
-
 
     public Order getOrder(Long orderId) {
         return orderRepository.findById(orderId).get();
@@ -42,12 +41,10 @@ public class OrderService {
         return orderRepository.findByCustomerCustomerId(customerId);
 
     }
-
-    public Order checkout(Customer customer, List<CartDetails> cartDetailsList, Payment payment, String address){
+    public Order createOrder(Customer customer, List<CartDetails> cartDetailsList, Payment payment){
         Order order = new Order();
         order.setCustomer(customer);
         order.setPayment(payment);
-        order.setAddress(address);
         List<OrderDetails> orderDetailsList = new ArrayList<>();
         double totalPrice=0;
         for (CartDetails cartDetails: cartDetailsList){
@@ -74,9 +71,4 @@ public class OrderService {
             return "Delete item successfully";
         }
     }
-
-
-    public List<Order> getBillByCustomer(Long customerId){
-        return orderDetailsRepository.getBillByCustomer(customerId);
-    };
 }

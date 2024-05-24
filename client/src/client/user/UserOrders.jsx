@@ -5,25 +5,50 @@ import Sidebar from "../components/Sidebar";
 import Letter from '../components/Letter';
 import Footer from '../components/Footer';
 import { Link } from 'react-router-dom';
+import { getOrders } from '../service/Order';
 import { cancelOrder, getOrdersOfCustomer } from '../service/Order';
 import { checkValidToken, customerProfile } from '../service/ClientService';
 import { jwtDecode } from 'jwt-decode';
-import { useAuth } from '../context/AuthContext';
-import { toast } from 'react-toastify';
 
 
 const UserOrders = () => {
-  const { user, setUser, isLogged, setIsLogged } = useAuth();
+  const [user, setUser] = useState(null);
+  const [isLogged, setIsLogged] = useState(false);
   const [orders, setOrders] = useState([]);
   const [orderId, setOrderId] = useState(null);
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const decoded_token = jwtDecode(token);
+    const current = new Date();
+
+    if (decoded_token.exp * 1000 > current.getTime()) {
+      const checkIsValid = async () => {
+        const response = await checkValidToken({
+          token: token,
+        });
+
+        if (response.data["valid"] === true) {
+          const userProfile = async () => {
+            const headers = { Authorization: `Bearer ${token}` };
+            const response = await customerProfile(headers);
+            setOrderId(response.data.customerId);
+            setUser(response.data);
+            setIsLogged(true);
+          };
+          userProfile();
+        }
+      };
+      checkIsValid();
+    }
+  }, [user, isLogged]);
 
   const token = localStorage.getItem("token");
   const header = {
     Authorization: "Bearer " + token,
   };
 
-  useEffect(() => {
+   useEffect(() => {
     const getOrder = async () => {
       try {
         const response = await getOrdersOfCustomer(user.customerId, header);
@@ -63,6 +88,7 @@ const UserOrders = () => {
     }
     cancel();
   }
+
   return (
     <>
       <Header />
@@ -159,18 +185,18 @@ const UserOrders = () => {
                                             {Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(order.totalPrice)}
                                           </td>
                                           <td className="text-center font-weight-semibold align-middle p-4">
-                                            <span style={getColor(order.stateType)}>
-                                              {order.stateType}
-                                            </span>
+                                            {order.stateType}
                                           </td>
 
                                           <td className="text-center align-middle px-0 align-middle">
                                             {/* Delete */}
+
                                             <button className="shop-tooltip float-none text-center" onClick={(e) => { hanldeCancelOrder(e, order.orderId) }}>
                                               Cancel
+
                                             </button>
                                           </td>
-                                        </tr> 
+                                        </tr>
                                       );
                                     })}
 

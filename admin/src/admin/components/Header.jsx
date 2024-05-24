@@ -38,6 +38,7 @@ const Header = () => {
   }
 
   return (
+    <>
     <div>
       {/* ======= Header ======= */}
       <div
@@ -85,11 +86,7 @@ const Header = () => {
                 href="#"
                 data-bs-toggle="dropdown"
               >
-                <img
-                  src="./components/assets/img/profile-img.jpg"
-                  alt="Profile"
-                  className="rounded-circle"
-                />
+
                 <span className="d-none d-md-block dropdown-toggle ps-2">
                 {`${profile.firstName} ${profile.lastName}`}
                 </span>
@@ -147,7 +144,7 @@ const Header = () => {
        
       />
     </div>
-    
+    </>
   );
 };
 
