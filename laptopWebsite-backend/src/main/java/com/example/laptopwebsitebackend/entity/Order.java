@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class Order {
 
     private String address;
 
+    @Temporal(value = TemporalType.TIMESTAMP)
     private Date deliveredDate;
 
     @ManyToOne

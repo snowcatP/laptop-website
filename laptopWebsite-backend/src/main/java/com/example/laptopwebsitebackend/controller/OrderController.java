@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.laptopwebsitebackend.dto.request.OrderRequest;
+
+import java.time.LocalDate;
 import java.util.*;
 
 @RestController
@@ -28,6 +30,10 @@ public class OrderController{
     private PaymentService paymentService;
     @Autowired
     private CartDetailService cartDetailService;
+    @Autowired
+    private BillDetailsService billDetailsService;
+    @Autowired
+    private BillService billService;
 
     @Autowired
     private EmailSenderService emailSenderService;
@@ -45,10 +51,7 @@ public class OrderController{
     public ResponseEntity<List<Order>> getOrderByCustomer(@PathVariable("customerId") Long customerId){
         return new ResponseEntity<>(orderService.getOrderByCustomer(customerId), HttpStatus.OK);
     }
-    @GetMapping("/bills-of-customer/{customerId}")
-    public ResponseEntity<List<Order>> getBillByCustomer(@PathVariable("customerId") Long customerId){
-        return new ResponseEntity<>(orderService.getBillByCustomer(customerId),HttpStatus.OK);
-    }
+
     private Double calculateTotalPrice(Product product, int quantity){
         int discountValue = (product.getDiscount() != null) ? product.getDiscount().getDiscountValue() : 0;
         double costPrice = product.getPrice();
@@ -92,6 +95,9 @@ public class OrderController{
         }
         Customer customer = customerService.findCustomerById(orderRequest.getCustomerId());
         customer.setPhone(orderRequest.getPhone());
+
+        customer.setAddress(orderRequest.getAddress());
+
         customer.setEmail(orderRequest.getEmail());
 
         Order result = orderService.checkout(customer,cartDetailsList,paymentMethod,orderRequest.getAddress());
@@ -102,15 +108,41 @@ public class OrderController{
         }
 
         return new ResponseEntity<>(result,HttpStatus.OK);
+
     }
     @PostMapping("/change-order-state/{orderId}")
     public ResponseEntity<Order> changeOrderState(@PathVariable("orderId") Long orderId){
         Order order = orderService.findOrderById(orderId);
-        if(order.getStateType() != OrderStateType.DELIVERED &&
-                order.getStateType()!= OrderStateType.CANCELLED){
-            order.nextState();
+        if(order.getStateType()!= OrderStateType.CANCELLED&&order.getStateType()!= OrderStateType.DELIVERED){
+            if (order.getStateType() == OrderStateType.CONFIRMED){
+                order.setDeliveredDate(new Date());
+            }
+            else if (order.getStateType() == OrderStateType.SHIPPED) {
+                List<BillDetails>  billDetailsList = new ArrayList<>();
+                Bill bill = new Bill();
+                for(OrderDetails orderDetails: order.getOrderDetails()){
+                    Product product = orderDetails.getProduct();
+                    BillDetails billDetails = new BillDetails();
+                    billDetails.setProduct(product);
+                    billDetails.setQuantity(orderDetails.getQuantity());
+                    billDetails.setTotalPrice(orderDetails.getTotalPrice());
+                    billDetails.setBill(bill);
+                    billDetailsList.add(billDetails);
+                    billDetailsService.addBillDetails(billDetails);
+                }
+
+                bill.setBillDetailsList(billDetailsList);
+                bill.setCustomer(order.getCustomer());
+                bill.setTotalPrice(order.getTotalPrice());
+                bill.setDateCreated(new Date());
+                billService.addBill(bill);
+
+            }
+                order.nextState();
             return new ResponseEntity<>(orderService.updateOrder(order),HttpStatus.OK);
         }
+
+
         return new ResponseEntity<>(orderService.updateOrder(order),HttpStatus.EXPECTATION_FAILED);
     }
     @PostMapping("/cancel-order/{orderId}")

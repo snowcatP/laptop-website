@@ -4,18 +4,14 @@ import Navigation from "../components/Navigation";
 import Sidebar from "../components/Sidebar";
 import Letter from '../components/Letter';
 import Footer from '../components/Footer';
-import { Link } from 'react-router-dom';
 import { cancelOrder, getOrdersOfCustomer } from '../service/Order';
-import { checkValidToken, customerProfile } from '../service/ClientService';
-import { jwtDecode } from 'jwt-decode';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
-
+import moment from 'moment';
 
 const UserOrders = () => {
-  const { user, setUser, isLogged, setIsLogged } = useAuth();
+  const { user } = useAuth();
   const [orders, setOrders] = useState([]);
-  const [orderId, setOrderId] = useState(null);
 
 
   const token = localStorage.getItem("token");
@@ -103,6 +99,12 @@ const UserOrders = () => {
                                       <th className="text-center py-3 px-4" style={{ width: "80px" }}>
                                         Status
                                       </th>
+                                      <th className="text-center py-3 px-4" style={{ width: "80px" }}>
+                                        Delivered Date
+                                      </th>
+                                      <th className="text-center py-3 px-4" style={{ width: "80px" }}>
+                                        Address
+                                      </th>
                                       <th className="text-center py-3 px-4" style={{ width: "20px" }}>
                                       </th>
 
@@ -118,7 +120,6 @@ const UserOrders = () => {
 
                                           {order.orderDetails.map((orderDetail, detailIndex) => {
                                             const product = orderDetail.product;
-                                            const price = orderDetail.price;
                                             return (
                                               <>
                                                 <tr key={detailIndex}>
@@ -162,6 +163,12 @@ const UserOrders = () => {
                                               {order.stateType}
                                             </span>
                                           </td>
+                                          <td className="text-center font-weight-semibold align-middle p-4">
+                                            {moment(order.deliveredDate).format('YYYY-MM-DD HH:mm:ss')}
+                                          </td>
+                                          <td className="text-center font-weight-semibold align-middle p-4">
+                                            {order.address}
+                                          </td>
 
                                           <td className="text-center align-middle px-0 align-middle">
                                             {/* Delete */}
@@ -169,7 +176,7 @@ const UserOrders = () => {
                                               Cancel
                                             </button>
                                           </td>
-                                        </tr> 
+                                        </tr>
                                       );
                                     })}
 

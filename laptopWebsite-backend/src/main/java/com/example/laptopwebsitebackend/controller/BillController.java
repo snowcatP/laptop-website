@@ -9,15 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/bill")
+@CrossOrigin()
 public class BillController {
     @Autowired
     private BillDetailsService billDetailsService;
@@ -28,9 +26,10 @@ public class BillController {
     public ResponseEntity<List<Bill>> getAllBills(){
         return new ResponseEntity<>(billService.getAllBills(), HttpStatus.OK) ;
     }
-    @GetMapping("/bill-details/{id}")
-    public ResponseEntity<BillDetails> getBillsDetails(@PathVariable("id") Long id){
-        return new ResponseEntity<>(billDetailsService.getBillsDetails(id), HttpStatus.OK) ;
+    @GetMapping("/bills-of-customer/{customerId}")
+    public ResponseEntity<List<Bill>> getBillsDetails(@PathVariable("customerId") Long customerId){
+        return new ResponseEntity<>(billService.getBillsDetailsByCustomerId(customerId), HttpStatus.OK) ;
     }
+
 
 }
