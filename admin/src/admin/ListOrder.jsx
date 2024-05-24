@@ -17,6 +17,7 @@ const ListOrder = ({ allCustomerList, message }) => {
       try {
         const response = await getAllOrders(header);
         setOrders(response.data);
+        console.log(orders)
       } catch (error) {
         console.log(error.response.data.message);
       }

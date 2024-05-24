@@ -3,12 +3,16 @@ package com.example.laptopwebsitebackend.service;
 import com.example.laptopwebsitebackend.entity.*;
 import com.example.laptopwebsitebackend.repository.OrderDetailsRepository;
 import com.example.laptopwebsitebackend.repository.OrderRepository;
+import com.example.laptopwebsitebackend.repository.ProductRepository;
+import com.example.laptopwebsitebackend.state.OrderStateType;
+import org.hibernate.query.sql.internal.ParameterRecognizerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -16,6 +20,9 @@ public class OrderService {
     private OrderRepository orderRepository;
     @Autowired
     private OrderDetailsRepository orderDetailsRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
     public List<Order> getAllOrders() {
 
         return orderRepository.findAll();
@@ -79,4 +86,28 @@ public class OrderService {
     public List<Order> getBillByCustomer(Long customerId){
         return orderDetailsRepository.getBillByCustomer(customerId);
     };
+
+    public long countAllOrders() {
+        return orderRepository.count();
+    }
+
+    public Double calculateTotalRevenue() {
+        List<Order> deliveredOrders = orderRepository.findOrdersByStateType(OrderStateType.DELIVERED);
+        return deliveredOrders.stream()
+                .mapToDouble(Order::getTotalPrice)
+                .sum();
+    }
+
+    public List<ProductSalesData> getTopSellingProducts(int topN) {
+        List<Object[]> results = orderDetailsRepository.findTopSellingProducts();
+        return results.stream()
+                .limit(topN)
+                .map(result -> {
+                    Long productId = (Long) result[0];
+                    Long totalQuantity = (Long) result[1];
+                    Product product = productRepository.findById(productId).orElse(null);
+                    return new ProductSalesData(product, totalQuantity);
+                })
+                .collect(Collectors.toList());
+    }
 }
