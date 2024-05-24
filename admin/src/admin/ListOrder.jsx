@@ -6,16 +6,13 @@ import { useEffect, useState } from "react";
 import { changeOrderState, getAllOrders } from "./service/OrderSerive";
 import { toast } from "react-toastify";
 const ListOrder = ({ allCustomerList, message }) => {
-  const [users, setUsers] = useState([]);
   const [orders, setOrders] = useState([]);
   const token = localStorage.getItem("token");
-  const header = {
-    Authorization: "Bearer " + token,
-  };
+  
   useEffect(() => {
     const getOrder = async () => {
       try {
-        const response = await getAllOrders(header);
+        const response = await getAllOrders({Authorization: "Bearer " + token});
         setOrders(response.data);
       } catch (error) {
         console.log(error.response.data.message);
@@ -23,13 +20,16 @@ const ListOrder = ({ allCustomerList, message }) => {
     };
     getOrder();
 
-  }, [orders]);
+  }, [orders, token]);
 
   const handleChangeOrderState = (e, orderId) => {
     e.preventDefault();
     const modifyOrderState = async () => {
+      const header = {
+        Authorization: "Bearer " + token,
+      };
       try {
-        const response = await changeOrderState(orderId, header);
+        await changeOrderState(orderId, header);
         toast.success("Update order state successfully");
       }
       catch (error) {
@@ -106,7 +106,7 @@ const ListOrder = ({ allCustomerList, message }) => {
                             <td className="">
                               {order.orderDetails.map((orderDetail, detailIndex) => {
                                 const product = orderDetail.product;
-                                const price = orderDetail.price;
+                                // const price = orderDetail.price;
                                 return (
                                   <>
                                     <tr key={detailIndex}>

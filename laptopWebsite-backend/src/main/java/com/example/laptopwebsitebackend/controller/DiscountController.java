@@ -3,9 +3,13 @@ package com.example.laptopwebsitebackend.controller;
 import com.example.laptopwebsitebackend.dto.request.DiscountRequest;
 import com.example.laptopwebsitebackend.dto.request.EditDiscountRequest;
 import com.example.laptopwebsitebackend.entity.Discount;
+import com.example.laptopwebsitebackend.entity.DiscountSubject;
+import com.example.laptopwebsitebackend.entity.Observer;
 import com.example.laptopwebsitebackend.entity.Product;
+import com.example.laptopwebsitebackend.repository.CustomerRepository;
 import com.example.laptopwebsitebackend.repository.ProductRepository;
 import com.example.laptopwebsitebackend.service.DiscountService;
+import com.example.laptopwebsitebackend.service.EmailSenderService;
 import com.example.laptopwebsitebackend.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +17,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
 @RequestMapping("/discount")
 @CrossOrigin
-public class DiscountController {
+public class DiscountController implements DiscountSubject {
+    @Autowired
+    private EmailSenderService emailSenderService;
+
+    private List<Observer> observers = new ArrayList<>();
 
     @Autowired
     private DiscountService discountService;
@@ -46,8 +56,13 @@ public class DiscountController {
             productRepository.save(product);
         }
 
+        new Thread(() -> {
+            notifyDiscount(newDiscount.getDiscountValue(), newDiscount.getStartDate(), newDiscount.getEndDate());
+        }).start();
         return new ResponseEntity<>(discountRequest, HttpStatus.OK  );
     }
+
+
 
     @GetMapping
     public ResponseEntity<List<Discount>> get_All_Discounts(){
@@ -89,5 +104,32 @@ public class DiscountController {
     @GetMapping("/get-products/{id}")
     public ResponseEntity<List<Product>> getProductsByDiscountId(@PathVariable("id") Long id) {
         return ResponseEntity.ok(discountService.getProductsByDiscountId(id));
+    }
+
+    @Override
+    public void attach(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void detach(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers(String message) {
+        for(Observer observer : observers) {
+            observer.notifyUpdate(message);
+        }
+    }
+
+    private void notifyDiscount(int discountValue, Date startDate, Date endDate){
+        attach(emailSenderService);
+
+        String message = "We're excited to announce a new discount! You can now save " + discountValue+ "% on selected products.\n\n" +
+                "This is a great opportunity to treat yourself to the laptop you've been eyeing, or to grab some gifts for upcoming occasions.\n\n" +
+                "The discount is valid from " + startDate +" to " + endDate + ". Shop now and take advantage of these savings!\n\n" +
+                "Happy Shopping!";
+        notifyObservers(message);
     }
 }

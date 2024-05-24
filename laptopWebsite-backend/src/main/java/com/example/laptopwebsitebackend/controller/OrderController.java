@@ -17,7 +17,7 @@ import java.util.*;
 @RequestMapping("/order")
 @CrossOrigin()
 
-public class OrderController {
+public class OrderController{
     @Autowired
     private OrderDetailsService orderDetailsService;
     @Autowired
@@ -28,6 +28,9 @@ public class OrderController {
     private PaymentService paymentService;
     @Autowired
     private CartDetailService cartDetailService;
+
+    @Autowired
+    private EmailSenderService emailSenderService;
 
     @GetMapping()
     public ResponseEntity<List<Order>> getAllOrders(){
@@ -91,7 +94,14 @@ public class OrderController {
         customer.setPhone(orderRequest.getPhone());
         customer.setEmail(orderRequest.getEmail());
 
-        return new ResponseEntity<>(orderService.checkout(customer,cartDetailsList,paymentMethod,orderRequest.getAddress()),HttpStatus.OK);
+        Order result = orderService.checkout(customer,cartDetailsList,paymentMethod,orderRequest.getAddress());
+        if(result != null) {
+            emailSenderService.sendEmail(customer.getEmail(),
+                    "Electro - Order status",
+                    "Order has been placed successfully. You can track your order status, also bill in your profile!");
+        }
+
+        return new ResponseEntity<>(result,HttpStatus.OK);
     }
     @PostMapping("/change-order-state/{orderId}")
     public ResponseEntity<Order> changeOrderState(@PathVariable("orderId") Long orderId){
@@ -117,6 +127,5 @@ public class OrderController {
         }
         return new ResponseEntity<>(orderService.updateOrder(order),HttpStatus.BAD_REQUEST);
     }
-
 
 }
