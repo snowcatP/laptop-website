@@ -49,7 +49,7 @@ public class WebSecurityConfig{
             "/comment",
             "/comment/add",
             "/discount",
-            "/discount/*",
+            "/discount/**",
             "/warranty",
             "/warranty/**",
             "/user",

@@ -1,13 +1,7 @@
 package com.example.laptopwebsitebackend.config;
 
-import com.example.laptopwebsitebackend.entity.Account;
-import com.example.laptopwebsitebackend.entity.Permission;
-import com.example.laptopwebsitebackend.entity.Role;
-import com.example.laptopwebsitebackend.entity.Staff;
-import com.example.laptopwebsitebackend.repository.AccountRepository;
-import com.example.laptopwebsitebackend.repository.PermissionRepository;
-import com.example.laptopwebsitebackend.repository.RoleRepository;
-import com.example.laptopwebsitebackend.repository.StaffRepository;
+import com.example.laptopwebsitebackend.entity.*;
+import com.example.laptopwebsitebackend.repository.*;
 import com.example.laptopwebsitebackend.util.PasswordEncoderSingleton;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +21,8 @@ public class ApplicationInitConfig {
     ApplicationRunner applicationRunner(AccountRepository accountRepository,
                                         StaffRepository staffRepository,
                                         RoleRepository roleRepository,
-                                        PermissionRepository permissionRepository) {
+                                        PermissionRepository permissionRepository,
+                                        PaymentRepository paymentRepository) {
         return args -> {
             if (permissionRepository.findByPermissionName("ADMIN") == null) {
                 Permission permission = new Permission();
@@ -36,8 +31,14 @@ public class ApplicationInitConfig {
             }
             if (permissionRepository.findByPermissionName("USER") == null) {
                 Permission permission = new Permission();
-                permission.setPermissionName("STAFF");
+                permission.setPermissionName("USER");
                 permissionRepository.save(permission);
+            }
+
+            if (paymentRepository.findByPaymentMethod("COD") == null) {
+                Payment payment = new Payment();
+                payment.setPaymentMethod("COD");
+                paymentRepository.save(payment);
             }
 
             if (roleRepository.findByRoleName("MANAGER") == null) {
