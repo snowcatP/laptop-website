@@ -50,16 +50,18 @@ public class OrderService {
         order.setAddress(address);
         List<OrderDetails> orderDetailsList = new ArrayList<>();
         double totalPrice=0;
-        for (CartDetails cartDetails: cartDetailsList){
+        for (CartDetails cartDetails: cartDetailsList) {
             OrderDetails orderDetails = new OrderDetails();
             orderDetails.setProduct(cartDetails.getProduct());
-            orderDetails.setQuantity(cartDetails.getQuantity());
-            orderDetails.setTotalPrice(cartDetails.getPrice());
-            orderDetails.setOrder(order);
-            orderDetailsRepository.save(orderDetails);
-            totalPrice+= cartDetails.getPrice();
-            orderDetailsList.add(orderDetails);
-        }
+            Product product = cartDetails.getProduct();
+                product.setQuantity(product.getQuantity() - cartDetails.getQuantity());
+                orderDetails.setQuantity(cartDetails.getQuantity());
+                orderDetails.setTotalPrice(cartDetails.getPrice());
+                orderDetails.setOrder(order);
+                orderDetailsRepository.save(orderDetails);
+                totalPrice += cartDetails.getPrice();
+                orderDetailsList.add(orderDetails);
+            }
         order.setTotalPrice(totalPrice);
         order.setOrderDetails(orderDetailsList);
 
