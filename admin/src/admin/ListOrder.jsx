@@ -5,6 +5,7 @@ import Sidebar from "./components/Sidebar";
 import { useEffect, useState } from "react";
 import { changeOrderState, getAllOrders } from "./service/OrderSerive";
 import { toast } from "react-toastify";
+import moment from "moment";
 const ListOrder = ({ allCustomerList, message }) => {
   const [users, setUsers] = useState([]);
   const [orders, setOrders] = useState([]);
@@ -38,20 +39,20 @@ const ListOrder = ({ allCustomerList, message }) => {
     };
     modifyOrderState();
   };
-    const getColor = (stateType) => {
-      switch (stateType) {
-        case 'CANCELLED':
-          return { color: 'red', fontSize: '1.2em'};
-        case 'CONFIRMED':
-          return { color: 'blue', fontSize: '1.2em'};
-        case 'SHIPPED':
-          return { color: 'orange', fontSize: '1.2em' };
-        case 'DELIVERED':
-          return { color: 'green', fontSize: '1.2em' };
-        default:
-          return { color: 'black', fontSize: '1.2em' };
-      }
-    };
+  const getColor = (stateType) => {
+    switch (stateType) {
+      case 'CANCELLED':
+        return { color: 'red', fontSize: '1.2em' };
+      case 'CONFIRMED':
+        return { color: 'blue', fontSize: '1.2em' };
+      case 'SHIPPED':
+        return { color: 'orange', fontSize: '1.2em' };
+      case 'DELIVERED':
+        return { color: 'green', fontSize: '1.2em' };
+      default:
+        return { color: 'black', fontSize: '1.2em' };
+    }
+  };
 
   return (
     <>
@@ -92,6 +93,8 @@ const ListOrder = ({ allCustomerList, message }) => {
                           <th className="text-center font-weight-semibold align-middle p-4">Product</th>
                           <th className="text-center font-weight-semibold align-middle p-4">Total Price</th>
                           <th className="text-center font-weight-semibold align-middle p-4">Status</th>
+                          <th className="text-center font-weight-semibold align-middle p-4">Delivered Date</th>
+                          <th className="text-center font-weight-semibold align-middle p-4">Address</th>
                           <th className="text-center font-weight-semibold align-middle p-4"></th>
                           {/* <th></th>
                           <th></th> */}
@@ -151,7 +154,12 @@ const ListOrder = ({ allCustomerList, message }) => {
                               </span>
                             </td>
                             <td className="text-center font-weight-semibold align-middle p-4">
-
+                              {moment(order.deliveredDate).format('YYYY-MM-DD HH:mm:ss')}
+                            </td>
+                            <td className="text-center font-weight-semibold align-middle p-4">
+                              {order.address}
+                            </td>
+                            <td className="text-center font-weight-semibold align-middle p-4">
                               <button
                                 className="btn btn-outline-dark btn-sm"
                                 onClick={(e) => { handleChangeOrderState(e, order.orderId) }}

@@ -48,6 +48,7 @@ public class OrderService {
         order.setCustomer(customer);
         order.setPayment(payment);
         order.setAddress(address);
+
         List<OrderDetails> orderDetailsList = new ArrayList<>();
         double totalPrice=0;
         for (CartDetails cartDetails: cartDetailsList) {
