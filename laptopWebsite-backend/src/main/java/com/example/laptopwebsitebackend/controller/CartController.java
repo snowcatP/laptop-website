@@ -62,8 +62,6 @@ public class CartController {
 
             lstCartDetails.add(cartDetails);
             cart.setCartDetails(lstCartDetails);
-            //Update the availibility quantity of this product
-            product.setQuantity(product.getQuantity() - quantity);
             return new ResponseEntity<>(cartDetailService.addItemToCart(cartDetails), HttpStatus.OK);
         }
         else {return new ResponseEntity<>(cartDetailService.addItemToCart(cartDetails), HttpStatus.EXPECTATION_FAILED);}

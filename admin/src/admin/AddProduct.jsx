@@ -37,38 +37,36 @@ const AddProduct = () => {
         const fieldName = `image${i}`;
         const imgRef = ref(imageDb, `images/${v4()}`);
         const uploadPromise = uploadBytes(imgRef, form[fieldName])
-          .then((snapshot) => {
-            return getDownloadURL(snapshot.ref);
-          })
-          .then((url) => {
-            // Set URL in the form state
-            setForm((prevForm) => ({
-              ...prevForm,
-              [fieldName]: url,
-            }));
-          })
-          .catch((error) => {
-            toast(error.message);
-          });
-
+          .then((snapshot) => getDownloadURL(snapshot.ref));
         uploadPromises.push(uploadPromise);
       }
-      await Promise.all(uploadPromises);
+
+      const imageUrls = await Promise.all(uploadPromises);
+
+      setForm((prevForm) => ({
+        ...prevForm,
+        image1: imageUrls[0],
+        image2: imageUrls[1],
+        image3: imageUrls[2],
+        image4: imageUrls[3],
+      }));
       
-      
+
+      console.log(form)
       setTimeout(async () => {
-        console.log(form)
+        console.log(form) 
+
         const response = await addProduct(form);
-  
         if (response.status === 200) {
-          console.log(response.data);
-          toast.success("Product added successfully!");
+          // console.log(response.data)
+
+          toast.success("Add new product success")
           
           setTimeout(() => {
-            navigate("/list-product");
-          },2000)
+            navigate("/list-product")
+          }, 2000)
         }
-      }, 2000);
+      }, 2000)
 
     } catch (error) {
       console.error("Error adding product:", error);

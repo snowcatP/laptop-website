@@ -57,8 +57,7 @@ const UserOrders = () => {
 
       }
       catch (error) {
-        console.log(error)
-        toast.error(error.respone.data.message)
+        toast.error("Cannot cancel unpendding order!")
       }
     }
     cancel();
