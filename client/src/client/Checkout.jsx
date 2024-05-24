@@ -73,17 +73,15 @@ function Checkout(props) {
       }
       try {
         const response = await checkout(credential, header);
-        if (response.status === 200) {
-          console.table(response.data);
+        if (response.status  === 200) {
           toast.success("Order successfully!");
-          navigate("/user/orders");
         }
       }
       catch (error) {
-        toast.error(error.response.data.message);
+        toast.error("Order Failed, Check your Order again!");
       }
+      
     }
-    e.preventDefault();
   };
 
   const onChangeInput = (e) => {

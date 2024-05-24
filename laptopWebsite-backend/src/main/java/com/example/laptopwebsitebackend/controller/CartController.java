@@ -45,17 +45,18 @@ public class CartController {
         if (quantity<=product.getQuantity()) {
             for (CartDetails cartDetails2 : cart.getCartDetails()) {
 
-                if (cartDetails2.getProduct().getProductId().equals(productId)) {
-                    cartDetails2.setQuantity(cartDetails2.getQuantity() + quantity);
-                    cartDetails2.setPrice(calculateTotalPrice(product, cartDetails2.getQuantity()));
-                    return new ResponseEntity<>(cartDetailService.updateItemInCart(cartDetails2), HttpStatus.OK);
+                if (cartDetails2.getProduct().getProductId().equals(productId) ) {
+                    if (cartDetails2.getQuantity() <= 10) {
+                        cartDetails2.setQuantity(cartDetails2.getQuantity() + quantity);
+                        cartDetails2.setPrice(calculateTotalPrice(product, cartDetails2.getQuantity()));
+                        return new ResponseEntity<>(cartDetailService.updateItemInCart(cartDetails2), HttpStatus.OK);
+                    }
                 }
             }
             List<CartDetails> lstCartDetails = new ArrayList<>();
             cartDetails.setProduct(product);
             cartDetails.setQuantity(quantity);
             cartDetails.setCart(cart);
-
             //Calculate the total price of this item
 
             cartDetails.setPrice(calculateTotalPrice(product, quantity));
@@ -81,7 +82,6 @@ public class CartController {
 
         //Update the availibility quantity of this product
         int quantity = cartDetails.getQuantity();
-        product.setQuantity(product.getQuantity()+quantity);
 
         return ResponseEntity.ok(cartDetailService.deleteById(cartDetailsId));
     }

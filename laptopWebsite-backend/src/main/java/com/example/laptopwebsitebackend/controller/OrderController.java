@@ -79,6 +79,10 @@ public class OrderController {
         List<CartDetails> cartDetailsList = new ArrayList<>();
         for(Long cartDetailId: orderRequest.getLstCartDetailsId()){
             CartDetails cartDetails = cartDetailService.findById(cartDetailId);
+            Product product = cartDetails.getProduct();
+            if (product.getQuantity()<cartDetails.getQuantity()){
+                return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+            }
             cartDetailsList.add(cartDetails);
             cartDetailService.deleteById(cartDetailId);
 
