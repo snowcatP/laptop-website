@@ -4,26 +4,95 @@ import Footer from "./components/Footer";
 import Sidebar from "./components/Sidebar";
 import { Link } from "react-router-dom";
 import { getCountCustomers } from "./service/CustomerService";
+import {
+  getAllOrders,
+  getCountOrders,
+  getRevenueOrders,
+  getTopSelling,
+} from "./service/OrderSerive";
 const Admin = () => {
   const [countCustomers, setCountCustomers] = useState([]);
+  const [countOrders, setCountOrders] = useState([]);
+  const [revenue, setRevenue] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [topSelling, setTopSelling] = useState([]);
 
   useEffect(() => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    const getAllCustomers = async () => {
+    const CountCustomers = async () => {
       try {
         const response = await getCountCustomers(headers);
 
         setCountCustomers(response.data);
-        console.log(countCustomers);
       } catch (error) {
         console.log(error);
       }
     };
 
-    getAllCustomers();
-  }, [countCustomers]);
+    const CountOrders = async () => {
+      try {
+        const response = await getCountOrders(headers);
+
+        setCountOrders(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const getRevenue = async () => {
+      try {
+        const response = await getRevenueOrders(headers);
+
+        setRevenue(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const getOrder = async () => {
+      try {
+        const response = await getAllOrders(headers);
+        setOrders(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const getTopProductSelling = async () => {
+      try {
+        const response = await getTopSelling(headers);
+        setTopSelling(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+
+    getOrder();
+
+    CountCustomers();
+    CountOrders();
+    getRevenue();
+    getOrder();
+    getTopProductSelling();
+  }, []);
+
+  const getColor = (stateType) => {
+    switch (stateType) {
+      case "CANCELLED":
+        return "badge bg-danger";
+      case "CONFIRMED":
+        return "badge bg-warning";
+      case "SHIPPED":
+        return { color: "orange", fontSize: "1.2em" };
+      case "DELIVERED":
+        return "badge bg-success";
+      default:
+        return { color: "black", fontSize: "1.2em" };
+    }
+  };
 
   return (
     <>
@@ -47,13 +116,17 @@ const Admin = () => {
           <section className="section dashboard">
             <div className="row">
               {/* Left side columns */}
-              <div className="col-lg-8">
+              <div className="col-lg-16">
                 <div className="row">
                   {/* Sales Card */}
                   <div className="col-xxl-4 col-md-6">
                     <div className="card info-card sales-card">
                       <div className="filter">
-                        <Link className="icon" href="#" data-bs-toggle="dropdown">
+                        <Link
+                          className="icon"
+                          href="#"
+                          data-bs-toggle="dropdown"
+                        >
                           <i className="bi bi-three-dots" />
                         </Link>
                         <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
@@ -86,13 +159,13 @@ const Admin = () => {
                             <i className="bi bi-cart" />
                           </div>
                           <div className="ps-3">
-                            <h6>145</h6>
-                            <span className="text-success small pt-1 fw-bold">
+                            <h6>{countOrders} orders</h6>
+                            {/* <span className="text-success small pt-1 fw-bold">
                               12%
                             </span>{" "}
                             <span className="text-muted small pt-2 ps-1">
                               increase
-                            </span>
+                            </span> */}
                           </div>
                         </div>
                       </div>
@@ -103,7 +176,11 @@ const Admin = () => {
                   <div className="col-xxl-4 col-md-6">
                     <div className="card info-card revenue-card">
                       <div className="filter">
-                        <Link className="icon" href="#" data-bs-toggle="dropdown">
+                        <Link
+                          className="icon"
+                          href="#"
+                          data-bs-toggle="dropdown"
+                        >
                           <i className="bi bi-three-dots" />
                         </Link>
                         <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
@@ -136,13 +213,18 @@ const Admin = () => {
                             <i className="bi bi-currency-dollar" />
                           </div>
                           <div className="ps-3">
-                            <h6>$3,264</h6>
-                            <span className="text-success small pt-1 fw-bold">
+                            <h6>
+                              {Intl.NumberFormat("vi-VN", {
+                                style: "currency",
+                                currency: "VND",
+                              }).format(revenue)}
+                            </h6>
+                            {/* <span className="text-success small pt-1 fw-bold">
                               8%
-                            </span>{" "}
-                            <span className="text-muted small pt-2 ps-1">
+                            </span>{" "} */}
+                            {/* <span className="text-muted small pt-2 ps-1">
                               increase
-                            </span>
+                            </span> */}
                           </div>
                         </div>
                       </div>
@@ -153,7 +235,11 @@ const Admin = () => {
                   <div className="col-xxl-4 col-xl-12">
                     <div className="card info-card customers-card">
                       <div className="filter">
-                        <Link className="icon" href="#" data-bs-toggle="dropdown">
+                        <Link
+                          className="icon"
+                          href="#"
+                          data-bs-toggle="dropdown"
+                        >
                           <i className="bi bi-three-dots" />
                         </Link>
                         <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
@@ -203,7 +289,11 @@ const Admin = () => {
                   <div className="col-12">
                     <div className="card">
                       <div className="filter">
-                        <Link className="icon" href="#" data-bs-toggle="dropdown">
+                        <Link
+                          className="icon"
+                          href="#"
+                          data-bs-toggle="dropdown"
+                        >
                           <i className="bi bi-three-dots" />
                         </Link>
                         <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
@@ -242,7 +332,11 @@ const Admin = () => {
                   <div className="col-12">
                     <div className="card recent-sales overflow-auto">
                       <div className="filter">
-                        <Link className="icon" href="#" data-bs-toggle="dropdown">
+                        <Link
+                          className="icon"
+                          href="#"
+                          data-bs-toggle="dropdown"
+                        >
                           <i className="bi bi-three-dots" />
                         </Link>
                         <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
@@ -273,7 +367,7 @@ const Admin = () => {
                         <table className="table table-borderless datatable">
                           <thead>
                             <tr>
-                              <th scope="col">#</th>
+                              <th scope="col">ID</th>
                               <th scope="col">Customer</th>
                               <th scope="col">Product</th>
                               <th scope="col">Price</th>
@@ -281,91 +375,51 @@ const Admin = () => {
                             </tr>
                           </thead>
                           <tbody>
-                            <tr>
-                              <th scope="row">
-                                <Link to="#">#2457</Link>
-                              </th>
-                              <td>Brandon Jacob</td>
-                              <td>
-                                <Link to="#" className="text-primary">
-                                  At praesentium minu
-                                </Link>
-                              </td>
-                              <td>$64</td>
-                              <td>
-                                <span className="badge bg-success">
-                                  Approved
-                                </span>
-                              </td>
-                            </tr>
-                            <tr>
-                              <th scope="row">
-                                <Link to="#">#2147</Link>
-                              </th>
-                              <td>Bridie Kessler</td>
-                              <td>
-                                <Link to="#" className="text-primary">
-                                  Blanditiis dolor omnis similique
-                                </Link>
-                              </td>
-                              <td>$47</td>
-                              <td>
-                                <span className="badge bg-warning">
-                                  Pending
-                                </span>
-                              </td>
-                            </tr>
-                            <tr>
-                              <th scope="row">
-                                <Link to="#">#2049</Link>
-                              </th>
-                              <td>Ashleigh Langosh</td>
-                              <td>
-                                <Link to="#" className="text-primary">
-                                  At recusandae consectetur
-                                </Link>
-                              </td>
-                              <td>$147</td>
-                              <td>
-                                <span className="badge bg-success">
-                                  Approved
-                                </span>
-                              </td>
-                            </tr>
-                            <tr>
-                              <th scope="row">
-                                <Link to="#">#2644</Link>
-                              </th>
-                              <td>Angus Grady</td>
-                              <td>
-                                <Link to="#" className="text-primar">
-                                  Ut voluptatem id earum et
-                                </Link>
-                              </td>
-                              <td>$67</td>
-                              <td>
-                                <span className="badge bg-danger">
-                                  Rejected
-                                </span>
-                              </td>
-                            </tr>
-                            <tr>
-                              <th scope="row">
-                                <Link to="#">#2644</Link>
-                              </th>
-                              <td>Raheem Lehner</td>
-                              <td>
-                                <Link to="#" className="text-primary">
-                                  Sunt similique distinctio
-                                </Link>
-                              </td>
-                              <td>$165</td>
-                              <td>
-                                <span className="badge bg-success">
-                                  Approved
-                                </span>
-                              </td>
-                            </tr>
+                            {orders
+                              .sort((a, b) => b.orderId - a.orderId)
+                              .map((order, index) => (
+                                <tr key={index}>
+                                  <th scope="row">{order.orderId}</th>
+                                  <td>
+                                    {order.customer.firstName}{" "}
+                                    {order.customer.lastName}
+                                  </td>
+                                  <td className="">
+                                    {order.orderDetails.map(
+                                      (orderDetail, detailIndex) => {
+                                        const product = orderDetail.product;
+                                        return (
+                                          <>
+                                            <tr key={detailIndex}>
+                                              <td>
+                                                <input
+                                                  type="hidden"
+                                                  name="productId"
+                                                  value={product.productId}
+                                                />
+                                                {product.productName}{"           "}
+                                                {orderDetail.quantity}x
+                                              </td>
+                                            </tr>
+                                          </>
+                                        );
+                                      }
+                                    )}
+                                  </td>
+                                  <td>
+                                    {Intl.NumberFormat("vi-VN", {
+                                      style: "currency",
+                                      currency: "VND",
+                                    }).format(order.totalPrice)}
+                                  </td>
+
+                                  <td>
+                                    <span className={getColor(order.stateType)}>
+                                      {order.stateType}
+                                    </span>
+                                  </td>
+                                </tr>
+                              ))}
                           </tbody>
                         </table>
                       </div>
@@ -376,7 +430,11 @@ const Admin = () => {
                   <div className="col-12">
                     <div className="card top-selling overflow-auto">
                       <div className="filter">
-                        <Link className="icon" href="#" data-bs-toggle="dropdown">
+                        <Link
+                          className="icon"
+                          href="#"
+                          data-bs-toggle="dropdown"
+                        >
                           <i className="bi bi-three-dots" />
                         </Link>
                         <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
@@ -415,81 +473,32 @@ const Admin = () => {
                             </tr>
                           </thead>
                           <tbody>
-                            <tr>
-                              <th scope="row">
-                                <Link to="#">
-                                  <img src="assets/img/product-1.jpg" alt="" />
-                                </Link>
-                              </th>
-                              <td>
-                                <Link to="#" className="text-primary fw-bold">
-                                  Ut inventore ipsa voluptas nulla
-                                </Link>
-                              </td>
-                              <td>$64</td>
-                              <td className="fw-bold">124</td>
-                              <td>$5,828</td>
-                            </tr>
-                            <tr>
-                              <th scope="row">
-                                <Link to="#">
-                                  <img src="assets/img/product-2.jpg" alt="" />
-                                </Link>
-                              </th>
-                              <td>
-                                <Link to="#" className="text-primary fw-bold">
-                                  Exercitationem similique doloremque
-                                </Link>
-                              </td>
-                              <td>$46</td>
-                              <td className="fw-bold">98</td>
-                              <td>$4,508</td>
-                            </tr>
-                            <tr>
-                              <th scope="row">
-                                <Link to="#">
-                                  <img src="assets/img/product-3.jpg" alt="" />
-                                </Link>
-                              </th>
-                              <td>
-                                <Link to="#" className="text-primary fw-bold">
-                                  Doloribus nisi exercitationem
-                                </Link>
-                              </td>
-                              <td>$59</td>
-                              <td className="fw-bold">74</td>
-                              <td>$4,366</td>
-                            </tr>
-                            <tr>
-                              <th scope="row">
-                                <Link to="#">
-                                  <img src="assets/img/product-4.jpg" alt="" />
-                                </Link>
-                              </th>
-                              <td>
-                                <Link to="#" className="text-primary fw-bold">
-                                  Officiis quaerat sint rerum error
-                                </Link>
-                              </td>
-                              <td>$32</td>
-                              <td className="fw-bold">63</td>
-                              <td>$2,016</td>
-                            </tr>
-                            <tr>
-                              <th scope="row">
-                                <Link to="#">
-                                  <img src="assets/img/product-5.jpg" alt="" />
-                                </Link>
-                              </th>
-                              <td>
-                                <Link to="#" className="text-primary fw-bold">
-                                  Sit unde debitis delectus repellendus
-                                </Link>
-                              </td>
-                              <td>$79</td>
-                              <td className="fw-bold">41</td>
-                              <td>$3,239</td>
-                            </tr>
+                          {topSelling
+                              ?.map((productTop, index) => (
+                                <tr key={index}>
+                                  <th scope="row">
+                                  <img src={productTop.product.image1} alt="" />
+                                  </th>
+                                  <td className="text-primary fw-bold">
+                                  {productTop.product.productName}
+                                  </td>
+                                  <td>
+                                  {Intl.NumberFormat("vi-VN", {
+                                      style: "currency",
+                                      currency: "VND",
+                                    }).format(productTop.product.price)}
+                                  </td>
+                                  <td className="fw-bold">
+                                  {productTop.totalQuantitySold}
+                                  </td>
+                                  <td>
+                                  {Intl.NumberFormat("vi-VN", { 
+                                    style: 'currency', 
+                                    currency: 'VND' 
+                                    }).format(2 * productTop?.product.price * (1-((productTop?.product?.discount?.discountValue ?? 0) / 100)))}
+                                  </td>
+                                </tr>
+                              ))}
                           </tbody>
                         </table>
                       </div>
@@ -500,8 +509,7 @@ const Admin = () => {
               </div>
               {/* End Left side columns */}
               {/* Right side columns */}
-              <div className="col-lg-4">
-                {/* Recent Activity */}
+              {/* <div className="col-lg-4">
                 <div className="card">
                   <div className="filter">
                     <Link className="icon" href="#" data-bs-toggle="dropdown">
@@ -544,7 +552,6 @@ const Admin = () => {
                           beatae
                         </div>
                       </div>
-                      {/* End activity item*/}
                       <div className="activity-item d-flex">
                         <div className="activite-label">56 min</div>
                         <i className="bi bi-circle-fill activity-badge text-danger align-self-start" />
@@ -552,7 +559,6 @@ const Admin = () => {
                           Voluptatem blanditiis blanditiis eveniet
                         </div>
                       </div>
-                      {/* End activity item*/}
                       <div className="activity-item d-flex">
                         <div className="activite-label">2 hrs</div>
                         <i className="bi bi-circle-fill activity-badge text-primary align-self-start" />
@@ -560,7 +566,6 @@ const Admin = () => {
                           Voluptates corrupti molestias voluptatem
                         </div>
                       </div>
-                      {/* End activity item*/}
                       <div className="activity-item d-flex">
                         <div className="activite-label">1 day</div>
                         <i className="bi bi-circle-fill activity-badge text-info align-self-start" />
@@ -572,7 +577,6 @@ const Admin = () => {
                           tempore
                         </div>
                       </div>
-                      {/* End activity item*/}
                       <div className="activity-item d-flex">
                         <div className="activite-label">2 days</div>
                         <i className="bi bi-circle-fill activity-badge text-warning align-self-start" />
@@ -580,7 +584,6 @@ const Admin = () => {
                           Est sit eum reiciendis exercitationem
                         </div>
                       </div>
-                      {/* End activity item*/}
                       <div className="activity-item d-flex">
                         <div className="activite-label">4 weeks</div>
                         <i className="bi bi-circle-fill activity-badge text-muted align-self-start" />
@@ -589,12 +592,10 @@ const Admin = () => {
                           quas
                         </div>
                       </div>
-                      {/* End activity item*/}
+
                     </div>
                   </div>
                 </div>
-                {/* End Recent Activity */}
-                {/* Budget Report */}
                 <div className="card">
                   <div className="filter">
                     <Link className="icon" href="#" data-bs-toggle="dropdown">
@@ -632,8 +633,6 @@ const Admin = () => {
                     />
                   </div>
                 </div>
-                {/* End Budget Report */}
-                {/* Website Traffic */}
                 <div className="card">
                   <div className="filter">
                     <Link className="icon" href="#" data-bs-toggle="dropdown">
@@ -671,8 +670,6 @@ const Admin = () => {
                     />
                   </div>
                 </div>
-                {/* End Website Traffic */}
-                {/* News & Updates Traffic */}
                 <div className="card">
                   <div className="filter">
                     <Link className="icon" href="#" data-bs-toggle="dropdown">
@@ -759,11 +756,10 @@ const Admin = () => {
                         </p>
                       </div>
                     </div>
-                    {/* End sidebar recent posts*/}
+
                   </div>
                 </div>
-                {/* End News & Updates */}
-              </div>
+              </div> */}
               {/* End Right side columns */}
             </div>
           </section>

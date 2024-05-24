@@ -160,4 +160,22 @@ public class OrderController{
         return new ResponseEntity<>(orderService.updateOrder(order),HttpStatus.BAD_REQUEST);
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<Long> countAllOrders() {
+        long orderCount = orderService.countAllOrders();
+        return new ResponseEntity<>(orderCount, HttpStatus.OK);
+    }
+
+    @GetMapping("/total-revenue")
+    public ResponseEntity<Double> getTotalRevenue() {
+        Double totalRevenue = orderService.calculateTotalRevenue();
+        return new ResponseEntity<>(totalRevenue, HttpStatus.OK);
+    }
+
+    @GetMapping("/top-selling-products")
+    public ResponseEntity<List<ProductSalesData>> getTopSellingProducts() {
+        List<ProductSalesData> topSellingProducts = orderService.getTopSellingProducts(5);
+        return new ResponseEntity<>(topSellingProducts, HttpStatus.OK);
+    }
+
 }
