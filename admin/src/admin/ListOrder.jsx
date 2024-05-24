@@ -33,7 +33,7 @@ const ListOrder = ({ allCustomerList, message }) => {
         toast.success("Update order state successfully");
       }
       catch (error) {
-        toast.error(error.response.data.message);
+        toast.error("Cannot update order state");
       }
     };
     modifyOrderState();

@@ -92,8 +92,12 @@ public class OrderController {
     @PostMapping("/change-order-state/{orderId}")
     public ResponseEntity<Order> changeOrderState(@PathVariable("orderId") Long orderId){
         Order order = orderService.findOrderById(orderId);
-        order.nextState();
-        return new ResponseEntity<>(orderService.updateOrder(order),HttpStatus.OK);
+        if(order.getStateType() != OrderStateType.DELIVERED &&
+                order.getStateType()!= OrderStateType.CANCELLED){
+            order.nextState();
+            return new ResponseEntity<>(orderService.updateOrder(order),HttpStatus.OK);
+        }
+        return new ResponseEntity<>(orderService.updateOrder(order),HttpStatus.EXPECTATION_FAILED);
     }
     @PostMapping("/cancel-order/{orderId}")
     public ResponseEntity<Order> cancelOrder(@PathVariable("orderId") Long orderId){
@@ -107,11 +111,8 @@ public class OrderController {
             order.setState(new CancelledState());
             return new ResponseEntity<>(orderService.updateOrder(order),HttpStatus.OK);
         }
-        return new ResponseEntity<>(orderService.updateOrder(order),HttpStatus.EXPECTATION_FAILED);
+        return new ResponseEntity<>(orderService.updateOrder(order),HttpStatus.BAD_REQUEST);
     }
-   public void DEF(){
-
-   }
 
 
 }
