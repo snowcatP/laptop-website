@@ -15,7 +15,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/order")
-    @CrossOrigin(origins = {"http://localhost:3001","http://localhost:3000"})
+@CrossOrigin()
 
 public class OrderController {
     @Autowired
@@ -109,9 +109,9 @@ public class OrderController {
         }
         return new ResponseEntity<>(orderService.updateOrder(order),HttpStatus.EXPECTATION_FAILED);
     }
-    public void Abc(){
+   public void DEF(){
 
-    }
+   }
 
 
 }
