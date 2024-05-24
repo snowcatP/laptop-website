@@ -26,8 +26,6 @@ public class ProductController {
 
     @PostMapping("/add")
     public ResponseEntity<Product> create_New_Product(@Valid @RequestBody ProductRequest productRequest){
-
-        System.out.println(productRequest.toString());
         Configuration configuration = new Configuration();
         configuration.setRam(productRequest.getRam());
         configuration.setProcessor(productRequest.getProcessor());

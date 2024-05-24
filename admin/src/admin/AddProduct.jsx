@@ -37,40 +37,30 @@ const AddProduct = () => {
         const fieldName = `image${i}`;
         const imgRef = ref(imageDb, `images/${v4()}`);
         const uploadPromise = uploadBytes(imgRef, form[fieldName])
-          .then((snapshot) => {
-            return getDownloadURL(snapshot.ref);
-          })
-          .then((url) => {
-            // Set URL in the form state
-            setForm((prevForm) => ({
-              ...prevForm,
-              [fieldName]: url,
-            }));
-          })
-          .catch((error) => {
-            toast(error.message);
-          });
-
+          .then((snapshot) => getDownloadURL(snapshot.ref));
         uploadPromises.push(uploadPromise);
       }
 
-      // Wait for all image uploads to complete
-      await Promise.all(uploadPromises);
+      const imageUrls = await Promise.all(uploadPromises);
 
+      const updatedForm = {
+        ...form,
+        image1: imageUrls[0],
+        image2: imageUrls[1],
+        image3: imageUrls[2],
+        image4: imageUrls[3],
+      };
       
-      setTimeout(async () => {
-        const response = await addProduct(form);
-  
-        if (response.status === 200) {
-          console.log(response.data);
-          toast.success("Product added successfully!");
-          
-          setTimeout(() => {
-            navigate("/list-product");
-          },2000)
-        }
-      }, 2000);
 
+      setForm(updatedForm);
+
+      const response = await addProduct(updatedForm);
+      if (response.status === 200) {
+        toast.success("Add new product success");
+        setTimeout(() => {
+          navigate("/list-product");
+        }, 2000);
+      }
     } catch (error) {
       console.error("Error adding product:", error);
       toast.error("Fail to add new product");
