@@ -52,6 +52,8 @@ public class OrderController{
         return new ResponseEntity<>(orderService.getOrderByCustomer(customerId), HttpStatus.OK);
     }
 
+
+
     private Double calculateTotalPrice(Product product, int quantity){
         int discountValue = (product.getDiscount() != null) ? product.getDiscount().getDiscountValue() : 0;
         double costPrice = product.getPrice();
@@ -178,4 +180,9 @@ public class OrderController{
         return new ResponseEntity<>(topSellingProducts, HttpStatus.OK);
     }
 
+    @GetMapping("/delivered-orders/{customerId}")
+    public ResponseEntity<List<Order>> getDeliveredOrdersByCustomerId(@PathVariable("customerId") Long customerId) {
+        List<Order> deliveredOrders = orderService.getDeliveredOrdersByCustomerId(customerId);
+        return new ResponseEntity<>(deliveredOrders, HttpStatus.OK);
+    }
 }

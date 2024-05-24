@@ -172,11 +172,7 @@ const AdminProfile = () => {
                     >
                       <h5 className="card-title">About</h5>
                       <p className="small fst-italic">
-                        Sunt est soluta temporibus accusantium neque nam maiores
-                        cumque temporibus. Tempora libero non est unde veniam
-                        est qui dolor. Ut sunt iure rerum quae quisquam autem
-                        eveniet perspiciatis odit. Fuga sequi sed ea saepe at
-                        unde.
+                        Student UTE K21 - GROUP
                       </p>
                       <h5 className="card-title">Profile Details</h5>
                       <div className="row">
