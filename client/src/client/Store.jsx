@@ -382,8 +382,10 @@ const handleAddToCart = (id) =>{
                              {product?.productName}
                             </h3>
                             <h4 className="product-price">
-                              {product.price * (1-((product.discount?.discountValue ?? 0) / 100))} VND
-                              <del className="product-old-price">{product?.price}</del>
+                            {Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(product.price * (1-((product.discount?.discountValue ?? 0) / 100)))}{" "}
+                              <del className="product-old-price">
+                              {Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(product?.price)}
+                                </del>
                             </h4>
                           </div>
                           <div className="add-to-cart">

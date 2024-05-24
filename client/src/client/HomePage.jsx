@@ -177,9 +177,9 @@ const HomePage = () => {
                                 {product.productName}
                               </h3>
                               <h4 className="product-price">
-                                {product.price * (1-((product.discount?.discountValue ?? 0) / 100))} VND
+                                {Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(product.price * (1-((product?.discount?.discountValue ?? 0) / 100)))}{" "}
                                 <del className="product-old-price">
-                                  {product.price} VND
+                                {Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(product.price)}
                                 </del>
                               </h4>
                               <div className="product-rating">
@@ -323,9 +323,9 @@ const HomePage = () => {
                                 {topproduct.productName}
                               </h3>
                               <h4 className="product-price">
-                                {topproduct.price * (1-((topproduct.discount?.discountValue ?? 0) / 100))} VND
+                              {Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(topproduct?.price * (1-((topproduct?.discount?.discountValue ?? 0) / 100)))}{" "}
                                 <del className="product-old-price">
-                                  {topproduct.price} VND
+                                {Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(topproduct.price)}
                                 </del>
                               </h4>
                               <div className="product-rating">

@@ -18,6 +18,7 @@ import ListCustomer from "./admin/ListCustomer";
 import EditWarranty from "./admin/EditWarranty";
 import ListEmployee from "./admin/ListEmployee";
 import AddEmployee from "./admin/AddEmployee";
+import ListOrder from "./admin/ListOrder";
 
 function App() {
   return (
@@ -139,6 +140,15 @@ function App() {
           element={
             <ProtectedRoute>
               <AddEmployee />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/list-order"
+          element={
+            <ProtectedRoute>
+              <ListOrder />
             </ProtectedRoute>
           }
         />

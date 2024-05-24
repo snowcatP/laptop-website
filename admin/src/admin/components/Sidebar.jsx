@@ -132,6 +132,30 @@ const Sidebar = () => {
               </li>
             </ul>
           </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link collapsed"
+              data-bs-target="#icons-nav"
+              data-bs-toggle="collapse"
+              to="#"
+            >
+              <i className="bi bi-gem" />
+              <span>Order Management</span>
+              <i className="bi bi-chevron-down ms-auto" />
+            </Link>
+            <ul
+              id="icons-nav"
+              className="nav-content collapse "
+              data-bs-parent="#sidebar-nav"
+            >
+              <li>
+                <Link to="/list-order">
+                  <i className="bi bi-circle" />
+                  <span>List Order</span>
+                </Link>
+              </li>
+            </ul>
+          </li>
           {/* End Charts Nav */}
           <li className="nav-item">
             <Link

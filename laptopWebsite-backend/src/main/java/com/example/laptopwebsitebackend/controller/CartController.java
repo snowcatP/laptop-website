@@ -42,7 +42,7 @@ public class CartController {
         Cart cart = cartService.findCartById(cartId);
         CartDetails cartDetails = new CartDetails();
 
-        if (quantity<product.getQuantity()) {
+        if (quantity<=product.getQuantity()) {
             for (CartDetails cartDetails2 : cart.getCartDetails()) {
 
                 if (cartDetails2.getProduct().getProductId().equals(productId)) {
@@ -62,8 +62,6 @@ public class CartController {
 
             lstCartDetails.add(cartDetails);
             cart.setCartDetails(lstCartDetails);
-            //Update the availibility quantity of this product
-            product.setQuantity(product.getQuantity() - quantity);
             return new ResponseEntity<>(cartDetailService.addItemToCart(cartDetails), HttpStatus.OK);
         }
         else {return new ResponseEntity<>(cartDetailService.addItemToCart(cartDetails), HttpStatus.EXPECTATION_FAILED);}
