@@ -177,7 +177,9 @@ const HomePage = () => {
                                 {product.productName}
                               </h3>
                               <h4 className="product-price">
+
                                 {product.price * (1-((product.discount?.discountValue ?? 0) / 100))} VND
+
                                 <del className="product-old-price">
                                   {product.price} VND
                                 </del>
@@ -323,6 +325,7 @@ const HomePage = () => {
                                 {topproduct.productName}
                               </h3>
                               <h4 className="product-price">
+
                                 {topproduct.price * (1-((topproduct.discount?.discountValue ?? 0) / 100))} VND
                                 <del className="product-old-price">
                                   {topproduct.price} VND

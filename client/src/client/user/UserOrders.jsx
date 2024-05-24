@@ -6,6 +6,7 @@ import Letter from '../components/Letter';
 import Footer from '../components/Footer';
 import { Link } from 'react-router-dom';
 import { getOrders } from '../service/Order';
+import { cancelOrder, getOrdersOfCustomer } from '../service/Order';
 import { checkValidToken, customerProfile } from '../service/ClientService';
 import { jwtDecode } from 'jwt-decode';
 
@@ -47,17 +48,46 @@ const UserOrders = () => {
     Authorization: "Bearer " + token,
   };
 
-  useEffect(() => {
-    const getCart = async () => {
+   useEffect(() => {
+    const getOrder = async () => {
       try {
-        const response = await getOrders(orderId, header);
+        const response = await getOrdersOfCustomer(user.customerId, header);
         setOrders(response.data);
       } catch (error) {
-        console.log(error);
+        console.log(error.response.data.message);
       }
     };
-    getCart();
-  }, [orderId, orders]);
+    getOrder();
+  }, [orders]);
+  const getColor = (stateType) => {
+    switch (stateType) {
+      case 'CANCELLED':
+        return { color: 'red', fontSize: '1.2em' };
+      case 'CONFIRMED':
+        return { color: 'blue', fontSize: '1.2em' };
+      case 'SHIPPED':
+        return { color: 'orange', fontSize: '1.2em' };
+      case 'DELIVERED':
+        return { color: 'green', fontSize: '1.2em' };
+      default:
+        return { color: 'black', fontSize: '1.2em' };
+    }
+  };
+  const hanldeCancelOrder = (e, orderId) => {
+    e.preventDefault();
+    const cancel = async () => {
+      try {
+        const respone = await cancelOrder(orderId, header);
+        toast.success("Cancel order successfully!")
+
+      }
+      catch (error) {
+        console.log(error)
+        toast.error(error.respone.data.message)
+      }
+    }
+    cancel();
+  }
 
   return (
     <>
@@ -101,7 +131,6 @@ const UserOrders = () => {
                                         Status
                                       </th>
                                       <th className="text-center py-3 px-4" style={{ width: "20px" }}>
-                                        Cancel
                                       </th>
 
                                     </tr>
@@ -161,8 +190,10 @@ const UserOrders = () => {
 
                                           <td className="text-center align-middle px-0 align-middle">
                                             {/* Delete */}
-                                            <button className="shop-tooltip float-none text-center" type="button">
-                                              Delete
+
+                                            <button className="shop-tooltip float-none text-center" onClick={(e) => { hanldeCancelOrder(e, order.orderId) }}>
+                                              Cancel
+
                                             </button>
                                           </td>
                                         </tr>

@@ -8,12 +8,12 @@ import Slider from "react-slick";
 import { getProductById } from "./service/DetailProduct";
 import { addNewComment, getListComment } from "./service/CommentService";
 import { useAuth } from "./context/AuthContext";
-import {ToastContainer,  toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { addToCart } from "./service/ProductService";
 
 const Product = () => {
-  const {user, isLogged} = useAuth()
+  const { user, isLogged } = useAuth()
   const navigate = useNavigate()
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);
@@ -107,9 +107,9 @@ const Product = () => {
     }
 
     e.preventDefault()
-  
+
     const current = new Date()
-    const currentDate = (current.getDate() + 1 < 10 ? "0" + (current.getDate() + 1): current.getDate() + 1)
+    const currentDate = (current.getDate() + 1 < 10 ? "0" + (current.getDate() + 1) : current.getDate() + 1)
     const currentMonth = (current.getMonth() < 10 ? "0" + current.getMonth() : current.getMonth())
 
     const commentDate = `${current.getFullYear()}-${currentMonth}-${currentDate}`
@@ -130,15 +130,15 @@ const Product = () => {
       try {
         const response = await addNewComment(commentRequest, headers)
 
-        if(response.status === 200) {
+        if (response.status === 200) {
           toast.success("Add new comment success!")
-  
+
           const newComment = response.data
           comments.push(newComment)
-  
+
           e.target.content.value = ""
         }
-      } catch(error) {
+      } catch (error) {
         console.log(error)
       }
     }
@@ -146,32 +146,32 @@ const Product = () => {
   }
 
 
-    const handleAddToCart = (e) => {
-      e.preventDefault();
+  const handleAddToCart = (e) => {
+    e.preventDefault();
 
-      const cartId = user.customerId;
+    const cartId = user.customerId;
 
-      const headers = {
-        Authorization: `Bearer ${localStorage.getItem("token")}`
-      }
-
-      const addProductToCart = async () => {
-        try {
-          const response = await addToCart(cartId, id, quantity, headers)
-
-          if (response.status === 200) {
-            toast.success("Add to cart successfully")
-
-            setTimeout(() => {  
-              navigate("/user/cart")
-            }, 2000)
-          }
-        } catch(error) {
-          toast.error("Add to cart failed")
-        }
-      }
-      addProductToCart()
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`
     }
+
+    const addProductToCart = async () => {
+      try {
+        const response = await addToCart(cartId, id, quantity, headers)
+
+        if (response.status === 200) {
+          toast.success("Add to cart successfully")
+
+          setTimeout(() => {
+            navigate("/user/cart")
+          }, 2000)
+        }
+      } catch (error) {
+        toast.error("Add to cart failed")
+      }
+    }
+    addProductToCart()
+  }
 
   return (
     <>
@@ -230,7 +230,6 @@ const Product = () => {
                       {product?.price * (1-discount)}{" VND"}
                       <del className="product-old-price">{product?.price}</del>
                     </h3>
-                    <span className="product-available">In Stock</span>
                   </div>
                   {/* <p>
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit,
@@ -252,9 +251,23 @@ const Product = () => {
                         </span>
                       </div>
                     </div>
-                    <button className="add-to-cart-btn" onClick={handleAddToCart}>
+                    {(() => {
+                      if(product?.quantity > 0 ){
+                        return(
+                          <button className="add-to-cart-btn" onClick={handleAddToCart} >
                       <i className="fa fa-shopping-cart" /> add to cart
                     </button>
+                        )
+                      }
+                      return(
+                        
+                         <span className="product-price" style={{fontWeight: "bold"}}> Sorry this product is out of stock</span>
+                        
+                      )
+
+                    })()}
+
+                    
                   </div>
 
                   <ul className="product-links">
@@ -327,12 +340,12 @@ const Product = () => {
                                     }
                                   </div>
                                   <div class="review-body">
-                                  <textarea class="input" name="content" placeholder="Your Review"></textarea>
+                                    <textarea class="input" name="content" placeholder="Your Review"></textarea>
                                   </div>
                                 </li>
                                 <li>
                                   <div class="d-flex flex-row-reverse">
-                                    <button className="primary-btn" style={{fontSize: "11px"}} type="submit">Add comment</button>
+                                    <button className="primary-btn" style={{ fontSize: "11px" }} type="submit">Add comment</button>
                                   </div>
                                 </li>
                               </ul>
@@ -340,7 +353,7 @@ const Product = () => {
                           </div>
                         </div>
                         <div className="col-md-2"></div>
-                        </div>
+                      </div>
                     </div>
                     {/* /Review Form */}
 
@@ -426,7 +439,7 @@ const Product = () => {
         draggable
         pauseOnHover
         theme="light"
-      
+
       />
       <Footer />
     </>
