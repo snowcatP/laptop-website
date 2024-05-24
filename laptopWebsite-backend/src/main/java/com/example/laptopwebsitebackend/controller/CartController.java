@@ -42,7 +42,7 @@ public class CartController {
         Cart cart = cartService.findCartById(cartId);
         CartDetails cartDetails = new CartDetails();
 
-        if (quantity<product.getQuantity()) {
+        if (quantity<=product.getQuantity()) {
             for (CartDetails cartDetails2 : cart.getCartDetails()) {
 
                 if (cartDetails2.getProduct().getProductId().equals(productId)) {
