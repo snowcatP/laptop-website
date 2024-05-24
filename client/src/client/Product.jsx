@@ -227,8 +227,9 @@ const Product = () => {
 
                   <div>
                     <h3 className="product-price">
-                      {product?.price * (1-discount)}{" VND"}
-                      <del className="product-old-price">{product?.price}</del>
+                      {Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(product?.price * (1-discount))}
+                      <del className="product-old-price"> {product?.price}</del>
+                    <span className="product-available"  style={{fontSize:"20px"}}>In Stock {product?.quantity}</span>
                     </h3>
                   </div>
                   {/* <p>
