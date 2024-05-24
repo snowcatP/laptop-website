@@ -6,8 +6,7 @@ import Letter from "./components/Letter";
 import Footer from "./components/Footer";
 import { toast } from "react-toastify";
 import { checkout } from "./service/Order";
-import { useAuth } from "./context/AuthContext";
-import { getCartById } from "./service/Cart";
+
 
 function Checkout(props) {
   const { user, setUser, isLogged, setIsLogged } = useAuth()
@@ -16,23 +15,14 @@ function Checkout(props) {
   const [totalPrice, setTotalPrice] = useState(0);
   const location = useLocation();
   const [termsAccepted, setTermsAccepted] = useState(false);
+
+
   const token = localStorage.getItem("token");
   const header = {
     ContentType: 'application/json',
     Authorization: "Bearer " + token,
   };
-  useEffect(() => {
-    const getCart = async () => {
-      try {
-        setCartId(user.customerId);
-        const response = await getCartById(cartId, header);
-        setCarts(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getCart();
-  }, [cartId, carts]);
+  
   const [form, setForm] = useState({
     customerId: user.customerId,
     firstName: user.firstName,
@@ -43,6 +33,7 @@ function Checkout(props) {
     paymentId: "",
     lstCartDetailsId: ""
   });
+
   const handleTotalPrice = () => {
     let totalPrice = 0;
     carts.forEach((cart) => {
@@ -88,7 +79,7 @@ function Checkout(props) {
 
   const onChangeInput = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-    console.log(form.address);
+    
   };
 
   useEffect(() => {

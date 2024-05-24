@@ -77,7 +77,7 @@ const AdminProfile = () => {
           toast.success("Change password success!")
 
           setTimeout(() => {
-            navigate("/admin/profile")
+            window.location.reload();
           }, 1900)
         }
       } catch (error) {

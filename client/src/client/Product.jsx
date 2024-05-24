@@ -19,6 +19,7 @@ const Product = () => {
   const [nav2, setNav2] = useState(null);
   let sliderRef1 = useRef(null);
   let sliderRef2 = useRef(null);
+  const[discount,setDiscount] = useState(null);
 
   const settings = {
     slidesToShow: 3,
@@ -66,6 +67,7 @@ const Product = () => {
       try {
         const response = await getProductById(id);
         setProduct(response.data);
+        setDiscount(product.discount.discountValue/100)
       } catch (error) {
         console.log(error);
       }
@@ -225,8 +227,8 @@ const Product = () => {
 
                   <div>
                     <h3 className="product-price">
-                    {Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(product?.price)}
-                    <span className="product-available"  style={{fontSize:"20px"}}>In Stock {product?.quantity}</span>
+                      {product?.price * (1-discount)}{" VND"}
+                      <del className="product-old-price">{product?.price}</del>
                     </h3>
                   </div>
                   {/* <p>

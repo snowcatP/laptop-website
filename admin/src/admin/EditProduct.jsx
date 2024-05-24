@@ -196,6 +196,29 @@ const EditProduct = ({ allproductList, message }) => {
                         </div>
                         <div className="row mb-3">
                           <label className="col-sm-2 col-form-label">
+                            Brand
+                          </label>
+                          <div className="col-sm-10">
+                            <select
+                              className="form-select"
+                              aria-label="Default select example"
+                              name="brand"
+                              value={form.brand}
+                              onChange={onChangeInput}
+                            >
+                              <option value="ASUS" selected>
+                                ASUS
+                              </option>
+                              <option value="DELL">DELL</option>
+                              <option value="MSI">MSI</option>
+                              <option value="ACER">ACER</option>
+                              <option value="HP">HP</option>
+                              <option value="LENOVO">LENOVO</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className="row mb-3">
+                          <label className="col-sm-2 col-form-label">
                             Image 1
                           </label>
                           <div className="col-sm-10">
@@ -307,7 +330,7 @@ const EditProduct = ({ allproductList, message }) => {
                               type="number"
                               className="form-control"
                               name="ram"
-                              value={form.screen}
+                              value={form.ram}
                               onChange={onChangeInput}
                             />
                           </div>

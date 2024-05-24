@@ -2,20 +2,16 @@ package com.example.laptopwebsitebackend.controller;
 
 import com.example.laptopwebsitebackend.dto.request.ProductRequest;
 import com.example.laptopwebsitebackend.entity.Configuration;
-import com.example.laptopwebsitebackend.entity.Customer;
 import com.example.laptopwebsitebackend.entity.Product;
-import com.example.laptopwebsitebackend.repository.ConfigurationRepository;
 import com.example.laptopwebsitebackend.service.ConfigurationService;
 import com.example.laptopwebsitebackend.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/product")
@@ -31,6 +27,7 @@ public class ProductController {
     @PostMapping("/add")
     public ResponseEntity<Product> create_New_Product(@Valid @RequestBody ProductRequest productRequest){
 
+        System.out.println(productRequest.toString());
         Configuration configuration = new Configuration();
         configuration.setRam(productRequest.getRam());
         configuration.setProcessor(productRequest.getProcessor());
@@ -52,9 +49,7 @@ public class ProductController {
         newProduct.setImage4(productRequest.getImage4());
         newProduct.setConfiguration(configuration);
 
-        productService.addNewProduct(newProduct);
-
-        return new ResponseEntity<>(newProduct, HttpStatus.OK  );
+        return new ResponseEntity<>(productService.addNewProduct(newProduct), HttpStatus.OK  );
     }
 
     @GetMapping
@@ -103,10 +98,14 @@ public class ProductController {
         product.setQuantity(productRequest.getQuantity());
         product.setPrice(productRequest.getPrice());
         product.setBrand(productRequest.getBrand());
-        product.setImage1(productRequest.getImage1());
-        product.setImage2(productRequest.getImage2());
-        product.setImage3(productRequest.getImage3());
-        product.setImage4(productRequest.getImage4());
+//        product.setImage1(productRequest.getImage1());
+//        product.setImage2(productRequest.getImage2());
+//        product.setImage3(productRequest.getImage3());
+//        product.setImage4(productRequest.getImage4());
+        product.setImage1("");
+        product.setImage2("");
+        product.setImage3("");
+        product.setImage4("");
         product.setCategory(productRequest.getCategory());
 
         productService.updateProduct(product, id);
@@ -131,5 +130,9 @@ public class ProductController {
         return new ResponseEntity<>(foundProducts, HttpStatus.OK);
     }
 
-
+    @GetMapping("/count")
+    public ResponseEntity<Long> countAllProducts() {
+        long productCount = productService.countAllProducts();
+        return new ResponseEntity<>(productCount, HttpStatus.OK);
+    }
 }

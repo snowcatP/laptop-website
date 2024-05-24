@@ -5,5 +5,5 @@ public enum OrderStateType {
     CONFIRMED,
     SHIPPED,
     DELIVERED,
-    CANCELLED,
+    CANCELLED
 }

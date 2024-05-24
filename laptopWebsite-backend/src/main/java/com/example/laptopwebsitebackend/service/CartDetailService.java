@@ -14,7 +14,6 @@ public class CartDetailService {
 
     public List<CartDetails> getAllCartDetailsByCartId(Long id) {
         return cartDetailsRepository.findAllByCartCartId(id);
-
     }
 
     public CartDetails addItemToCart(CartDetails cartDetails) {
@@ -29,10 +28,7 @@ public class CartDetailService {
             cartDetailsRepository.deleteById(cartDetailsId);
             return "Delete item successfully";
         }
-
-
     }
-
 
     public CartDetails findById(Long cartDetailsId) {
         return cartDetailsRepository.findById(cartDetailsId).get();

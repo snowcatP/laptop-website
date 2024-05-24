@@ -6,6 +6,7 @@ import com.example.laptopwebsitebackend.entity.Role;
 import com.example.laptopwebsitebackend.repository.AccountRepository;
 import com.example.laptopwebsitebackend.repository.PermissionRepository;
 
+import com.example.laptopwebsitebackend.util.PasswordEncoderSingleton;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,14 +18,13 @@ import java.util.Objects;
 
 @Service
 public class AccountService {
+    private static final PasswordEncoder passwordEncoder = PasswordEncoderSingleton.getEncoder();
 
     @Autowired
     private AccountRepository accountRepository;
 
     @Autowired
     private PermissionService permissionService;
-
-    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
     public Account createNewAccount(Account newAccount, String permission) {
         Permission userPermission = permissionService.findByPermissionName(permission);
