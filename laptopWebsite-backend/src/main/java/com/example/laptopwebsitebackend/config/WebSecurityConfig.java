@@ -75,9 +75,6 @@ public class WebSecurityConfig{
                         .requestMatchers(HttpMethod.DELETE, "/product/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/discount").permitAll()
                         .requestMatchers(HttpMethod.GET, "/discount/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/warranty").hasRole("USER")
-                        .requestMatchers(HttpMethod.GET, "/warranty/**").hasRole("USER")
-                        .requestMatchers(HttpMethod.POST, "/warranty/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/comment").permitAll()
                         .requestMatchers(HttpMethod.GET, "/comment/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/user").permitAll()
@@ -92,7 +89,7 @@ public class WebSecurityConfig{
                         .requestMatchers(HttpMethod.POST, "/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/warranty/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/warranty/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/warranty/**").permitAll()
                         .anyRequest().authenticated());
 
 

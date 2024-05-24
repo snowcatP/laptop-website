@@ -17,11 +17,15 @@ const ListWarranty = () => {
   const npages = Math.ceil(warrantys.length / recordsPerPage);
   const numbers = [...Array(npages + 1).keys()].slice(1);
 
+  const token = localStorage.getItem("token");
+  const header = {
+    Authorization: "Bearer " + token,
+  };
 
   useEffect(() => {
     const getAllProducts = async () => {
       try {
-        const response = await getListWarrantys();
+        const response = await getListWarrantys(header);
 
         setWarrantys(response.data);
       } catch (error) {
@@ -62,10 +66,7 @@ const ListWarranty = () => {
   const changePage = (n) => setCurrentPage(n);
 
 
-  const token = localStorage.getItem("token");
-  const header = {
-    Authorization: "Bearer " + token,
-  };
+  
 
   const handleDelete = async (id) => {
     try {

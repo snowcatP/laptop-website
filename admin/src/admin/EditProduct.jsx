@@ -228,6 +228,7 @@ const EditProduct = ({ allproductList, message }) => {
                               name="image1"
                               value={form.image1}
                               onChange={onChangeInput}
+                              readOnly
                             />
                           </div>
                         </div>
@@ -242,6 +243,7 @@ const EditProduct = ({ allproductList, message }) => {
                               name="image2"
                               value={form.image2}
                               onChange={onChangeInput}
+                              readOnly
                             />
                           </div>
                         </div>
@@ -256,6 +258,7 @@ const EditProduct = ({ allproductList, message }) => {
                               name="image3"
                               value={form.image3}
                               onChange={onChangeInput}
+                              readOnly
                             />
                           </div>
                         </div>
@@ -270,6 +273,7 @@ const EditProduct = ({ allproductList, message }) => {
                               name="image4"
                               value={form.image4}
                               onChange={onChangeInput}
+                              readOnly
                             />
                           </div>
                         </div>
