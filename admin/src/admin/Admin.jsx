@@ -85,8 +85,8 @@ const Admin = () => {
         return "badge bg-danger";
       case "CONFIRMED":
         return "badge bg-warning";
-      case "SHIPPED":
-        return { color: "orange", fontSize: "1.2em" };
+      case "PENDING":
+        return "badge bg-secondary";
       case "DELIVERED":
         return "badge bg-success";
       default:
