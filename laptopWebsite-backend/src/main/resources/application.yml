@@ -1,11 +1,14 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/laptop-website
-    username: postgres
-    password: nguyenhao2112003
+    #    url: jdbc:postgresql://localhost:5432/laptop-website
+    #    username: postgres
+    #    password: hoang2003
+    url: jdbc:postgresql://dpg-cp8m56f109ks739t70m0-a.singapore-postgres.render.com:5432/laptop_website_db
+    username: admin
+    password: gHyoF7VN5E2EJUYUod1n0ry1nO8XU3bO
     driver-class-name: org.postgresql.Driver
   jpa:
-#    show-sql: true
+    #    show-sql: true
     properties:
       hibernate:
         format_sql: true
@@ -14,7 +17,7 @@ spring:
       ddl-auto: update
   mail:
     host: smtp.gmail.com
-    port: 25
+    port: 587
     username: ok.byethibye2@gmail.com
     password: uwikbacvdxedubkm
     properties:
