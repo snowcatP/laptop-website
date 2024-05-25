@@ -46,7 +46,7 @@ public class CartController {
             for (CartDetails cartDetails2 : cart.getCartDetails()) {
 
                 if (cartDetails2.getProduct().getProductId().equals(productId) ) {
-                    if (cartDetails2.getQuantity() <= 10) {
+                    if (cartDetails2.getQuantity() < 10) {
                         cartDetails2.setQuantity(cartDetails2.getQuantity() + quantity);
                         cartDetails2.setPrice(calculateTotalPrice(product, cartDetails2.getQuantity()));
                         return new ResponseEntity<>(cartDetailService.updateItemInCart(cartDetails2), HttpStatus.OK);

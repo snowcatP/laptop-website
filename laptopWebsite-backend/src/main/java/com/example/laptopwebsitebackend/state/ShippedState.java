@@ -8,10 +8,6 @@ public class ShippedState implements OrderState{
         order.setState(new DeliveredState());
     }
 
-    @Override
-    public void prev(Order order) {
-        order.setState(new ConfirmedState());
-    }
 
     @Override
     public String getStatus() {

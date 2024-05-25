@@ -139,8 +139,4 @@ public class Order {
         state.next(this);
 
     }
-
-    public void previousState() {
-        state.prev(this);
-    }
 }
