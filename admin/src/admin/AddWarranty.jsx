@@ -7,6 +7,8 @@ import { getListCustomers } from "./service/CustomerService";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button"
 import { Link } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 const AddWarranty = () => {
   const [message, setMessage] = useState("");
   const [form, setForm] = useState({
@@ -18,10 +20,10 @@ const AddWarranty = () => {
   });
   const [customers, setCustomers] = useState([]);
   const [selectedCustomer, setSelectedCustomer] = useState("");
-  const [selectedOrder, setSelectedOrders] = useState([]);
   const [orders, setProductOrders] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState("");
 
+  const navigate = useNavigate()
   const handleSubmit = async (e) => {
     e.preventDefault(); // Ngăn chặn form submit mặc định
     const credential = {
@@ -36,14 +38,17 @@ const AddWarranty = () => {
       // Gọi hàm addWarranty từ WarrantyService để thêm bảo hành
       const response = await addWarranty(credential,header);
 
-      // Xử lý kết quả từ API
       if (response.status === 200) {
-        // Nếu thành công, hiển thị thông báo hoặc thực hiện các hành động khác
-        setMessage("Added successfully!");
+        toast.success("Add new discount success!")
+
+        setTimeout(() => {
+          navigate("/list-warranty")
+        }, 2000)
       }
     } catch (error) {
       // Xử lý lỗi nếu có
       console.error("Error adding warranty:", error);
+      toast.error("Fail to add new warranty!")
     }
   };
 
