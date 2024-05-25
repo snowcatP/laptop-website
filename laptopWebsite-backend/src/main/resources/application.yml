@@ -1,9 +1,9 @@
 spring:
   datasource:
-
     url: jdbc:postgresql://localhost:5432/laptop-website
     username: postgres
     password: hoang2003
+
 
     driver-class-name: org.postgresql.Driver
   jpa:
@@ -18,8 +18,8 @@ spring:
     host: smtp.gmail.com
 
     port: 25
-    username: <gmail>
-    password: <password>
+    username: 
+    password: 
 
     properties:
       mail:
@@ -29,12 +29,12 @@ spring:
             enable: true
 
 jwt:
-  signerKey: <key>
+  signerKey: 
 
 api:
-  endpoint: <endpoint to frontend>
+  endpoint: 
 
 email:
 
-  sender: <gmail>
+  sender: 
 

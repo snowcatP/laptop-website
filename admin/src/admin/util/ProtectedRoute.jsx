@@ -1,17 +1,14 @@
 // import React from "react";
 import { useAuth } from "../context/AuthContext";
 // import { Navigate, useLocation, useNavigate } from "react-router-dom";
-import {useNavigate} from 'react-router-dom'
-const ProtectedRoute = ({ children }) => {
+import {Outlet, Navigate} from 'react-router-dom'
+const ProtectedRoute = () => {
   const { isLogged } = useAuth();
-  // const location = useLocation()
-  const navigate = useNavigate()
 
   return isLogged ? (
-    children
+    <Outlet/>
   ) : (
-    // <Navigate to="/auth/admin-login" replace state={{path: location.pathname}}/>
-    navigate("/auth/admin-login")
+    <Navigate to="/auth/admin-login" replace/>
   )
   
 };
