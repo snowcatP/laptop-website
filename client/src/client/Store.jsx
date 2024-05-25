@@ -60,7 +60,7 @@ const [itemsPerPage, setItemsPerPage] = useState(9);
       };
   
       getAllProducts();
-    }, [filterProducts]);
+    }, []);
 
     const fetchSearchResults = async (params = searchParams) => {
       try {
@@ -127,11 +127,6 @@ const resetFilters = () => {
 };
 
 const handleSearch = (keyword) => {
-  if(keyword){
-    console.log(keyword)
-  } else {
-    console.log("null")
-  }
   setSearchParams({ ...searchParams, keyword });
   fetchSearchResults({ ...searchParams, keyword });
 };
