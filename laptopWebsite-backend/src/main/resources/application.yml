@@ -1,11 +1,9 @@
 spring:
   datasource:
+
     url: jdbc:postgresql://localhost:5432/laptop-website
     username: postgres
     password: hoang2003
-#    url: jdbc:postgresql://dpg-cp8m56f109ks739t70m0-a.singapore-postgres.render.com:5432/laptop_website_db
-#    username: admin
-#    password: gHyoF7VN5E2EJUYUod1n0ry1nO8XU3bO
 
     driver-class-name: org.postgresql.Driver
   jpa:
@@ -20,8 +18,8 @@ spring:
     host: smtp.gmail.com
 
     port: 25
-    username: ok.byethibye2@gmail.com
-    password: uwikbacvdxedubkm
+    username: <gmail>
+    password: <password>
 
     properties:
       mail:
@@ -31,12 +29,12 @@ spring:
             enable: true
 
 jwt:
-  signerKey: "bR/S8KVi0SkB02p/4tlq81tEhbZGTJ8aNmlOEHZE2+Yb5uhVlPzmRFrY1AOSXnz/"
+  signerKey: <key>
 
 api:
-  endpoint: "http://localhost:3000"
+  endpoint: <endpoint to frontend>
 
 email:
 
-  sender: ok.byethibye2@gmail.com
+  sender: <gmail>
 
