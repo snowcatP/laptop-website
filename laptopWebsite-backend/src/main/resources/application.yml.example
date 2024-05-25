@@ -1,13 +1,11 @@
 spring:
   datasource:
-
-    url: jdbc:postgresql://localhost:5432/laptop-website
-    username: postgres
-    password: hoang2003
-
+   url: jdbc:postgresql://localhost:5432/<database name>
+   username: username
+   password: password
     driver-class-name: org.postgresql.Driver
   jpa:
-    #    show-sql: true
+#    show-sql: true
     properties:
       hibernate:
         format_sql: true
@@ -16,11 +14,9 @@ spring:
       ddl-auto: update
   mail:
     host: smtp.gmail.com
-
     port: 25
     username: <gmail>
     password: <password>
-
     properties:
       mail:
         smtp:
@@ -35,6 +31,4 @@ api:
   endpoint: <endpoint to frontend>
 
 email:
-
   sender: <gmail>
-
