@@ -13,14 +13,14 @@ const UserBills = () => {
     const [bills, setBills] = useState([]);
 
 
-    const token = localStorage.getItem("token");
-    const header = {
-        Authorization: "Bearer " + token,
-    };
+    
 
     useEffect(() => {
         const getOrder = async () => {
             try {
+                const token = localStorage.getItem("token");
+                const header = { Authorization: `Bearer ${token}` };
+
                 const response = await getBillsOfCustomer(user.customerId, header);
                 if (response.status === 200) {
                     setBills(response.data);

@@ -43,7 +43,6 @@ const [itemsPerPage, setItemsPerPage] = useState(9);
             const response = await getListProducts(page)
             setProducts(response.data);
             setCurrentPage(page);
-            console.log(response.data);
         } catch (error) {
             console.error('Error fetching products:', error);
         }

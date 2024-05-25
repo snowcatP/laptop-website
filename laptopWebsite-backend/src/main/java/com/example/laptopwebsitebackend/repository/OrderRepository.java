@@ -1,6 +1,7 @@
 package com.example.laptopwebsitebackend.repository;
 
 import com.example.laptopwebsitebackend.entity.Order;
+import com.example.laptopwebsitebackend.state.OrderStateType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -21,4 +22,8 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
 
     void deleteByOrderId(Long orderId);
 
+    List<Order> findOrdersByStateType(OrderStateType stateType);
+
+    @Query("SELECT o FROM Order o WHERE o.customer.customerId = :customerId AND o.stateType = 'DELIVERED'")
+    List<Order> findDeliveredOrdersByCustomerId(Long customerId);
 }
