@@ -66,8 +66,8 @@ const ListOrder = ({ allCustomerList, message }) => {
 
         <section className="section">
           <div className="row">
-            <div className="col-lg-1"></div>
-            <div className="col-lg-10">
+            {/* <div className="col-lg-1"></div> */}
+            <div className="col-lg">
               <div className="card">
                 <div className="card-body">
                   <h5 className="card-title">List Order</h5>
@@ -88,14 +88,14 @@ const ListOrder = ({ allCustomerList, message }) => {
                     <table id="myTable" className="table table-striped">
                       <thead>
                         <tr>
-                          <th className="text-center font-weight-semibold align-middle p-4"><b>Order ID</b></th>
-                          <th className="text-center font-weight-semibold align-middle p-4">Customer</th>
-                          <th className="text-center font-weight-semibold align-middle p-4">Product</th>
-                          <th className="text-center font-weight-semibold align-middle p-4">Total Price</th>
-                          <th className="text-center font-weight-semibold align-middle p-4">Status</th>
-                          <th className="text-center font-weight-semibold align-middle p-4">Delivered Date</th>
-                          <th className="text-center font-weight-semibold align-middle p-4">Address</th>
-                          <th className="text-center font-weight-semibold align-middle p-4"></th>
+                          <th className="text-center font-weight-semibold align-middle"><b>Order ID</b></th>
+                          <th className="text-center font-weight-semibold align-middle">Customer</th>
+                          <th className="text-center font-weight-semibold align-middle">Product</th>
+                          <th className="text-center font-weight-semibold align-middle">Total Price</th>
+                          <th className="text-center font-weight-semibold align-middle">Status</th>
+                          <th className="text-center font-weight-semibold align-middle">Delivered Date</th>
+                          <th className="text-center font-weight-semibold align-middle">Address</th>
+                          <th className="text-center font-weight-semibold align-middle"></th>
                           {/* <th></th>
                           <th></th> */}
                         </tr>
@@ -104,8 +104,8 @@ const ListOrder = ({ allCustomerList, message }) => {
                         {orders.sort((a, b) => b.orderId - a.orderId).map((order, index) => (
 
                           <tr key={index}>
-                            <td className="text-center font-weight-semibold align-middle p-4">{order.orderId}</td>
-                            <td className="text-center font-weight-semibold align-middle p-4">{order.customer.firstName} {order.customer.lastName}</td>
+                            <td className="text-center font-weight-semibold align-middle">{order.orderId}</td>
+                            <td className="text-center font-weight-semibold align-middle">{order.customer.firstName} {order.customer.lastName}</td>
                             <td className="">
                               {order.orderDetails.map((orderDetail, detailIndex) => {
                                 const product = orderDetail.product;
@@ -113,7 +113,7 @@ const ListOrder = ({ allCustomerList, message }) => {
                                 return (
                                   <>
                                     <tr key={detailIndex}>
-                                      <td className="p-4">
+                                      <td className="">
                                         <input type="hidden" name="productId" value={product.productId} />
                                         <div className="media align-items-center">
                                           <div className="row">
@@ -144,22 +144,22 @@ const ListOrder = ({ allCustomerList, message }) => {
                               })}
 
                             </td>
-                            <td className="text-center font-weight-semibold align-middle p-4">
+                            <td className="text-center font-weight-semibold align-middle">
                               {Intl.NumberFormat("vi-VN", { style: 'currency', currency: 'VND' }).format(order.totalPrice)}
                             </td>
 
-                            <td className="text-center font-weight-semibold align-middle p-4">
+                            <td className="text-center font-weight-semibold align-middle">
                               <span style={getColor(order.stateType)}>
                                 {order.stateType}
                               </span>
                             </td>
-                            <td className="text-center font-weight-semibold align-middle p-4">
+                            <td className="text-center font-weight-semibold align-middle">
                               {moment(order.deliveredDate).format('YYYY-MM-DD HH:mm:ss')}
                             </td>
-                            <td className="text-center font-weight-semibold align-middle p-4">
+                            <td className="text-center font-weight-semibold align-middle">
                               {order.address}
                             </td>
-                            <td className="text-center font-weight-semibold align-middle p-4">
+                            <td className="text-center font-weight-semibold align-middle">
                               <button
                                 className="btn btn-outline-dark btn-sm"
                                 onClick={(e) => { handleChangeOrderState(e, order.orderId) }}
@@ -176,7 +176,7 @@ const ListOrder = ({ allCustomerList, message }) => {
                 </div>
               </div>
             </div>
-            <div className="col-lg-1"></div>
+            {/* <div className="col-lg-1"></div> */}
           </div>
         </section>
       </main>

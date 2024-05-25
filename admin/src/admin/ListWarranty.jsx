@@ -5,6 +5,8 @@ import Sidebar from "./components/Sidebar";
 import { deleteWarrantyById, getListWarrantys } from "./service/WarrantyService";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const ListWarranty = () => {
   const [warrantys, setWarrantys] = useState([]);
@@ -61,6 +63,7 @@ const ListWarranty = () => {
   const changePage = (n) => setCurrentPage(n);
 
 
+  const navigate = useNavigate()
   
 
   const handleDelete = async (id) => {
@@ -68,11 +71,15 @@ const ListWarranty = () => {
       const response = await deleteWarrantyById(id,{Authorization: "Bearer " + localStorage.getItem("token")});
       if (response.status === 200) {
         setWarrantys(warrantys.filter((warranty) => warranty.warrantyId !== id));
-        setMessage("Deleted Successfully !")
+        toast.success("Delete Successfully!")
+
+        setTimeout(() => {
+          navigate("/list-warranty")
+        }, 2000)
       }
     } catch (error) {
       console.log("Error deleting warranty:", error);
-      setMessage("Delete Failed !")
+      toast.success("Delete Failed !")
     }
   };
 
