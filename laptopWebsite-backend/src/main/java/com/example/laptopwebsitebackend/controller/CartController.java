@@ -49,7 +49,6 @@ public class CartController {
                     cartDetails2.setQuantity(cartDetails2.getQuantity() + quantity);
                     cartDetails2.setPrice(calculateTotalPrice(product, cartDetails2.getQuantity()));
                     return new ResponseEntity<>(cartDetailService.updateItemInCart(cartDetails2), HttpStatus.OK);
-
                 }
             }
             List<CartDetails> lstCartDetails = new ArrayList<>();
