@@ -16,26 +16,26 @@ const Footer = () => {
                 <div className="footer">
                   <h3 className="footer-title">About Us</h3>
                   <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                    sed do eiusmod tempor incididunt ut.
+                    We are students from HCMUTE (Hoang, Hao, Hiep K21). This project is built for OOSE course.
+                    Contact us if you interest.
                   </p>
                   <ul className="footer-links">
                     <li>
                       <Link to="#">
                         <i className="fa fa-map-marker" />
-                        1734 Stonecoal Road
+                        1 Vo Van Ngan
                       </Link>
                     </li>
                     <li>
                       <Link to="#">
                         <i className="fa fa-phone" />
-                        +021-95-51-84
+                        +09-2986-3793
                       </Link>
                     </li>
                     <li>
                       <Link to="#">
                         <i className="fa fa-envelope-o" />
-                        email@email.com
+                        xuanhoang281003@email.com
                       </Link>
                     </li>
                   </ul>
@@ -46,19 +46,10 @@ const Footer = () => {
                   <h3 className="footer-title">Categories</h3>
                   <ul className="footer-links">
                     <li>
-                      <Link to="#">Hot deals</Link>
+                      <Link to="/">Hot deals</Link>
                     </li>
                     <li>
-                      <Link to="#">Laptops</Link>
-                    </li>
-                    <li>
-                      <Link to="#">Smartphones</Link>
-                    </li>
-                    <li>
-                      <Link to="#">Cameras</Link>
-                    </li>
-                    <li>
-                      <Link to="#">Accessories</Link>
+                      <Link to="/store">Laptops</Link>
                     </li>
                   </ul>
                 </div>
@@ -78,9 +69,6 @@ const Footer = () => {
                       <Link to="#">Privacy Policy</Link>
                     </li>
                     <li>
-                      <Link to="#">Orders and Returns</Link>
-                    </li>
-                    <li>
                       <Link to="#">Terms &amp; Conditions</Link>
                     </li>
                   </ul>
@@ -91,16 +79,13 @@ const Footer = () => {
                   <h3 className="footer-title">Service</h3>
                   <ul className="footer-links">
                     <li>
-                      <Link to="#">My Account</Link>
+                      <Link to="/user/profile">My Account</Link>
                     </li>
                     <li>
-                      <Link to="#">View Cart</Link>
+                      <Link to="/user/cart">View Cart</Link>
                     </li>
                     <li>
-                      <Link to="#">Wishlist</Link>
-                    </li>
-                    <li>
-                      <Link to="#">Track My Order</Link>
+                      <Link to="/user/orders">Track My Order</Link>
                     </li>
                     <li>
                       <Link to="#">Help</Link>

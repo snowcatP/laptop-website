@@ -133,8 +133,10 @@ const Product = () => {
         if (response.status === 200) {
           toast.success("Add new comment success!")
 
-          const newComment = response.data
-          comments.push(newComment)
+          setTimeout(() => {
+            window.location.reload()
+
+          }, 1000)
 
           e.target.content.value = ""
         }
