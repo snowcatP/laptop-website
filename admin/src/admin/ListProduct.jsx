@@ -7,6 +7,7 @@ import { getListProducts, deleteProductById } from "./service/ProductService";
 import { Link } from "react-router-dom";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import { toast } from "react-toastify";
 
 const ListProduct = () => {
   const [products, setProducts] = useState([]);
@@ -75,9 +76,11 @@ const ListProduct = () => {
       const response = await deleteProductById(id,headers);
       if (response.status === 200) {
         setProducts(products.filter((product) => product.productId !== id));
+        toast.success("Deleted Product Successfully !");
       }
     } catch (error) {
       console.log("Error deleting product:", error);
+      toast.success("Delete Failed!");
     }
   };
 
