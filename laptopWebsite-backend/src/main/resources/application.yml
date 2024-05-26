@@ -3,11 +3,10 @@ spring:
     url: jdbc:postgresql://localhost:5432/laptop-website
     username: postgres
     password: hoang2003
+    driver-class-name: org.postgresql.Driver
 #    url: jdbc:postgresql://dpg-cp8m56f109ks739t70m0-a.singapore-postgres.render.com:5432/laptop_website_db
 #    username: admin
 #    password: gHyoF7VN5E2EJUYUod1n0ry1nO8XU3bO
-
-    driver-class-name: org.postgresql.Driver
   jpa:
     #    show-sql: true
     properties:
@@ -18,11 +17,9 @@ spring:
       ddl-auto: update
   mail:
     host: smtp.gmail.com
-
-    port: 25
+    port: 587
     username: ok.byethibye2@gmail.com
     password: uwikbacvdxedubkm
-
     properties:
       mail:
         smtp:
@@ -37,6 +34,4 @@ api:
   endpoint: "http://localhost:3000"
 
 email:
-
   sender: ok.byethibye2@gmail.com
-

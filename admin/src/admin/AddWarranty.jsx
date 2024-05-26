@@ -11,6 +11,9 @@ import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 const AddWarranty = () => {
   const [message, setMessage] = useState("");
+  const headers = {
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
+  };
   const [form, setForm] = useState({
     productCode: "",
     dateStart: "",
@@ -35,11 +38,12 @@ const AddWarranty = () => {
     };
 
     try {
+      
       // Gọi hàm addWarranty từ WarrantyService để thêm bảo hành
-      const response = await addWarranty(credential,header);
+      const response = await addWarranty(credential,headers);
 
       if (response.status === 200) {
-        toast.success("Add new discount success!")
+        toast.success("Add new warranty success!")
 
         setTimeout(() => {
           navigate("/list-warranty")
@@ -79,17 +83,14 @@ const AddWarranty = () => {
     setSelectedProduct(product.productName);
   };
 
-  const token = localStorage.getItem("token");
-  const header = {
-    Authorization: "Bearer " + token,
-  };
+  
 
   const [showModal, setShowModal] = useState(false);
 
 
   const fetchOrdersByCustomer = async (customerId) => {
     try {
-      const response = await getProductDeliveredByIdCustomer(customerId,header);
+      const response = await getProductDeliveredByIdCustomer(customerId,headers);
       setProductOrders(response.data);
       setShowModal(true)
     } catch (error) {

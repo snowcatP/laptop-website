@@ -64,6 +64,7 @@ const Admin = () => {
       try {
         const response = await getTopSelling(headers);
         setTopSelling(response.data);
+        console.log(topSelling)
       } catch (error) {
         console.log(error);
       }
@@ -495,7 +496,7 @@ const Admin = () => {
                                   {Intl.NumberFormat("vi-VN", { 
                                     style: 'currency', 
                                     currency: 'VND' 
-                                    }).format(2 * productTop?.product.price * (1-((productTop?.product?.discount?.discountValue ?? 0) / 100)))}
+                                    }).format(productTop?.totalQuantitySold * productTop?.product.price * (1-((productTop?.product?.discount?.discountValue ?? 0) / 100)))}
                                   </td>
                                 </tr>
                               ))}
