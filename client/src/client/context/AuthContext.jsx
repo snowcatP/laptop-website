@@ -30,13 +30,18 @@ export const AuthContextProvider = (props) => {
 
             if (response.data["valid"] === true) {
               const userProfile = async () => {
-                const headers = { Authorization: `Bearer ${token}` };
-  
-                const response = await customerProfile(headers);
-  
-                if (response.status === 200) {
-                  setUser(response.data);
-                  setIsLogged(true);
+                try {
+
+                  const headers = { Authorization: `Bearer ${token}` };
+                  
+                  const response = await customerProfile(headers);
+                  
+                  if (response.status === 200) {
+                    setUser(response.data);
+                    setIsLogged(true);
+                  }
+                } catch (error){
+                  console.log(error)
                 }
   
               };

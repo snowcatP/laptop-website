@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import {useAuth} from '../context/AuthContext';
 import { adminLogout } from "../service/AdminService";
 import { ToastContainer, toast } from 'react-toastify';
@@ -21,15 +21,15 @@ const Header = () => {
       const response = await adminLogout(token)
 
       if (response.status === 200) {
-        
-        toast.success("Logout success!")
-        
-        setTimeout(() => {
-          setAdmin(null)
-          setIsLogged(false)
+        setAdmin(null)
+        setIsLogged(false)
+        return <Navigate to="/auth/admin-login"/>
 
-          navigate("/auth/admin-login")
-        }, 2000)
+        
+        // navigate("/auth/admin-login")
+        
+        
+
       } else {
         toast.error("Fail to logout!")
       }
