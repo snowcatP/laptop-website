@@ -131,10 +131,6 @@ const Product = () => {
         const response = await addNewComment(commentRequest, headers)
 
         if (response.status === 200) {
-          toast.success("Add new comment success!")
-
-          const newComment = response.data
-          comments.push(newComment)
 
           e.target.content.value = ""
         }
@@ -429,19 +425,6 @@ const Product = () => {
       </>
 
       <Letter />
-      <ToastContainer
-        position="top-right"
-        autoClose={4000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-
-      />
       <Footer />
     </>
   );

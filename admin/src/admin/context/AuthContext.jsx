@@ -30,12 +30,17 @@ export const AuthContextProvider = (props) => {
                         
                         if(response.data["valid"] === true) {
                             const getAdminProfile = async () => {
-                                const headers = { Authorization: `Bearer ${token}` };
-                                
-                                const response = await adminProfile(headers);
-                                
-                                setAdmin(response.data)
-                                setIsLogged(true)
+                                try {
+
+                                    const headers = { Authorization: `Bearer ${token}` };
+                                    
+                                    const response = await adminProfile(headers);
+                                    
+                                    setAdmin(response.data)
+                                    setIsLogged(true)
+                                } catch(error) {
+                                    console.log(error)
+                                }
                             }
                             getAdminProfile()
                         }

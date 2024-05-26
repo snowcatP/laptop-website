@@ -13,6 +13,9 @@ const EditProduct = ({ allproductList, message }) => {
   const { id } = useParams(); // Lấy id từ địa chỉ URL
   const [product, setProduct] = useState(null);
   const navigate = useNavigate()
+  const headers = {
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
+  };
   useEffect(() => {
     const getProduct = async () => {
       try {
@@ -85,7 +88,7 @@ const EditProduct = ({ allproductList, message }) => {
     };
 
     try {
-      const response = await editProductById(id, credential);
+      const response = await editProductById(id, credential,headers);
       if (response.status === 200) {
         toast.success("Update success!")
 
@@ -95,6 +98,7 @@ const EditProduct = ({ allproductList, message }) => {
       }
     } catch (error) {
       toast.error("Fail to update!")
+      console.log(error)
 
       setTimeout(() => {
         navigate("/list-product")
@@ -104,6 +108,7 @@ const EditProduct = ({ allproductList, message }) => {
 
   const onChangeInput = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    console.log(form)
   };
 
   return (

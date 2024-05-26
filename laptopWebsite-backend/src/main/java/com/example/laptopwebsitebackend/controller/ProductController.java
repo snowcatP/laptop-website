@@ -96,14 +96,10 @@ public class ProductController {
         product.setQuantity(productRequest.getQuantity());
         product.setPrice(productRequest.getPrice());
         product.setBrand(productRequest.getBrand());
-//        product.setImage1(productRequest.getImage1());
-//        product.setImage2(productRequest.getImage2());
-//        product.setImage3(productRequest.getImage3());
-//        product.setImage4(productRequest.getImage4());
-        product.setImage1("");
-        product.setImage2("");
-        product.setImage3("");
-        product.setImage4("");
+        product.setImage1(productRequest.getImage1());
+        product.setImage2(productRequest.getImage2());
+        product.setImage3(productRequest.getImage3());
+        product.setImage4(productRequest.getImage4());
         product.setCategory(productRequest.getCategory());
 
         productService.updateProduct(product, id);
