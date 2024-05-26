@@ -20,10 +20,10 @@ const AddProduct = () => {
     image2: "",
     image3: "",
     image4: "",
-    ram: 1,
+    ram: 8,
     processor: "",
-    screen: 1,
-    memory: 1,
+    screen: 15.6,
+    memory: 256,
     graphicCard: "",
   });
 
