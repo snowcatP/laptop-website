@@ -75,7 +75,6 @@ function Checkout(props) {
         const response = await checkout(credential, header);
         if (response.status  === 200) {
           toast.success("Order successfully!");
-          navigate("/user/orders")
         }
       }
       catch (error) {
