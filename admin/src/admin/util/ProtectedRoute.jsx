@@ -8,7 +8,7 @@ const ProtectedRoute = ({ children }) => {
   const navigate = useNavigate()
 
   return isLogged ? (
-    children
+    <>{children}</>
   ) : (
     // <Navigate to="/auth/admin-login" replace state={{path: location.pathname}}/>
     navigate("/auth/admin-login")

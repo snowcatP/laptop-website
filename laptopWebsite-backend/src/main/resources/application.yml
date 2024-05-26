@@ -1,9 +1,9 @@
 spring:
   datasource:
-        url: jdbc:postgresql://localhost:5432/laptop-website
-        username: postgres
-        password: nguyenhao2112003
-        driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/laptop-website
+    username: postgres
+    password: hoang2003
+    driver-class-name: org.postgresql.Driver
 #    url: jdbc:postgresql://dpg-cp8m56f109ks739t70m0-a.singapore-postgres.render.com:5432/laptop_website_db
 #    username: admin
 #    password: gHyoF7VN5E2EJUYUod1n0ry1nO8XU3bO
