@@ -11,3 +11,5 @@ export const customerLogout = (token) => axios.post(URL + "/auth/logout", token)
 export const customerRegister = (customer) => axios.post(URL + "/auth/register", customer)
 
 export const checkValidToken = (token) => axios.post(URL + "/auth/introspect", token)
+
+export const changePassword = (request, headers) => axios.put(URL + "/user/change-password", request, {headers})

@@ -8,17 +8,15 @@ import PasswordInput from "../components/PasswordInput";
 import { Form } from "react-bootstrap";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { changePassword } from "../service/ClientService";
 const UserChangePassword = () => {
 
 
   const [values, setValues] = useState({
     oldPassword: "",
     newPassword: "",
-    confirmNewPassword: ""
+    confirmPassword: ""
   })
-
-  //const [changeSuccess, setChangeSuccess] = useState("")
-
   const inputs = [
     {
       id: 1,
@@ -59,8 +57,26 @@ const UserChangePassword = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    console.log(values)
-    toast.success("Change password success!")
+    const changePass = async () => {
+      try{
+        const headers = {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+
+        const response = await changePassword(values, headers)
+
+        if (response.status === 200) {
+          toast.success("Change password success!")
+
+          setTimeout(() => {
+            window.location.reload()
+          }, 2000)
+        }
+      } catch(error) {
+        toast.error("Fail to change password")
+      }
+    }
+    changePass()
   }
 
   return (
@@ -88,7 +104,6 @@ const UserChangePassword = () => {
                 <Form 
                   onSubmit={handleSubmit}
                 >
-                  <h4 className="change-password-success">Change success!</h4>
                   <input
                     type="hidden"
                     name="action"
