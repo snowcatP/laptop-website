@@ -41,31 +41,32 @@ public class CartController {
         Product product = productService.findProductByID(productId);
         Cart cart = cartService.findCartById(cartId);
         CartDetails cartDetails = new CartDetails();
-
-        if (quantity<=product.getQuantity()) {
-            for (CartDetails cartDetails2 : cart.getCartDetails()) {
-
-                if (cartDetails2.getProduct().getProductId().equals(productId) ) {
-                    cartDetails2.setQuantity(cartDetails2.getQuantity() + quantity);
-                    cartDetails2.setPrice(calculateTotalPrice(product, cartDetails2.getQuantity()));
-                    return new ResponseEntity<>(cartDetailService.updateItemInCart(cartDetails2), HttpStatus.OK);
+            if (quantity <= product.getQuantity()) {
+                for (CartDetails cartDetails2 : cart.getCartDetails()) {
+                    if (cartDetails2.getQuantity()<10){
+                        if (cartDetails2.getProduct().getProductId().equals(productId)) {
+                            cartDetails2.setQuantity(cartDetails2.getQuantity() + quantity);
+                            cartDetails2.setPrice(calculateTotalPrice(product, cartDetails2.getQuantity()));
+                            return new ResponseEntity<>(cartDetailService.updateItemInCart(cartDetails2), HttpStatus.OK);
+                        }
+                    }
+                    return new ResponseEntity<>(cartDetailService.addItemToCart(cartDetails), HttpStatus.EXPECTATION_FAILED);
                 }
+                List<CartDetails> lstCartDetails = new ArrayList<>();
+                cartDetails.setProduct(product);
+                cartDetails.setQuantity(quantity);
+                cartDetails.setCart(cart);
+
+                cartDetails.setPrice(calculateTotalPrice(product, quantity));
+
+                lstCartDetails.add(cartDetails);
+                cart.setCartDetails(lstCartDetails);
+                return new ResponseEntity<>(cartDetailService.addItemToCart(cartDetails), HttpStatus.OK);
             }
-            List<CartDetails> lstCartDetails = new ArrayList<>();
-            cartDetails.setProduct(product);
-            cartDetails.setQuantity(quantity);
-            cartDetails.setCart(cart);
-            //Calculate the total price of this item
-
-            cartDetails.setPrice(calculateTotalPrice(product, quantity));
-
-            lstCartDetails.add(cartDetails);
-            cart.setCartDetails(lstCartDetails);
-            return new ResponseEntity<>(cartDetailService.addItemToCart(cartDetails), HttpStatus.OK);
-        }
         else {return new ResponseEntity<>(cartDetailService.addItemToCart(cartDetails), HttpStatus.EXPECTATION_FAILED);}
 
     }
+
     public Double calculateTotalPrice(Product product, int quantity){
         int discountValue = (product.getDiscount() != null) ? product.getDiscount().getDiscountValue() : 0;
         double costPrice = product.getPrice();
