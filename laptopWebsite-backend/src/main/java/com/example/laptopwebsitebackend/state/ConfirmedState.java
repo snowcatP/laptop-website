@@ -9,10 +9,7 @@ public class ConfirmedState implements OrderState{
 
     }
 
-    @Override
-    public void prev(Order order) {
-        order.setState(new PendingState());
-    }
+
 
     @Override
     public String getStatus() {

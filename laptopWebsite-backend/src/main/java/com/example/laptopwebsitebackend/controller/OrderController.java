@@ -143,8 +143,6 @@ public class OrderController{
                 order.nextState();
             return new ResponseEntity<>(orderService.updateOrder(order),HttpStatus.OK);
         }
-
-
         return new ResponseEntity<>(orderService.updateOrder(order),HttpStatus.EXPECTATION_FAILED);
     }
     @PostMapping("/cancel-order/{orderId}")

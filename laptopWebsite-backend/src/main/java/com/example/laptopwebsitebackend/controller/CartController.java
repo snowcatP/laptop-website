@@ -41,6 +41,7 @@ public class CartController {
         Product product = productService.findProductByID(productId);
         Cart cart = cartService.findCartById(cartId);
         CartDetails cartDetails = new CartDetails();
+
             if (quantity <= product.getQuantity()) {
                 for (CartDetails cartDetails2 : cart.getCartDetails()) {
                     if (cartDetails2.getQuantity()<10){
@@ -51,6 +52,7 @@ public class CartController {
                         }
                     }
                     return new ResponseEntity<>(cartDetailService.addItemToCart(cartDetails), HttpStatus.EXPECTATION_FAILED);
+
                 }
                 List<CartDetails> lstCartDetails = new ArrayList<>();
                 cartDetails.setProduct(product);

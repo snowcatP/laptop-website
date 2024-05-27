@@ -9,12 +9,6 @@ public class DeliveredState implements OrderState{
     }
 
     @Override
-    public void prev(Order order) {
-        order.setState(new ShippedState());
-
-    }
-
-    @Override
     public String getStatus() {
         return "Delivered";
     }

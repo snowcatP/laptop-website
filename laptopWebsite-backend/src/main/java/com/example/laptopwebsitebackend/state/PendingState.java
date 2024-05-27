@@ -7,12 +7,6 @@ public class PendingState implements OrderState{
     public void next(Order order) {
         order.setState(new ConfirmedState());
     }
-
-    @Override
-    public void prev(Order order) {
-
-    }
-
     @Override
     public String getStatus() {
         return "Pending";

@@ -8,10 +8,7 @@ public class CancelledState implements OrderState{
 
     }
 
-    @Override
-    public void prev(Order order) {
 
-    }
 
     @Override
     public String getStatus() {
