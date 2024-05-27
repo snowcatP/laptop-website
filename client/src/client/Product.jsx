@@ -159,7 +159,6 @@ const Product = () => {
           toast.success("Add to cart successfully")
 
           setTimeout(() => {
-            navigate("/user/cart")
           }, 2000)
         }
       } catch (error) {

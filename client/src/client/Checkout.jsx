@@ -286,7 +286,7 @@ function Checkout(props) {
                     {!termsAccepted && <p id="warning" style={{ color: 'red' }}>Bạn phải tích vào nút xác nhận các điều khoản</p>}
                   </label>
                 </div>
-                <Link to="/user/bills" className="primary-btn order-submit" state={{ totalPrice: totalPrice }} onClick={handleSubmit}>
+                <Link to="/user/bills" className="primary-btn order-submit" state={{ totalPrice: totalPrice }} onClick={(e)=>{handleSubmit(e)}}>
                   {/* <Link to="/user/bills" className="primary-btn order-submit" > */}
                   Place order
                 </Link>
